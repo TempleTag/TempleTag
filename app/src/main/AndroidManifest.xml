@@ -10,7 +10,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
         <activity android:name=".LoginActivity" />
-        <activity android:name=".TempleTagActivity" />
+        <activity android:name=".TempleTagActivity"
+            android:theme="@style/AppTheme.NoActionBar"/>
         <activity android:name=".SignUpActivity" />
         <activity
             android:name=".HomeActivity"
