@@ -4,7 +4,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity">
+    tools:context=".LoginActivity"
+    android:gravity="center_vertical">
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -16,9 +17,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="monospace"
-            android:text="Create a new account"
+            android:text="Login with existing account"
             android:textSize="20sp"
-            android:textStyle="bold" />
+            android:textStyle="bold"
+            android:textColor="@color/TempleTagTheme"/>
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/email"
@@ -45,11 +47,11 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"
-            android:background="@color/colorPrimaryDark"
+            android:background="@color/TempleTagTheme"
             android:fontFamily="monospace"
             android:padding="10dp"
             android:text="Login"
-            android:textColor="#fff" />
+            android:textColor="#FFFFFF" />
 
     </LinearLayout>
 
