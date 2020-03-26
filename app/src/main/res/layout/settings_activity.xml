@@ -1,9 +1,33 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/TempleTagTheme"
+        android:id="@+id/username"
+        android:text="User1224"
+        android:textSize="35sp"
+        android:textStyle="bold"
+        android:fontFamily="monospace"
+        android:layout_marginTop="100dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/username"
+        android:id="@+id/change_username"
+        android:fontFamily="monospace"
+        android:text="Change username"/>
 
     <FrameLayout
-        android:id="@+id/settings"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_below="@+id/change_username"
+        android:id="@+id/setting_container"/>
+
 </LinearLayout>

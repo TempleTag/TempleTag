@@ -1,0 +1,25 @@
+<PreferenceScreen xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <PreferenceCategory app:title="Personal Information">
+
+        <EditTextPreference
+            android:key="@string/email"
+            app:title="Email"
+            app:useSimpleSummaryProvider="true" />
+
+        <Preference
+            android:key="@string/password"
+            android:title="Change my password" />
+
+    </PreferenceCategory>
+
+    <PreferenceCategory app:title="App Preferences">
+
+        <SwitchPreferenceCompat
+            app:key="mode"
+            app:title="Night mode" />
+
+    </PreferenceCategory>
+
+</PreferenceScreen>
