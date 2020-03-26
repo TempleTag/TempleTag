@@ -69,6 +69,10 @@ public class TempleTagActivity extends AppCompatActivity {
                 startActivity(new Intent(TempleTagActivity.this, HomeActivity.class));
                 finish();
                 return true;
+            case R.id.account_setting:
+                startActivity(new Intent(TempleTagActivity.this, UserSettingActivity.class));
+                finish();
+                return true;
         }
 
         return false;
