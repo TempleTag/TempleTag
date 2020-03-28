@@ -7,4 +7,10 @@
         android:orderInCategory="100"
         android:title="Logout"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/account_setting"
+        android:orderInCategory="50"
+        android:title="My Account"
+        app:showAsAction="never" />
 </menu>

@@ -31,6 +31,7 @@ public class TempleTagActivity extends AppCompatActivity {
     private FirebaseAuth mAuth;
     private FirebaseUser firebaseUser;
     private DatabaseReference reference;
+    private String txt_username, txt_email;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -60,12 +61,13 @@ public class TempleTagActivity extends AppCompatActivity {
     }
 
     private void displayUsername(){
-        reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid()).child("username");
+        reference = FirebaseDatabase.getInstance().getReference("Users").child(firebaseUser.getUid());
 
         reference.addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(@NonNull DataSnapshot dataSnapshot) {
-                String txt_username = (String) dataSnapshot.getValue();
+                txt_username = (String) dataSnapshot.child("username").getValue();
+                txt_email = (String) dataSnapshot.child("email").getValue();
                 getSupportActionBar().setTitle("Welcome, " + txt_username);
             }
 
@@ -90,8 +92,15 @@ public class TempleTagActivity extends AppCompatActivity {
                 startActivity(new Intent(TempleTagActivity.this, HomeActivity.class));
                 finish();
                 return true;
+            case R.id.account_setting:
+                Bundle bundle = new Bundle();
+                bundle.putString("username", txt_username);
+                bundle.putString("email", txt_email);
+                Intent intent = new Intent(TempleTagActivity.this, UserSettingActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+                return true;
         }
-
         return false;
     }
 }
