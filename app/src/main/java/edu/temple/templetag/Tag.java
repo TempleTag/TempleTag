@@ -1,9 +1,12 @@
 package edu.temple.templetag;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 /**
  * Created by dilloncoffman on 2020-03-18
  */
-public class Tag {
+public class Tag implements Parcelable {
     private int mTagID;
     private int mTagDuration;
     private String mTagImageURI;
@@ -134,5 +137,24 @@ public class Tag {
 
     public void increaseTagMapMarkerSize() {
 
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeInt(mTagID);
+        dest.writeString(mTagImageURI);
+        dest.writeInt(mTagDuration);
+        dest.writeString(mTagDescription);
+        dest.writeDouble(mTagLocationLat);
+        dest.writeDouble(mTagLocationLong);
+        dest.writeInt(mTagUpvoteCount);
+        dest.writeInt(mTagDownvoteCount);
+        dest.writeInt(mTagPopularity);
+        dest.writeString(mTagCreatedBy);
     }
 }
