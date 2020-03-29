@@ -8,6 +8,7 @@ import android.os.Parcelable;
  */
 public class Tag implements Parcelable {
     private int mTagID;
+    private String mTagLocationName;
     private int mTagDuration;
     private String mTagImageURI;
     private String mTagDescription;
@@ -18,8 +19,9 @@ public class Tag implements Parcelable {
     private int mTagPopularity;
     private String mTagCreatedBy;
 
-    public Tag(int mTagID, int mTagDuration, String mTagImageURI, String mTagDescription, double mTagLocationLat, double mTagLocationLong, int mTagUpvoteCount, int mTagDownvoteCount, int mTagPopularity, String mTagCreatedBy) {
+    public Tag(int mTagID, String mTagLocationName, int mTagDuration, String mTagImageURI, String mTagDescription, double mTagLocationLat, double mTagLocationLong, int mTagUpvoteCount, int mTagDownvoteCount, int mTagPopularity, String mTagCreatedBy) {
         this.mTagID = mTagID;
+        this.mTagLocationName = mTagLocationName;
         this.mTagDuration = mTagDuration;
         this.mTagImageURI = mTagImageURI;
         this.mTagDescription = mTagDescription;
@@ -31,6 +33,31 @@ public class Tag implements Parcelable {
         this.mTagCreatedBy = mTagCreatedBy;
     }
 
+    protected Tag(Parcel in) {
+        mTagID = in.readInt();
+        mTagDuration = in.readInt();
+        mTagImageURI = in.readString();
+        mTagDescription = in.readString();
+        mTagLocationLat = in.readDouble();
+        mTagLocationLong = in.readDouble();
+        mTagUpvoteCount = in.readInt();
+        mTagDownvoteCount = in.readInt();
+        mTagPopularity = in.readInt();
+        mTagCreatedBy = in.readString();
+    }
+
+    public static final Creator<Tag> CREATOR = new Creator<Tag>() {
+        @Override
+        public Tag createFromParcel(Parcel in) {
+            return new Tag(in);
+        }
+
+        @Override
+        public Tag[] newArray(int size) {
+            return new Tag[size];
+        }
+    };
+
     public int getmTagID() {
         return mTagID;
     }
@@ -38,6 +65,15 @@ public class Tag implements Parcelable {
     public void setmTagID(int mTagID) {
         this.mTagID = mTagID;
     }
+
+    public String getmTagLocationName() {
+        return mTagLocationName;
+    }
+
+    public void setmTagLocationName(String mTagLocationName) {
+        this.mTagLocationName = mTagLocationName;
+    }
+
 
     public int getmTagDuration() {
         return mTagDuration;

@@ -26,4 +26,6 @@
     <string name="login_failed">"Login failed"</string>
     <string name="tag_name">Tag Location Name</string>
     <string name="tag_description">Tag Description...</string>
+    <string name="take_tag_picture">Take Tag Picture</string>
+    <string name="create_tag">Create Tag</string>
 </resources>

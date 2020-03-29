@@ -39,8 +39,8 @@ public class SignUpActivity extends AppCompatActivity {
         firebaseAuth = FirebaseAuth.getInstance();
 
         username = findViewById(R.id.username);
-        email = findViewById(R.id.tagLocationName);
-        password = findViewById(R.id.tagDescription);
+        email = findViewById(R.id.email);
+        password = findViewById(R.id.password);
 
         registerBtn = findViewById(R.id.registerBtn);
         registerBtn.setOnClickListener(new View.OnClickListener() {
