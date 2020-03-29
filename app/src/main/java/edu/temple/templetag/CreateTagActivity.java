@@ -2,9 +2,16 @@ package edu.temple.templetag;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.app.ActivityCompat;
 
+import android.Manifest;
+import android.annotation.SuppressLint;
 import android.content.Intent;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.location.Location;
+import android.location.LocationListener;
+import android.location.LocationManager;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -31,7 +38,7 @@ import java.util.UUID;
 public class CreateTagActivity extends AppCompatActivity {
     // New Tag
     private Tag newTag;
-    private int mTagID; // need to generate a unique tag ID for each tag
+    private String mTagID; // need to generate a unique tag ID for each tag
     private int mTagDuration; // something we set that's fixed
     private String mTagImage; // user has option to take a picture to represent the tag, otherwise we show no image (null)
     private String mTagDescription; // user sets when creating describing what's in the tag
@@ -44,9 +51,13 @@ public class CreateTagActivity extends AppCompatActivity {
     private String mTagCreatedBy; // name of user that created the tag
 
     // Firebase
-    private FirebaseUser firebaseUser;
+    private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+
+    // Location
+    LocationManager locationManager;
+    LocationListener locationListener;
 
     // Views
     private MaterialEditText tagLocationNameInput;
@@ -61,9 +72,9 @@ public class CreateTagActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         // Check if user is authenticated, otherwise redirect to LoginActivity
-        firebaseUser = firebaseAuth.getInstance().getCurrentUser();
+        Log.d(TAG, "onStart: " + firebaseUser.getDisplayName());
 
-        if (firebaseUser == null){
+        if (firebaseUser == null) {
             Intent loginIntent = new Intent(CreateTagActivity.this, LoginActivity.class);
             startActivity(loginIntent);
             finish();
@@ -81,6 +92,38 @@ public class CreateTagActivity extends AppCompatActivity {
         mTagImageView = findViewById(R.id.tagImage);
         takeTagPictureBtn = findViewById(R.id.takeTagPictureBtn);
         createTagBtn = findViewById(R.id.createTagBtn);
+
+        // Get currentUser's location using device permission
+        locationManager = getSystemService(LocationManager.class);
+        locationListener = new LocationListener() {
+            @Override
+            public void onLocationChanged(Location location) {
+                mTagLocationLatitude = location.getLatitude();
+                mTagLocationLongitude = location.getLongitude();
+            }
+
+            @Override
+            public void onStatusChanged(String provider, int status, Bundle extras) {
+
+            }
+
+            @Override
+            public void onProviderEnabled(String provider) {
+
+            }
+
+            @Override
+            public void onProviderDisabled(String provider) {
+
+            }
+        };
+
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 123);
+        } else {
+            showLocationUpdates();
+        }
+
 
         takeTagPictureBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -107,24 +150,25 @@ public class CreateTagActivity extends AppCompatActivity {
 
         HashMap<String, Object> newTagMap = new HashMap<>();
         newTagMap.put("id", newTag.getmTagID());
-        newTagMap.put("location_name", newTag.getmTagLocationName());
+        newTagMap.put("locationName", newTag.getmTagLocationName());
         newTagMap.put("description", newTag.getmTagDescription());
-        newTagMap.put("created_by", newTag.getmTagCreatedBy());
-        newTagMap.put("image_ref", newTag.getmTagImageURI());
-        newTagMap.put("location_lat", newTag.getmTagLocationLat());
-        newTagMap.put("location_long", newTag.getmTagLocationLong());
+        newTagMap.put("createdBy", newTag.getmTagCreatedBy());
+        newTagMap.put("imageRef", newTag.getmTagImageURI());
+        newTagMap.put("locationLat", newTag.getmTagLocationLat());
+        newTagMap.put("locationLong", newTag.getmTagLocationLong());
         newTagMap.put("popularityCount", newTag.getmTagPopularity());
         newTagMap.put("upvoteCount", newTag.getmTagUpvoteCount());
         newTagMap.put("downvoteCount", newTag.getmTagDownvoteCount());
         newTagMap.put("duration", newTag.getmTagDuration());
 
         // Save newTag to Firestore
-        firestore.collection("Users")
+        firestore.collection("Tags")
                 .add(newTagMap)
                 .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         createdInDatabase[0] = true;
+                        Toast.makeText(CreateTagActivity.this, "Created your Tag!", Toast.LENGTH_SHORT).show();
                         finish();
                     }
                 })
@@ -140,13 +184,11 @@ public class CreateTagActivity extends AppCompatActivity {
     }
 
     private void createTag() {
-        mTagID = Integer.parseInt(UUID.randomUUID().toString());
+        mTagID = UUID.randomUUID().toString();
         mTagDuration = 0; // TODO will need to use Date objects to generate a duration to check later to determine whether to delete tag or not
         mTagImage = "tag-image-storage-reference in FirebaseStorage use to retrieve to display in TagRecyclerViewFragment and anywhere else a tag's image needs to be shown" ; // TODO will need to figure out saving image to Firebase Storage and holding reference to where that image is stored here
         mTagLocationName = Objects.requireNonNull(tagLocationNameInput.getText()).toString();
         mTagDescription = Objects.requireNonNull(tagDescriptionInput.getText()).toString();
-        // mTagLocationLatitude = // TODO get current location information using LocationManager
-        // mTagLocationLongitude =
         mTagUpvoteCount = 0;
         mTagDownvoteCount = 0;
         mTagCreatedBy = firebaseUser.getDisplayName();
@@ -186,5 +228,21 @@ public class CreateTagActivity extends AppCompatActivity {
         // returns popularTag if there are other tags with the same location name
         return true;
         // returns false if there are no tags in the database with the same location name
+    }
+
+    // Location methods and necessary lifecycle callbacks
+    @Override
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults);
+        if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+            showLocationUpdates();
+        }
+    }
+
+    @SuppressLint("MissingPermission") // Already checking necessary permission before calling
+    private void showLocationUpdates() {
+        locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, this.locationListener); // GPS
+        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 10, this.locationListener); // Cell sites
+        locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0, 10, this.locationListener); // WiFi
     }
 }

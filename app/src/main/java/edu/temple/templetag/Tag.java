@@ -7,7 +7,7 @@ import android.os.Parcelable;
  * Created by dilloncoffman on 2020-03-18
  */
 public class Tag implements Parcelable {
-    private int mTagID;
+    private String mTagID;
     private String mTagLocationName;
     private int mTagDuration;
     private String mTagImageURI;
@@ -19,7 +19,7 @@ public class Tag implements Parcelable {
     private int mTagPopularity;
     private String mTagCreatedBy;
 
-    public Tag(int mTagID, String mTagLocationName, int mTagDuration, String mTagImageURI, String mTagDescription, double mTagLocationLat, double mTagLocationLong, int mTagUpvoteCount, int mTagDownvoteCount, int mTagPopularity, String mTagCreatedBy) {
+    public Tag(String mTagID, String mTagLocationName, int mTagDuration, String mTagImageURI, String mTagDescription, double mTagLocationLat, double mTagLocationLong, int mTagUpvoteCount, int mTagDownvoteCount, int mTagPopularity, String mTagCreatedBy) {
         this.mTagID = mTagID;
         this.mTagLocationName = mTagLocationName;
         this.mTagDuration = mTagDuration;
@@ -34,7 +34,7 @@ public class Tag implements Parcelable {
     }
 
     protected Tag(Parcel in) {
-        mTagID = in.readInt();
+        mTagID = in.readString();
         mTagDuration = in.readInt();
         mTagImageURI = in.readString();
         mTagDescription = in.readString();
@@ -58,11 +58,11 @@ public class Tag implements Parcelable {
         }
     };
 
-    public int getmTagID() {
+    public String getmTagID() {
         return mTagID;
     }
 
-    public void setmTagID(int mTagID) {
+    public void setmTagID(String mTagID) {
         this.mTagID = mTagID;
     }
 
@@ -182,7 +182,7 @@ public class Tag implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(mTagID);
+        dest.writeString(mTagID);
         dest.writeString(mTagImageURI);
         dest.writeInt(mTagDuration);
         dest.writeString(mTagDescription);
