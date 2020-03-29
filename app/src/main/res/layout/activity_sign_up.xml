@@ -52,7 +52,7 @@
             app:met_floatingLabel="normal" />
 
         <Button
-            android:id="@+id/btn_register"
+            android:id="@+id/registerBtn"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginTop="10dp"

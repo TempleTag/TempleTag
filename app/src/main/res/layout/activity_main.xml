@@ -1,46 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeActivity"
-    android:orientation="vertical"
-    android:gravity="center_vertical"
-    android:background="@mipmap/wp4813142">
+    tools:context=".HomeActivity">
 
-    <TextView
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/my_toolbar"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:fontFamily="monospace"
-        android:text="Welcome to TempleTag"
-        android:textColor="#FFFFFF"
-        android:gravity="center"
-        android:textSize="30sp"
-        android:textStyle="bold"/>
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/TempleTagTheme"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:titleTextColor="#FFFFFF"/>
 
-    <Button
-        android:id="@+id/btn_signup"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="163dp"
-        android:layout_marginTop="10dp"
-        android:background="@drawable/rounded"
-        android:textColor="#FFFFFF"
-        android:fontFamily="monospace"
-        android:text="SIGN UP"
-        android:textStyle="bold"/>
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_below="@id/my_toolbar"
+        android:id="@+id/mapContainer"/>
 
-    <Button
-        android:id="@+id/btn_login"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="163dp"
-        android:layout_marginTop="10dp"
-        android:textColor="#FFFFFF"
-        android:text="Login"
-        android:textStyle="bold"
-        android:background="@drawable/rounded"
-        android:fontFamily="monospace" />
-
-</LinearLayout>
+</RelativeLayout>
