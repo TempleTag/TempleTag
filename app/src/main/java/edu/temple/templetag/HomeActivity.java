@@ -19,6 +19,7 @@ import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.Toast;
 
 import edu.temple.templetag.fragments.MapFragment;
@@ -28,6 +29,8 @@ public class HomeActivity extends AppCompatActivity {
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private FirebaseFirestore firestore;
+    private FloatingActionButton createTagBtn;
+    private Intent createTagIntent;
     private String txt_username, txt_email;
 
     private static final String TAG = "HomeActivity";
@@ -39,8 +42,8 @@ public class HomeActivity extends AppCompatActivity {
         firebaseUser = firebaseAuth.getInstance().getCurrentUser();
 
         if (firebaseUser == null){
-            Intent intent = new Intent(HomeActivity.this, LoginActivity.class);
-            startActivity(intent);
+            Intent loginIntent = new Intent(HomeActivity.this, LoginActivity.class);
+            startActivity(loginIntent);
             finish();
         }
     }
@@ -51,6 +54,15 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
+
+        createTagBtn = findViewById(R.id.createTagBtn);
+
+        createTagBtn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startCreateTagActivity();
+            }
+        });
 
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
@@ -92,6 +104,11 @@ public class HomeActivity extends AppCompatActivity {
                         }
                     }
                 });
+    }
+
+    private void startCreateTagActivity() {
+        createTagIntent = new Intent(HomeActivity.this, CreateTagActivity.class);
+        startActivity(createTagIntent);
     }
 
     @Override
