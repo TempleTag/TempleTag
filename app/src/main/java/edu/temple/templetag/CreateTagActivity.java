@@ -2,7 +2,6 @@ package edu.temple.templetag;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.core.app.ActivityCompat;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -130,8 +129,9 @@ public class CreateTagActivity extends AppCompatActivity {
         takeTagPictureBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Handle Android Camera API work here
-                // Use Picasso to load the picture Bitmap taken into the mTagImageView
+                // TODO Handle Android Camera API work here
+                // TODO Use Picasso to load the picture Bitmap taken into the mTagImageView
+                Toast.makeText(CreateTagActivity.this, "Implement camera API and Firebase Storage to handle this feature.", Toast.LENGTH_LONG).show();
             }
         });
 
