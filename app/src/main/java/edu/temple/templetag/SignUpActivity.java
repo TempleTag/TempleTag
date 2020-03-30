@@ -5,6 +5,7 @@ import androidx.appcompat.app.AppCompatActivity;
 
 import android.content.Intent;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.Toast;
@@ -16,8 +17,7 @@ import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.AuthResult;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.database.FirebaseDatabase;
+import com.google.firebase.auth.UserProfileChangeRequest;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.rengwuxian.materialedittext.MaterialEditText;
@@ -32,6 +32,8 @@ public class SignUpActivity extends AppCompatActivity {
     private Button registerBtn;
     private String userId;
     private Intent homeIntent;
+
+    private static final String TAG = "SignUpActivity";
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -69,6 +71,7 @@ public class SignUpActivity extends AppCompatActivity {
             public void onComplete(@NonNull Task<AuthResult> task) {
                 if (task.isSuccessful()){
                     FirebaseUser firebaseUser = firebaseAuth.getCurrentUser();
+
                     userId = firebaseUser.getUid();
 
                     firestore = FirebaseFirestore.getInstance();
@@ -76,6 +79,26 @@ public class SignUpActivity extends AppCompatActivity {
                     newUser.put("id", userId);
                     newUser.put("username", username);
                     newUser.put("email", email);
+
+                    // Set FirebaseAuth user's display name to use when user creates a new tag
+                    UserProfileChangeRequest profileUpdates = new UserProfileChangeRequest.Builder()
+                            .setDisplayName(username)
+                            .build();
+                    firebaseUser.updateProfile(profileUpdates)
+                            .addOnCompleteListener(new OnCompleteListener<Void>() {
+                                @Override
+                                public void onComplete(@NonNull Task<Void> task) {
+                                    if (task.isSuccessful()) {
+                                        Log.d(TAG, "User profile updated.");
+                                    }
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d(TAG, "onFailure: Something went wrong changing FirebaseAuth user's display name: "+e);
+                                }
+                            });
 
                     firestore.collection("Users")
                             .add(newUser)

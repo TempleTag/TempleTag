@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".CreateTagActivity">
+
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/TempleTagTheme"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:title="Create a new Tag"
+        app:titleTextColor="#FFFFFF" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/tagLocationName"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="28dp"
+        android:layout_marginEnd="30dp"
+        android:fontFamily="monospace"
+        android:hint="@string/tag_name"
+        android:inputType="text"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/my_toolbar"
+        app:met_floatingLabel="normal"
+        app:met_floatingLabelTextColor="@color/TempleTagTheme"
+        app:met_textColorHint="@color/TempleTagTheme"
+        app:met_primaryColor="@color/TempleTagTheme"
+        app:met_underlineColor="@color/TempleTagTheme" />
+
+    <com.rengwuxian.materialedittext.MaterialEditText
+        android:id="@+id/tagDescription"
+        android:layout_width="match_parent"
+        android:layout_marginStart="30dp"
+        android:layout_marginTop="22dp"
+        android:layout_marginEnd="30dp"
+        android:fontFamily="monospace"
+        android:hint="@string/tag_description"
+        android:inputType="textMultiLine"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tagLocationName"
+        app:met_floatingLabel="normal"
+        app:met_floatingLabelTextColor="@color/TempleTagTheme"
+        app:met_textColorHint="@color/TempleTagTheme"
+        app:met_primaryColor="@color/TempleTagTheme"
+        app:met_underlineColor="@color/TempleTagTheme"
+        android:layout_height="100dp" />
+
+    <ImageView
+        android:id="@+id/tagImage"
+        android:layout_width="277dp"
+        android:layout_height="167dp"
+        android:layout_marginStart="67dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="67dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tagDescription"
+        app:srcCompat="@android:drawable/ic_menu_report_image" />
+
+    <Button
+        android:id="@+id/takeTagPictureBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="128dp"
+        android:layout_marginTop="30dp"
+        android:layout_marginEnd="129dp"
+        android:background="@color/TempleTagTheme"
+        android:fontFamily="monospace"
+        android:padding="10dp"
+        android:text="@string/take_tag_picture"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tagImage" />
+
+    <Button
+        android:id="@+id/createTagBtn"
+        android:layout_width="258dp"
+        android:layout_height="48dp"
+        android:layout_marginStart="76dp"
+        android:layout_marginTop="50dp"
+        android:layout_marginEnd="77dp"
+        android:background="@color/TempleTagTheme"
+        android:fontFamily="monospace"
+        android:padding="10dp"
+        android:text="@string/create_tag"
+        android:textColor="@color/white"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/takeTagPictureBtn" />
+
+</androidx.constraintlayout.widget.ConstraintLayout>

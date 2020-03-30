@@ -20,6 +20,24 @@
         android:layout_width="match_parent"
         android:layout_height="match_parent"
         android:layout_below="@id/my_toolbar"
-        android:id="@+id/mapContainer"/>
+        android:id="@+id/mapContainer">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/createTagBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginRight="30dp"
+            android:layout_marginBottom="30dp"
+            android:clickable="true"
+            app:fabSize="auto"
+            app:rippleColor="#FFFFFF"
+            app:backgroundTint="@color/TempleTagTheme"
+            app:fabCustomSize="70dp"
+            app:srcCompat="@drawable/ic_plus_white_48dp" />
+    </FrameLayout>
+
+
+
 
 </RelativeLayout>

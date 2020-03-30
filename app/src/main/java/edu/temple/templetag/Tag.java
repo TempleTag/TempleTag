@@ -7,8 +7,9 @@ import android.os.Parcelable;
  * Created by dilloncoffman on 2020-03-18
  */
 public class Tag implements Parcelable {
-    private int mTagID;
-    private int mTagDuration;
+    private String mTagID;
+    private String mTagLocationName;
+    private String mTagDuration;
     private String mTagImageURI;
     private String mTagDescription;
     private double mTagLocationLat;
@@ -18,8 +19,9 @@ public class Tag implements Parcelable {
     private int mTagPopularity;
     private String mTagCreatedBy;
 
-    public Tag(int mTagID, int mTagDuration, String mTagImageURI, String mTagDescription, double mTagLocationLat, double mTagLocationLong, int mTagUpvoteCount, int mTagDownvoteCount, int mTagPopularity, String mTagCreatedBy) {
+    public Tag(String mTagID, String mTagLocationName, String mTagDuration, String mTagImageURI, String mTagDescription, double mTagLocationLat, double mTagLocationLong, int mTagUpvoteCount, int mTagDownvoteCount, int mTagPopularity, String mTagCreatedBy) {
         this.mTagID = mTagID;
+        this.mTagLocationName = mTagLocationName;
         this.mTagDuration = mTagDuration;
         this.mTagImageURI = mTagImageURI;
         this.mTagDescription = mTagDescription;
@@ -31,19 +33,53 @@ public class Tag implements Parcelable {
         this.mTagCreatedBy = mTagCreatedBy;
     }
 
-    public int getmTagID() {
+    protected Tag(Parcel in) {
+        mTagID = in.readString();
+        mTagDuration = in.readString();
+        mTagImageURI = in.readString();
+        mTagDescription = in.readString();
+        mTagLocationLat = in.readDouble();
+        mTagLocationLong = in.readDouble();
+        mTagUpvoteCount = in.readInt();
+        mTagDownvoteCount = in.readInt();
+        mTagPopularity = in.readInt();
+        mTagCreatedBy = in.readString();
+    }
+
+    public static final Creator<Tag> CREATOR = new Creator<Tag>() {
+        @Override
+        public Tag createFromParcel(Parcel in) {
+            return new Tag(in);
+        }
+
+        @Override
+        public Tag[] newArray(int size) {
+            return new Tag[size];
+        }
+    };
+
+    public String getmTagID() {
         return mTagID;
     }
 
-    public void setmTagID(int mTagID) {
+    public void setmTagID(String mTagID) {
         this.mTagID = mTagID;
     }
 
-    public int getmTagDuration() {
+    public String getmTagLocationName() {
+        return mTagLocationName;
+    }
+
+    public void setmTagLocationName(String mTagLocationName) {
+        this.mTagLocationName = mTagLocationName;
+    }
+
+
+    public String getmTagDuration() {
         return mTagDuration;
     }
 
-    public void setmTagDuration(int mTagDuration) {
+    public void setmTagDuration(String mTagDuration) {
         this.mTagDuration = mTagDuration;
     }
 
@@ -146,9 +182,9 @@ public class Tag implements Parcelable {
 
     @Override
     public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(mTagID);
+        dest.writeString(mTagID);
         dest.writeString(mTagImageURI);
-        dest.writeInt(mTagDuration);
+        dest.writeString(mTagDuration);
         dest.writeString(mTagDescription);
         dest.writeDouble(mTagLocationLat);
         dest.writeDouble(mTagLocationLong);
