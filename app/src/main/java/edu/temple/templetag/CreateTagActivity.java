@@ -74,8 +74,6 @@ public class CreateTagActivity extends AppCompatActivity {
     protected void onStart() {
         super.onStart();
         // Check if user is authenticated, otherwise redirect to LoginActivity
-        Log.d(TAG, "onStart: " + firebaseUser.getDisplayName());
-
         if (firebaseUser == null) {
             Intent loginIntent = new Intent(CreateTagActivity.this, LoginActivity.class);
             startActivity(loginIntent);
@@ -230,7 +228,7 @@ public class CreateTagActivity extends AppCompatActivity {
                                 }
                             }
                         } else {
-                            Log.w(TAG, "Error getting documents but task completed", task.getException());
+                            Log.d(TAG, "Error getting documents but task completed", task.getException());
                             Toast.makeText(CreateTagActivity.this, "There was an error getting documents to compare", Toast.LENGTH_LONG).show();
                         }
                     }
@@ -238,7 +236,7 @@ public class CreateTagActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Failed to get data from Firestore database..", e);
+                        Log.d(TAG, "Failed to get data from Firestore database..", e);
                         Toast.makeText(CreateTagActivity.this, "Failed to get data from Firestore database..", Toast.LENGTH_LONG).show();
                     }
                 });
@@ -257,7 +255,7 @@ public class CreateTagActivity extends AppCompatActivity {
                                 }
                             }
                         } else {
-                            Log.w(TAG, "Error getting documents but task completed", task.getException());
+                            Log.d(TAG, "Error getting documents but task completed", task.getException());
                             Toast.makeText(CreateTagActivity.this, "There was an error getting documents to compare", Toast.LENGTH_LONG).show();
                         }
                     }
@@ -265,7 +263,7 @@ public class CreateTagActivity extends AppCompatActivity {
                 .addOnFailureListener(new OnFailureListener() {
                     @Override
                     public void onFailure(@NonNull Exception e) {
-                        Log.w(TAG, "Failed to get data from Firestore database..", e);
+                        Log.d(TAG, "Failed to get data from Firestore database..", e);
                         Toast.makeText(CreateTagActivity.this, "Failed to get data from Firestore database..", Toast.LENGTH_LONG).show();
                     }
                 });
