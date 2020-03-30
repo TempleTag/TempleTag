@@ -40,10 +40,6 @@ public class HomeActivity extends AppCompatActivity {
         super.onStart();
 
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
-        if (firebaseUser != null) {
-            Log.d(TAG, "onStart: "+firebaseUser.getDisplayName());
-        }
-
         if (firebaseUser == null){
             Intent loginIntent = new Intent(HomeActivity.this, LoginActivity.class);
             startActivity(loginIntent);

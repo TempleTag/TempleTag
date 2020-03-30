@@ -31,6 +31,9 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.rengwuxian.materialedittext.MaterialEditText;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.HashMap;
 import java.util.Objects;
 import java.util.UUID;
@@ -39,7 +42,7 @@ public class CreateTagActivity extends AppCompatActivity {
     // New Tag
     private Tag newTag;
     private String mTagID; // need to generate a unique tag ID for each tag
-    private int mTagDuration; // something we set that's fixed
+    private String mTagDuration; // current Date tag was created, used to compare two dates later to determine which Tags get deleted in the database and which don't
     private String mTagImage; // user has option to take a picture to represent the tag, otherwise we show no image (null)
     private String mTagDescription; // user sets when creating describing what's in the tag
     private String mTagLocationName; // user sets when creating, naming the tag location
@@ -47,7 +50,7 @@ public class CreateTagActivity extends AppCompatActivity {
     private double mTagLocationLongitude; // we set based off user's current location
     private int mTagUpvoteCount; // changes as other users upvote
     private int mTagDownvoteCount; // changes as other users downvote
-    private int mTagPopularity; // if multiple users tag the same location, we increase the marker size on the map using this field
+    private int mTagPopularity = 0; // if multiple users tag the same location, we increase the marker size on the map using this field
     private String mTagCreatedBy; // name of user that created the tag
 
     // Firebase
@@ -124,7 +127,6 @@ public class CreateTagActivity extends AppCompatActivity {
             showLocationUpdates();
         }
 
-
         takeTagPictureBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -140,7 +142,6 @@ public class CreateTagActivity extends AppCompatActivity {
                 createInDatabase();
             }
         });
-
     }
 
     private boolean createInDatabase() {
@@ -184,9 +185,15 @@ public class CreateTagActivity extends AppCompatActivity {
     }
 
     private void createTag() {
+        // Get date tag was created
+        Date c = Calendar.getInstance().getTime();
+        System.out.println("Current time => " + c);
+        SimpleDateFormat df = new SimpleDateFormat("MMM-dd-yyyy");
+        String formattedDate = df.format(c);
+
         mTagID = UUID.randomUUID().toString();
-        mTagDuration = 0; // TODO will need to use Date objects to generate a duration to check later to determine whether to delete tag or not
-        mTagImage = "tag-image-storage-reference in FirebaseStorage use to retrieve to display in TagRecyclerViewFragment and anywhere else a tag's image needs to be shown" ; // TODO will need to figure out saving image to Firebase Storage and holding reference to where that image is stored here
+        mTagDuration = formattedDate;
+        mTagImage = "tag-image-storage-reference" ; // TODO Figure out saving an image to Firebase Storage and holding reference to where that image is stored in Firestore
         mTagLocationName = Objects.requireNonNull(tagLocationNameInput.getText()).toString();
         mTagDescription = Objects.requireNonNull(tagDescriptionInput.getText()).toString();
         mTagUpvoteCount = 0;
@@ -204,10 +211,11 @@ public class CreateTagActivity extends AppCompatActivity {
         }
     }
 
-    // Checks if other tags already exist at a certain location name, increasing the newTag's popularity and in turn, it's map marker size
+    // Checks if other tags already exist at a certain location name, which increases the newTag's popularity and updates the popularityCount for all other tags at the same location
+    // The popularityCount field will the tag's map marker size when we pull in tags from the Firestore database and pass them to the MapFragment
     private boolean checkCollation() {
-        boolean popularTag = false;
-        // Query using get() on firestore, increment private field mTagPopularity for each one that matches in DB
+        final boolean[] popularTag = {false};
+        // Query Firestore - increment private field mTagPopularity for each tag that matches the new tag's location name in Firestore database
         firestore.collection("Tags")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -215,19 +223,54 @@ public class CreateTagActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                // TODO Search firestore database for if other tag exists from same user set location name, if so increment our private field mTagPopularity that will be used later to create a new tag
+                                if (document.getData().get("locationName").equals(mTagLocationName)) {
+                                    Log.d(TAG, "onComplete: " + document.getData().get("locationName") + " was equal to new tag's location: " + mTagLocationName);
+                                    popularTag[0] = true;
+                                    mTagPopularity += 1; // if there were other tags in the database with the same locationName, increment tag's popularity rank
+                                }
                             }
                         } else {
-                            Log.w(TAG, "Error getting documents.", task.getException());
-                            // TODO adjust toast message to be user friendly
-                            Toast.makeText(CreateTagActivity.this, "Error fetching tags from database to check collation..", Toast.LENGTH_LONG).show();
+                            Log.w(TAG, "Error getting documents but task completed", task.getException());
+                            Toast.makeText(CreateTagActivity.this, "There was an error getting documents to compare", Toast.LENGTH_LONG).show();
                         }
                     }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Failed to get data from Firestore database..", e);
+                        Toast.makeText(CreateTagActivity.this, "Failed to get data from Firestore database..", Toast.LENGTH_LONG).show();
+                    }
                 });
-        // returns popularTag if there are other tags with the same location name
-        return true;
-        // returns false if there are no tags in the database with the same location name
+
+        // Query Firestore - update each tag that was equal to new tag's location's popularity to have same popularityCount
+        firestore.collection("Tags")
+                .get()
+                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                    @Override
+                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                        if (task.isSuccessful()) {
+                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                if (document.getData().get("locationName").equals(mTagLocationName)) {
+                                    // Update specific tags with same location name as new tag's location popularity ranking
+                                    firestore.collection("Tags").document(document.getId()).update("popularityCount", mTagPopularity);
+                                }
+                            }
+                        } else {
+                            Log.w(TAG, "Error getting documents but task completed", task.getException());
+                            Toast.makeText(CreateTagActivity.this, "There was an error getting documents to compare", Toast.LENGTH_LONG).show();
+                        }
+                    }
+                })
+                .addOnFailureListener(new OnFailureListener() {
+                    @Override
+                    public void onFailure(@NonNull Exception e) {
+                        Log.w(TAG, "Failed to get data from Firestore database..", e);
+                        Toast.makeText(CreateTagActivity.this, "Failed to get data from Firestore database..", Toast.LENGTH_LONG).show();
+                    }
+                });
+
+        return popularTag[0];
     }
 
     // Location methods and necessary lifecycle callbacks
@@ -239,7 +282,7 @@ public class CreateTagActivity extends AppCompatActivity {
         }
     }
 
-    @SuppressLint("MissingPermission") // Already checking necessary permission before calling
+    @SuppressLint("MissingPermission") // Already checking necessary permission before calling requestLocationUpdates
     private void showLocationUpdates() {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, this.locationListener); // GPS
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 10, this.locationListener); // Cell sites

@@ -9,7 +9,7 @@ import android.os.Parcelable;
 public class Tag implements Parcelable {
     private String mTagID;
     private String mTagLocationName;
-    private int mTagDuration;
+    private String mTagDuration;
     private String mTagImageURI;
     private String mTagDescription;
     private double mTagLocationLat;
@@ -19,7 +19,7 @@ public class Tag implements Parcelable {
     private int mTagPopularity;
     private String mTagCreatedBy;
 
-    public Tag(String mTagID, String mTagLocationName, int mTagDuration, String mTagImageURI, String mTagDescription, double mTagLocationLat, double mTagLocationLong, int mTagUpvoteCount, int mTagDownvoteCount, int mTagPopularity, String mTagCreatedBy) {
+    public Tag(String mTagID, String mTagLocationName, String mTagDuration, String mTagImageURI, String mTagDescription, double mTagLocationLat, double mTagLocationLong, int mTagUpvoteCount, int mTagDownvoteCount, int mTagPopularity, String mTagCreatedBy) {
         this.mTagID = mTagID;
         this.mTagLocationName = mTagLocationName;
         this.mTagDuration = mTagDuration;
@@ -35,7 +35,7 @@ public class Tag implements Parcelable {
 
     protected Tag(Parcel in) {
         mTagID = in.readString();
-        mTagDuration = in.readInt();
+        mTagDuration = in.readString();
         mTagImageURI = in.readString();
         mTagDescription = in.readString();
         mTagLocationLat = in.readDouble();
@@ -75,11 +75,11 @@ public class Tag implements Parcelable {
     }
 
 
-    public int getmTagDuration() {
+    public String getmTagDuration() {
         return mTagDuration;
     }
 
-    public void setmTagDuration(int mTagDuration) {
+    public void setmTagDuration(String mTagDuration) {
         this.mTagDuration = mTagDuration;
     }
 
@@ -184,7 +184,7 @@ public class Tag implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(mTagID);
         dest.writeString(mTagImageURI);
-        dest.writeInt(mTagDuration);
+        dest.writeString(mTagDuration);
         dest.writeString(mTagDescription);
         dest.writeDouble(mTagLocationLat);
         dest.writeDouble(mTagLocationLong);
