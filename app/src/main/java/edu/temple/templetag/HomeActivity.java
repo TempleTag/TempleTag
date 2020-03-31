@@ -92,10 +92,13 @@ public class HomeActivity extends AppCompatActivity {
                     public void onComplete(@NonNull Task<QuerySnapshot> task) {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
-                                Log.d(TAG, document.getId() + " => " + document.getData());
-                                txt_username = (String) document.getData().get("username");
-                                txt_email = (String) document.getData().get("email");
-                                getSupportActionBar().setTitle("Welcome, " + txt_username);
+                                if (document.getData().get("id").equals(firebaseUser.getUid())) {
+                                    Log.d(TAG, document.getId() + " => " + document.getData());
+                                    txt_username = (String) document.getData().get("username");
+                                    txt_email = (String) document.getData().get("email");
+                                    getSupportActionBar().setTitle("Welcome, " + txt_username);
+                                    break;
+                                }
                             }
                         } else {
                             Log.w(TAG, "Error getting documents.", task.getException());
