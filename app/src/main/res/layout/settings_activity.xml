@@ -14,20 +14,24 @@
         android:textSize="35sp"
         android:textStyle="bold"
         android:fontFamily="monospace"
-        android:layout_marginTop="100dp"/>
+        android:layout_marginTop="50dp"/>
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/username"
         android:id="@+id/change_username"
+        android:textSize="20sp"
         android:fontFamily="monospace"
         android:text="Change username"/>
 
     <FrameLayout
+        android:id="@+id/setting_container"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:layout_below="@+id/change_username"
-        android:id="@+id/setting_container"/>
+        android:layout_height="wrap_content" />
+
+    <FrameLayout
+        android:id="@+id/tagContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
 
 </LinearLayout>

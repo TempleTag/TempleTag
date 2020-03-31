@@ -13,6 +13,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -63,10 +64,6 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        firebaseAuth = FirebaseAuth.getInstance();
-        firebaseUser = firebaseAuth.getCurrentUser();
-        displayUsername();
-
         // Attach mapFragment
         MapFragment mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag("mapfragment");
         if (null != mapFragment){
@@ -82,7 +79,7 @@ public class HomeActivity extends AppCompatActivity {
         }
     }
 
-    private void displayUsername(){
+    private void displayUserInfo(){
         firestore = FirebaseFirestore.getInstance();
 
         firestore.collection("Users")
@@ -137,5 +134,17 @@ public class HomeActivity extends AppCompatActivity {
                 return true;
         }
         return false;
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+        firebaseAuth = FirebaseAuth.getInstance();
+        firebaseUser = firebaseAuth.getCurrentUser();
+
+        if (firebaseUser != null){
+            displayUserInfo();
+        }
     }
 }

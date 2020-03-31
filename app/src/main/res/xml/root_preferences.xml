@@ -14,12 +14,4 @@
 
     </PreferenceCategory>
 
-    <PreferenceCategory app:title="App Preferences">
-
-        <SwitchPreferenceCompat
-            app:key="mode"
-            app:title="Night mode" />
-
-    </PreferenceCategory>
-
 </PreferenceScreen>
