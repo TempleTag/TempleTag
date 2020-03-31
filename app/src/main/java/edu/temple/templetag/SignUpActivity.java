@@ -100,22 +100,20 @@ public class SignUpActivity extends AppCompatActivity {
                                 }
                             });
 
-                    firestore.collection("Users")
-                            .add(newUser)
-                            .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
-                                @Override
-                                public void onSuccess(DocumentReference documentReference) {
-                                    startHomeActivity();
-                                    finish();
-                                }
-                            })
-                            .addOnFailureListener(new OnFailureListener() {
-                                @Override
-                                public void onFailure(@NonNull Exception e) {
-                                    Toast.makeText(SignUpActivity.this, "Something went wrong! Please try again.", Toast.LENGTH_LONG).show();
-                                    finish();
-                                }
-                            });
+                    firestore.collection("Users").document(firebaseUser.getUid())
+                            .set(newUser).addOnSuccessListener(new OnSuccessListener<Void>() {
+                        @Override
+                        public void onSuccess(Void aVoid) {
+                            startHomeActivity();
+                            finish();
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Toast.makeText(SignUpActivity.this, "Something went wrong! Please try again.", Toast.LENGTH_LONG).show();
+                            finish();
+                        }
+                    });
                 } else {
                     Toast.makeText(SignUpActivity.this, "You can't register with this email or password", Toast.LENGTH_SHORT).show();
                 }

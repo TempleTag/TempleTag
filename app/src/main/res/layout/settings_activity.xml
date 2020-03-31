@@ -14,7 +14,7 @@
         android:textSize="35sp"
         android:textStyle="bold"
         android:fontFamily="monospace"
-        android:layout_marginTop="50dp"/>
+        android:layout_marginTop="40dp"/>
 
     <TextView
         android:layout_width="wrap_content"
@@ -24,14 +24,63 @@
         android:fontFamily="monospace"
         android:text="Change username"/>
 
-    <FrameLayout
-        android:id="@+id/setting_container"
+    <TextView
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="Your email"
+        android:textSize="15dp"
+        android:fontFamily="monospace"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/white"
+        android:layout_marginLeft="10dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/emailTextView"
+        android:text="myemail"
+        android:textSize="15dp"
+        android:fontFamily="monospace"
+        android:layout_marginLeft="10dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Your Tag Count"
+        android:textSize="15dp"
+        android:fontFamily="monospace"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/white"
+        android:layout_marginLeft="10dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tagCount"
+        android:text="#"
+        android:textSize="15dp"
+        android:fontFamily="monospace"
+        android:layout_marginLeft="10dp"/>
 
     <FrameLayout
-        android:id="@+id/tagContainer"
+        android:id="@+id/tagListContainer"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center|bottom">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Log Out"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:fontFamily="monospace"
+            android:background="@drawable/rounded"
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="center|bottom"
+            android:id="@+id/btn_lougout"/>
+    </LinearLayout>
 
 </LinearLayout>

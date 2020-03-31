@@ -23,6 +23,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.Toast;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import edu.temple.templetag.fragments.MapFragment;
 
 public class HomeActivity extends AppCompatActivity {
@@ -77,6 +78,20 @@ public class HomeActivity extends AppCompatActivity {
                     .add(R.id.mapContainer, mapFragment,"mapfragment")
                     .commit();
         }
+
+        //Profile On CLick
+        CircleImageView profile = findViewById(R.id.userProfile);
+        profile.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Bundle bundle = new Bundle();
+                bundle.putString("username", txt_username);
+                bundle.putString("email", txt_email);
+                Intent intent = new Intent(HomeActivity.this, UserSettingActivity.class);
+                intent.putExtras(bundle);
+                startActivity(intent);
+            }
+        });
     }
 
     private void displayUserInfo(){
@@ -108,32 +123,6 @@ public class HomeActivity extends AppCompatActivity {
     private void startCreateTagActivity() {
         createTagIntent = new Intent(HomeActivity.this, CreateTagActivity.class);
         startActivity(createTagIntent);
-    }
-
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_main, menu);
-        return true;
-    }
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.logout:
-                FirebaseAuth.getInstance().signOut();
-                startActivity(new Intent(HomeActivity.this, LoginActivity.class));
-                finish();
-                return true;
-            case R.id.account_setting:
-                Bundle bundle = new Bundle();
-                bundle.putString("username", txt_username);
-                bundle.putString("email", txt_email);
-                Intent intent = new Intent(HomeActivity.this, UserSettingActivity.class);
-                intent.putExtras(bundle);
-                startActivity(intent);
-                return true;
-        }
-        return false;
     }
 
     @Override
