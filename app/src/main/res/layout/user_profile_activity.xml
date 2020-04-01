@@ -1,0 +1,86 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:gravity="center_horizontal"
+    android:orientation="vertical">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="@color/TempleTagTheme"
+        android:id="@+id/username"
+        android:text="User1224"
+        android:textSize="35sp"
+        android:textStyle="bold"
+        android:fontFamily="monospace"
+        android:layout_marginTop="40dp"/>
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/change_username"
+        android:textSize="20sp"
+        android:fontFamily="monospace"
+        android:text="Change username"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Your email"
+        android:textSize="15dp"
+        android:fontFamily="monospace"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/white"
+        android:layout_marginLeft="10dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/emailTextView"
+        android:text="myemail"
+        android:textSize="15dp"
+        android:fontFamily="monospace"
+        android:layout_marginLeft="10dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Your Tag Count"
+        android:textSize="15dp"
+        android:fontFamily="monospace"
+        android:layout_marginTop="20dp"
+        android:textColor="@color/white"
+        android:layout_marginLeft="10dp"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tagCount"
+        android:text="#"
+        android:textSize="15dp"
+        android:fontFamily="monospace"
+        android:layout_marginLeft="10dp"/>
+
+    <FrameLayout
+        android:id="@+id/tagListContainer"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center|bottom">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Log Out"
+            android:textColor="@color/white"
+            android:textStyle="bold"
+            android:fontFamily="monospace"
+            android:background="@drawable/rounded"
+            android:layout_marginBottom="10dp"
+            android:layout_gravity="center|bottom"
+            android:id="@+id/btn_logout"/>
+    </LinearLayout>
+
+</LinearLayout>
