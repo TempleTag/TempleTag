@@ -80,7 +80,7 @@
             android:background="@drawable/rounded"
             android:layout_marginBottom="10dp"
             android:layout_gravity="center|bottom"
-            android:id="@+id/btn_lougout"/>
+            android:id="@+id/btn_logout"/>
     </LinearLayout>
 
 </LinearLayout>
