@@ -25,6 +25,10 @@ public class User implements Comparable<User>, Parcelable {
         mDistanceToCurrentUser = in.readFloat();
     }
 
+    public User(){
+
+    }
+
     public static final Creator<User> CREATOR = new Creator<User>() {
         @Override
         public User createFromParcel(Parcel in) {
