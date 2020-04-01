@@ -1,10 +1,12 @@
 package edu.temple.templetag.adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageButton;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -15,11 +17,12 @@ import java.util.ArrayList;
 
 import edu.temple.templetag.R;
 import edu.temple.templetag.Tag;
-import io.opencensus.tags.Tags;
+import edu.temple.templetag.TagDetailActivity;
 
 public class TagRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     Context context;
     ArrayList<Tag> Tags;
+    public static final String SELECTED_TAG = "theTag";
 
     public TagRecyclerViewAdapter(Context context, ArrayList<Tag> Tags){
         this.context = context;
@@ -41,7 +44,7 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     }
 
     @Override
-    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         ((TagView)holder).tagName.setText(Tags.get(position).getmTagLocationName());
         ((TagView)holder).tagDesc.setText(Tags.get(position).getmTagDescription());
         ((TagView)holder).tagPop.setText(Tags.get(position).getmTagPopularity() + " people are talking about this.");
@@ -59,6 +62,13 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             }
         });
 
+        ((TagView)holder).tagItemLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                //When tag is selected
+            }
+        });
+
 
     }
 
@@ -71,6 +81,7 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         de.hdodenhof.circleimageview.CircleImageView tagImgView;
         TextView tagName, tagDesc, tagPop;
         ImageButton tagUp, tagDown;
+        RelativeLayout tagItemLayout;
 
         public TagView(@NonNull View itemView) {
             super(itemView);
@@ -80,6 +91,7 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             tagPop = itemView.findViewById(R.id.tag_popularity);
             tagUp = itemView.findViewById(R.id.tag_up_vote);
             tagDown = itemView.findViewById(R.id.tag_down_vote);
+            tagItemLayout = itemView.findViewById(R.id.tagItemLayout);
         }
     }
 }
