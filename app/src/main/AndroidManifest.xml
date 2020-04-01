@@ -31,7 +31,7 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".UserSettingActivity"
+            android:name=".UserProfileActivity"
             android:theme="@style/Theme.AppCompat" />
 
         <meta-data
