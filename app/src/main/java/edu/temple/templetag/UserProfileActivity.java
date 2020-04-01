@@ -41,7 +41,7 @@ public class UserProfileActivity extends AppCompatActivity {
 
         displayInfo();
 
-        findViewById(R.id.btn_lougout).setOnClickListener(new View.OnClickListener() {
+        findViewById(R.id.btn_logout).setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 FirebaseAuth.getInstance().signOut();
