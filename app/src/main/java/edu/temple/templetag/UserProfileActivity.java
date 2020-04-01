@@ -85,19 +85,6 @@ public class UserProfileActivity extends AppCompatActivity {
                 builder.show();
             }
         });
-
-        TagRecyclerViewFragment fragment = (TagRecyclerViewFragment) getSupportFragmentManager().findFragmentByTag("taglist");
-        if (fragment != null){
-            getSupportFragmentManager().beginTransaction()
-                    .remove(fragment)
-                    .add(R.id.tagListContainer, TagRecyclerViewFragment.newInstance("Hello", "From UserSetting"), "taglist")
-                    .commit();
-        } else {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.tagListContainer, TagRecyclerViewFragment.newInstance("Hello", "From UserSetting"), "taglist")
-                    .commit();
-        }
-
     }
 
     @Override

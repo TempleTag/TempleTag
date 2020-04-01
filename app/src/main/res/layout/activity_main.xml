@@ -27,7 +27,7 @@
 
     <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="350dp"
         android:layout_below="@id/my_toolbar"
         android:id="@+id/mapContainer">
 
@@ -36,17 +36,23 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_gravity="bottom|end"
-            android:layout_marginRight="30dp"
-            android:layout_marginBottom="30dp"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
             android:clickable="true"
             app:fabSize="auto"
             app:rippleColor="#FFFFFF"
             app:backgroundTint="@color/TempleTagTheme"
             app:fabCustomSize="70dp"
-            app:srcCompat="@drawable/ic_plus_white_48dp" />
+            app:srcCompat="@drawable/ic_plus_white_48dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"/>
     </FrameLayout>
 
-
-
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/mapContainer"
+        android:layout_alignParentBottom="true"
+        android:id="@+id/tag_recycler_fragment_container"/>
 
 </RelativeLayout>
