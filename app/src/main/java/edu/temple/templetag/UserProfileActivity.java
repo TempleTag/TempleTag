@@ -124,11 +124,6 @@ public class UserProfileActivity extends AppCompatActivity {
         email_textview = findViewById(R.id.emailTextView);
         email_textview.setText(txt_email);
         tagcount_textview = findViewById(R.id.tagCount);
-        tagcount_textview.setText(getTagCount() + " active tags");
-    }
-
-    private int getTagCount(){
-        return Tags.size();
     }
 
     private void displayMyTagListFragment() {
@@ -162,6 +157,9 @@ public class UserProfileActivity extends AppCompatActivity {
                                     Tags.add(tag);
                                 }
                             }
+                            //Update active tags
+                            tagcount_textview.setText(Tags.size() + " active tags");
+
                             //Create tag recycler list fragment after fetching tags
                             tagRecyclerViewFragment = (TagRecyclerViewFragment) getSupportFragmentManager().findFragmentByTag(TAG_LIST_FRAGMENT);
                             if (null != tagRecyclerViewFragment) {
