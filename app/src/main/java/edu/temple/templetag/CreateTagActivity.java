@@ -51,6 +51,7 @@ public class CreateTagActivity extends AppCompatActivity {
     private int mTagDownvoteCount; // changes as other users downvote
     private int mTagPopularity = 0; // if multiple users tag the same location, we increase the marker size on the map using this field
     private String mTagCreatedBy; // name of user that created the tag
+    private String mTagCreatedById;
 
     // Firebase
     private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
@@ -159,6 +160,7 @@ public class CreateTagActivity extends AppCompatActivity {
         newTagMap.put("upvoteCount", newTag.getmTagUpvoteCount());
         newTagMap.put("downvoteCount", newTag.getmTagDownvoteCount());
         newTagMap.put("duration", newTag.getmTagDuration());
+        newTagMap.put("createdById", newTag.getmTagCreatedById());
 
         // Save newTag to Firestore
         firestore.collection("Tags")
@@ -197,15 +199,16 @@ public class CreateTagActivity extends AppCompatActivity {
         mTagUpvoteCount = 0;
         mTagDownvoteCount = 0;
         mTagCreatedBy = firebaseUser.getDisplayName();
+        mTagCreatedById = firebaseUser.getUid();
 
         if (checkCollation()) {
             // Tags at same location name exist
             newTag = new Tag(mTagID, mTagLocationName, mTagDuration, mTagImage, mTagDescription, mTagLocationLatitude,
-                    mTagLocationLongitude, mTagUpvoteCount, mTagDownvoteCount, mTagPopularity, mTagCreatedBy);
+                    mTagLocationLongitude, mTagUpvoteCount, mTagDownvoteCount, mTagPopularity, mTagCreatedBy, mTagCreatedById);
         } else {
             // A tag at this location name does not exist
             newTag = new Tag(mTagID, mTagLocationName, mTagDuration, mTagImage, mTagDescription, mTagLocationLatitude,
-                    mTagLocationLongitude, mTagUpvoteCount, mTagDownvoteCount, mTagPopularity, mTagCreatedBy);
+                    mTagLocationLongitude, mTagUpvoteCount, mTagDownvoteCount, mTagPopularity, mTagCreatedBy, mTagCreatedById);
         }
     }
 
