@@ -280,7 +280,7 @@ public class HomeActivity extends AppCompatActivity {
                                     tagRecyclerViewFragment = TagRecyclerViewFragment.newInstance(Tags);
                                     getSupportFragmentManager().beginTransaction()
                                             .add(R.id.tag_recycler_fragment_container, tagRecyclerViewFragment, TAG_LIST_FRAGMENT)
-                                            .commit();
+                                            .commitAllowingStateLoss();
                                 }
                                 //Update map
                                 runOnUiThread(new Thread(new Runnable() {
