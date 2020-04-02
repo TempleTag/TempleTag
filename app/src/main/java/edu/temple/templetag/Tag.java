@@ -18,8 +18,9 @@ public class Tag implements Parcelable {
     private int mTagDownvoteCount;
     private int mTagPopularity;
     private String mTagCreatedBy;
+    private String mTagCreatedById;
 
-    public Tag(String mTagID, String mTagLocationName, String mTagDuration, String mTagImageURI, String mTagDescription, double mTagLocationLat, double mTagLocationLong, int mTagUpvoteCount, int mTagDownvoteCount, int mTagPopularity, String mTagCreatedBy) {
+    public Tag(String mTagID, String mTagLocationName, String mTagDuration, String mTagImageURI, String mTagDescription, double mTagLocationLat, double mTagLocationLong, int mTagUpvoteCount, int mTagDownvoteCount, int mTagPopularity, String mTagCreatedBy, String mTagCreatedById) {
         this.mTagID = mTagID;
         this.mTagLocationName = mTagLocationName;
         this.mTagDuration = mTagDuration;
@@ -31,6 +32,7 @@ public class Tag implements Parcelable {
         this.mTagDownvoteCount = mTagDownvoteCount;
         this.mTagPopularity = mTagPopularity;
         this.mTagCreatedBy = mTagCreatedBy;
+        this.mTagCreatedById = mTagCreatedById;
     }
 
     protected Tag(Parcel in) {
@@ -44,6 +46,7 @@ public class Tag implements Parcelable {
         mTagDownvoteCount = in.readInt();
         mTagPopularity = in.readInt();
         mTagCreatedBy = in.readString();
+        mTagCreatedById = in.readString();
     }
 
     public static final Creator<Tag> CREATOR = new Creator<Tag>() {
@@ -147,6 +150,14 @@ public class Tag implements Parcelable {
         this.mTagCreatedBy = mTagCreatedBy;
     }
 
+    public String getmTagCreatedById(){
+        return this.mTagCreatedById;
+    }
+
+    public void setmTagCreatedById(String mTagCreatedById){
+        this.mTagCreatedById= mTagCreatedById;
+    }
+
     @Override
     public String toString() {
         return "Tag{" +
@@ -192,5 +203,6 @@ public class Tag implements Parcelable {
         dest.writeInt(mTagDownvoteCount);
         dest.writeInt(mTagPopularity);
         dest.writeString(mTagCreatedBy);
+        dest.writeString(mTagCreatedById);
     }
 }
