@@ -112,6 +112,13 @@ public class HomeActivity extends AppCompatActivity {
         //Check permission and display tags
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 123);
+        } else {
+            //fetch Tags
+            if (timerRef == null) {
+                Timer timer = new Timer();
+                timerRef = timer;
+                timer.schedule(new fetchTag(), 0, RELOAD_TIME);
+            }
         }
 
         // Get currentUser's location using device permission
@@ -135,8 +142,7 @@ public class HomeActivity extends AppCompatActivity {
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                currentLocation.setLatitude(location.getLatitude());
-                currentLocation.setLongitude(location.getLongitude());
+                currentLocation = location;
             }
 
             @Override
@@ -190,14 +196,6 @@ public class HomeActivity extends AppCompatActivity {
     @Override
     protected void onResume() {
         super.onResume();
-
-        //fetch Tags
-        if (timerRef == null) {
-            Timer timer = new Timer();
-            timerRef = timer;
-            timer.schedule(new fetchTag(), 0, RELOAD_TIME);
-        }
-
         firebaseAuth = FirebaseAuth.getInstance();
         firebaseUser = firebaseAuth.getCurrentUser();
 
@@ -211,6 +209,12 @@ public class HomeActivity extends AppCompatActivity {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
             getLastKnownLocation();
+            //fetch Tags
+            if (timerRef == null) {
+                Timer timer = new Timer();
+                timerRef = timer;
+                timer.schedule(new fetchTag(), 0, RELOAD_TIME);
+            }
             showLocationUpdates();
         }
     }
@@ -260,38 +264,38 @@ public class HomeActivity extends AppCompatActivity {
                                         int mTagDownvoteCount = Integer.valueOf(document.getData().get("downvoteCount").toString()); // changes as other users downvote
                                         int mTagPopularity = Integer.valueOf(document.getData().get("popularityCount").toString()); // if multiple users tag the same location, we increase the marker size on the map using this field
                                         String mTagCreatedBy = document.getData().get("createdBy").toString(); // name of user that created the tag
+                                        String mTagCreatedById = document.getData().get("createdById").toString();
+
                                         Tag tag = new Tag(mTagID, mTagLocationName, mTagDuration, mTagImage, mTagDescription, mTagLocationLatitude,
-                                                mTagLocationLongitude, mTagUpvoteCount, mTagDownvoteCount, mTagPopularity, mTagCreatedBy);
+                                                mTagLocationLongitude, mTagUpvoteCount, mTagDownvoteCount, mTagPopularity, mTagCreatedBy, mTagCreatedById);
                                         Tags.add(tag);
-                                        Log.d("tag", tag.getmTagLocationName());
                                     }
                                 }
+
+                                //Create a tag recycler list fragment after fetching tags
+                                tagRecyclerViewFragment = (TagRecyclerViewFragment) getSupportFragmentManager().findFragmentByTag(TAG_LIST_FRAGMENT);
+                                if (null != tagRecyclerViewFragment) {
+                                    tagRecyclerViewFragment.updateDataSet(Tags);
+                                } else {
+                                    tagRecyclerViewFragment = TagRecyclerViewFragment.newInstance(Tags);
+                                    getSupportFragmentManager().beginTransaction()
+                                            .add(R.id.tag_recycler_fragment_container, tagRecyclerViewFragment, TAG_LIST_FRAGMENT)
+                                            .commit();
+                                }
+                                //Update map
+                                runOnUiThread(new Thread(new Runnable() {
+                                    public void run() {
+                                        mapFragment.displayMarkers(Tags, currentLocation);
+                                    }
+                                }));
                             } else {
                                 Log.w(TAG, "Error getting documents.", task.getException());
                                 Toast.makeText(HomeActivity.this, "Error getting Tags", Toast.LENGTH_LONG).show();
                             }
                         }
                     });
-                    runOnUiThread(new Thread(new Runnable() {
-                        public void run() {
-                            mapFragment.displayMarkers(Tags, currentLocation);
-                            updateTagRecyclerView(Tags);
-                        }
-                    }));
                 }
             }.start();
-        }
-    }
-
-    private void updateTagRecyclerView(ArrayList<Tag> Tags){
-        tagRecyclerViewFragment = (TagRecyclerViewFragment) getSupportFragmentManager().findFragmentByTag(TAG_LIST_FRAGMENT);
-        if (null != tagRecyclerViewFragment) {
-            tagRecyclerViewFragment.updateDataSet(Tags);
-        } else {
-            tagRecyclerViewFragment = TagRecyclerViewFragment.newInstance(Tags);
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.tag_recycler_fragment_container, tagRecyclerViewFragment, TAG_LIST_FRAGMENT)
-                    .commit();
         }
     }
 }

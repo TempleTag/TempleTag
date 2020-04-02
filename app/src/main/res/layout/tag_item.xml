@@ -7,8 +7,8 @@
     android:id="@+id/tagItemLayout">
 
     <de.hdodenhof.circleimageview.CircleImageView
-        android:layout_width="60dp"
-        android:layout_height="60dp"
+        android:layout_width="50dp"
+        android:layout_height="50dp"
         android:src="@mipmap/ic_account_profile_round"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
@@ -59,18 +59,19 @@
         android:layout_width="30dp"
         android:layout_height="30dp"
         android:layout_below="@+id/tag_icon"
-        android:layout_marginLeft="10dp"
+        android:layout_marginLeft="19dp"
         android:src="@mipmap/ic_popularity"
-        android:id="@+id/img_popularity"/>
+        android:id="@+id/img_popularity" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/tag_icon"
-        android:layout_marginTop="5dp"
+        android:layout_marginTop="12dp"
         android:layout_toRightOf="@id/img_popularity"
         android:text="9 People are talking about this"
-        android:id="@+id/tag_popularity"/>
+        android:id="@+id/tag_popularity"
+        android:layout_marginLeft="5dp"/>
 
 
 </RelativeLayout>
