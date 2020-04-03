@@ -153,7 +153,7 @@ public class UserProfileActivity extends AppCompatActivity {
                                     String mTagCreatedById = document.getData().get("createdById").toString();
 
                                     Tag tag = new Tag(mTagID, mTagLocationName, mTagDuration, mTagImage, mTagDescription, mTagLocationLatitude,
-                                            mTagLocationLongitude, mTagUpvoteCount, mTagDownvoteCount, mTagPopularity, mTagCreatedBy, mTagCreatedById);
+                                    mTagLocationLongitude, mTagUpvoteCount, mTagDownvoteCount, mTagPopularity, mTagCreatedBy, mTagCreatedById);
                                     Tags.add(tag);
                                 }
                             }
