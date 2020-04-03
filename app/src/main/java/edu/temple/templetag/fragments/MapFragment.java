@@ -89,9 +89,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         return v;
     }
 
-    public void displayMarkers(ArrayList<Tag> Tags, Location currentLocation){
-        this.currentLocation = currentLocation;
-
+    public void displayMarkers(ArrayList<Tag> Tags){
         if (googleMap != null && currentLocation != null) {
             googleMap.clear();
             for (Tag tag : Tags){
@@ -105,12 +103,19 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
                 }
             }
-            //Create user location marker
-            LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
+            focusOn(currentLocation);
+        }
+    }
+
+    public void displayAMarker(Tag tag){
+        if (googleMap != null) {
+            googleMap.clear();
+            LatLng latLng = new LatLng(tag.getmTagLocationLat(), tag.getmTagLocationLong());
             googleMap.addMarker(new MarkerOptions()
                     .position(latLng)
-                    .title("You are here!")
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
+                    .title(tag.getmTagLocationName())
+                    .snippet(tag.getmTagDescription())
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
             focusOn(currentLocation);
         }
     }

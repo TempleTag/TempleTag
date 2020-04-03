@@ -66,6 +66,9 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             @Override
             public void onClick(View v) {
                 //When tag is selected
+                Intent intent = new Intent(context, TagDetailActivity.class);
+                intent.putExtra(SELECTED_TAG, Tags.get(position));
+                context.startActivity(intent);
             }
         });
 

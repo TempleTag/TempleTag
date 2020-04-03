@@ -13,7 +13,8 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light">
-        <activity android:name=".TagDetailActivity"></activity>
+        <activity android:name=".TagDetailActivity"
+            android:theme="@style/AppTheme.NoActionBar"></activity>
         <activity
             android:name=".CreateTagActivity"
             android:theme="@style/AppTheme.NoActionBar" />

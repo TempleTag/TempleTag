@@ -1,9 +1,128 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TagDetailActivity">
+    tools:context=".TagDetailActivity"
+    android:orientation="vertical">
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/TempleTagTheme"
+        android:elevation="4dp"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:titleTextColor="#FFFFFF"
+        android:gravity="right">
+
+        <ImageButton
+            android:layout_width="35dp"
+            android:layout_height="35dp"
+            android:background="@drawable/ic_action_delete"
+            android:layout_marginLeft="360dp"
+            android:id="@+id/btn_delete"/>
+    </androidx.appcompat.widget.Toolbar>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Tag Location Name"
+        android:textSize="30sp"
+        android:gravity="center_horizontal"
+        android:fontFamily="monospace"
+        android:textStyle="bold"
+        android:id="@+id/tag_location_name"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="created by Dillion"
+        android:gravity="center_horizontal"
+        android:textSize="20dp"
+        android:id="@+id/tag_created_by"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="45dp"
+            android:layout_height="40dp"
+            android:background="@mipmap/ic_thumb_up"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="30 upvotes"
+            android:textSize="20dp"
+            android:gravity="center_vertical"
+            android:id="@+id/tag_up_vote"/>
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:background="@mipmap/ic_thumb_down" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="20 downvotes"
+            android:textSize="20dp"
+            android:gravity="center_vertical"
+            android:id="@+id/tag_down_vote"/>
+
+    </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:gravity="center_horizontal">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:layout_width="30dp"
+            android:layout_height="30dp"
+            android:background="@mipmap/ic_popularity"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="20 People are talking about this event"
+            android:gravity="center_vertical"
+            android:id="@+id/tag_popularity"/>
+
+    </LinearLayout>
+
+
+    <FrameLayout
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:id="@+id/mapContainer"/>
+
+    <ImageView
+        android:layout_width="match_parent"
+        android:layout_height="150dp"
+        android:src="@mipmap/temple_background"/>
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Description"
+        android:textSize="20dp"
+        android:textStyle="bold"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:textColor="@color/colorPrimaryDark"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Washington (CNN)The commander of a US aircraft carrier that has been hit by a major outbreak of coronavirus has been relieved of command for showing poor judgment days after writing a memo warning Navy leadership that decisive action was needed to save the lives of the ship's crew, acting Secretary of the Navy Thomas Modly announced on Thursday."
+        android:fontFamily="monospace"
+        android:layout_marginLeft="10dp"
+        android:layout_marginRight="10dp"
+        android:id="@+id/tag_description"/>
+</LinearLayout>

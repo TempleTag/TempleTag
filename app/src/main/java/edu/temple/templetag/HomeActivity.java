@@ -142,7 +142,7 @@ public class HomeActivity extends AppCompatActivity {
         locationListener = new LocationListener() {
             @Override
             public void onLocationChanged(Location location) {
-                currentLocation = location;
+                currentLocation = new Location(location);
             }
 
             @Override
@@ -285,7 +285,7 @@ public class HomeActivity extends AppCompatActivity {
                                 //Update map
                                 runOnUiThread(new Thread(new Runnable() {
                                     public void run() {
-                                        mapFragment.displayMarkers(Tags, currentLocation);
+                                        mapFragment.displayMarkers(Tags);
                                     }
                                 }));
                             } else {
