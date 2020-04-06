@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:layout_marginBottom="30dp"
+    android:id="@+id/tagItemLayout">
+
+    <de.hdodenhof.circleimageview.CircleImageView
+        android:layout_width="50dp"
+        android:layout_height="50dp"
+        android:src="@mipmap/ic_account_profile_round"
+        android:layout_marginTop="10dp"
+        android:layout_marginLeft="10dp"
+        android:id="@+id/tag_icon"/>
+
+    <TextView
+        android:id="@+id/tag_location_name"
+        android:layout_width="257dp"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@id/tag_icon"
+        android:maxLines="1"
+        android:text="Tennis Course"
+        android:textSize="20dp"
+        android:layout_marginTop="10dp"
+        />
+
+    <TextView
+        android:id="@+id/tag_description"
+        android:layout_width="258dp"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tag_location_name"
+        android:layout_marginLeft="15dp"
+        android:layout_toRightOf="@id/tag_icon"
+        android:maxLength="70"
+        android:text="There is a big party that is going on at this place, chaeck this out!! Can't wait to do this OMG this is so cool..."
+        android:textSize="15dp" />
+
+    <ImageButton
+        android:id="@+id/tag_up_vote"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="10dp"
+        android:layout_toRightOf="@+id/tag_location_name"
+        android:background="@mipmap/ic_thumb_up" />
+
+    <ImageButton
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_toRightOf="@+id/tag_location_name"
+        android:background="@mipmap/ic_thumb_down"
+        android:layout_marginLeft="12dp"
+        android:layout_marginTop="50dp"
+        android:id="@+id/tag_down_vote"/>
+
+    <ImageView
+        android:layout_width="30dp"
+        android:layout_height="30dp"
+        android:layout_below="@+id/tag_icon"
+        android:layout_marginLeft="19dp"
+        android:src="@mipmap/ic_popularity"
+        android:id="@+id/img_popularity" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/tag_icon"
+        android:layout_marginTop="12dp"
+        android:layout_toRightOf="@id/img_popularity"
+        android:text="9 People are talking about this"
+        android:id="@+id/tag_popularity"
+        android:layout_marginLeft="5dp"/>
+
+
+</RelativeLayout>

@@ -51,34 +51,43 @@
         android:textColor="@color/white"
         android:layout_marginLeft="10dp"/>
     <TextView
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:id="@+id/tagCount"
+    android:text="#"
+    android:textSize="15dp"
+    android:fontFamily="monospace"
+    android:layout_marginLeft="10dp"/>
+
+    <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/tagCount"
-        android:text="#"
+        android:id="@+id/myTagTextView"
+        android:text="My Posted Tags"
         android:textSize="15dp"
         android:fontFamily="monospace"
-        android:layout_marginLeft="10dp"/>
+        android:layout_marginLeft="10dp"
+        android:textColor="@color/white"
+        android:layout_marginTop="20dp"/>
 
     <FrameLayout
-        android:id="@+id/tagListContainer"
+        android:id="@+id/tag_recycler_fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"/>
+        android:layout_height="380dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="vertical"
-        android:gravity="center|bottom">
+        android:orientation="vertical">
 
         <Button
             android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_height="45dp"
             android:text="Log Out"
             android:textColor="@color/white"
             android:textStyle="bold"
             android:fontFamily="monospace"
             android:background="@drawable/rounded"
-            android:layout_marginBottom="10dp"
             android:layout_gravity="center|bottom"
             android:id="@+id/btn_logout"/>
     </LinearLayout>

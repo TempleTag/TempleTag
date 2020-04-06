@@ -37,12 +37,13 @@ import java.util.ArrayList;
 import edu.temple.templetag.HomeActivity;
 import edu.temple.templetag.R;
 import edu.temple.templetag.Tag;
+import edu.temple.templetag.tools.DistanceCalculator;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
     private static final String ARG_PARAM1 = "tags";
     private static final String ARG_PARAM2 = "currentLocation";
-    private static final double MAX_RADIUS = 10;
     private Location currentLocation;
+    private DistanceCalculator distanceCalculator = new DistanceCalculator();
 
     // TODO: Rename and change types of parameters
     private ArrayList<Tag> tags;
@@ -56,22 +57,20 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     }
 
 
-    public static MapFragment newInstance() {
+    public static MapFragment newInstance(Location currentLocation) {
         MapFragment fragment = new MapFragment();
-//        Bundle args = new Bundle();
-//        args.putParcelableArrayList(ARG_PARAM1, tags);
-//        args.putParcelable(ARG_PARAM2, currentUserLocation);
-//        fragment.setArguments(args);
+        Bundle args = new Bundle();
+        args.putParcelable(ARG_PARAM2, currentLocation);
+        fragment.setArguments(args);
         return fragment;
     }
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-//        if (getArguments() != null) {
-//            tags = getArguments().getParcelableArrayList(ARG_PARAM1);
-//            currentUserLocation = getArguments().getParcelable(ARG_PARAM2);
-//        }
+        if (getArguments() != null) {
+            currentLocation = getArguments().getParcelable(ARG_PARAM2);
+        }
     }
 
     @Override
@@ -96,8 +95,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         if (googleMap != null && currentLocation != null) {
             googleMap.clear();
             for (Tag tag : Tags){
-                if (distanceFromTo(tag.getmTagLocationLat(), tag.getmTagLocationLong(), currentLocation.getLatitude(),
-                        currentLocation.getLongitude()) < MAX_RADIUS){ //if tag is close to the user --> display
+                if (distanceCalculator.distanceFromTo(tag.getmTagLocationLat(), tag.getmTagLocationLong(), currentLocation.getLatitude(),
+                        currentLocation.getLongitude()) < HomeActivity.MAX_RADIUS){ //if tag is close to the user --> display
                     LatLng latLng = new LatLng(tag.getmTagLocationLat(), tag.getmTagLocationLong());
                     googleMap.addMarker(new MarkerOptions()
                             .position(latLng)
@@ -116,33 +115,12 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    private double distanceFromTo(double lat1, double lon1, double lat2, double lon2){
-        lon1 = Math.toRadians(lon1);
-        lon2 = Math.toRadians(lon2);
-        lat1 = Math.toRadians(lat1);
-        lat2 = Math.toRadians(lat2);
-
-        // Haversine formula
-        double dlon = lon2 - lon1;
-        double dlat = lat2 - lat1;
-        double a = Math.pow(Math.sin(dlat / 2), 2)
-                + Math.cos(lat1) * Math.cos(lat2)
-                * Math.pow(Math.sin(dlon / 2),2);
-
-        double c = 2 * Math.asin(Math.sqrt(a));
-
-        // Radius of earth in kilometers. Use 3956
-        // for miles
-        double r = 3956;
-
-        // calculate the result
-        return(c * r);
-    }
-
     public void focusOn(Location location){
-        LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
-        CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
-        googleMap.animateCamera(cameraUpdate);
+        if (googleMap!= null && location != null) {
+            LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
+            CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
+            googleMap.animateCamera(cameraUpdate);
+        }
     }
 
 
@@ -199,7 +177,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
-//        updateMap(tags);
-//        focusOn(currentUserLocation);
+        focusOn(currentLocation);
     }
 }
