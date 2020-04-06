@@ -275,7 +275,7 @@ public class HomeActivity extends AppCompatActivity {
                             .commitAllowingStateLoss();
                 }
 
-                mapFragment.updateNewTags(Tags, currentLocation);
+                mapFragment.updateNewTagsLocations(Tags, currentLocation);
             }
         });
     }

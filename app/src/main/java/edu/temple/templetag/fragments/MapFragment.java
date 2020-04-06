@@ -40,13 +40,12 @@ import edu.temple.templetag.Tag;
 import edu.temple.templetag.tools.DistanceCalculator;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
-    private static final String ARG_PARAM1 = "tags";
-    private static final String ARG_PARAM3 = "tag";
-    private static final String ARG_PARAM2 = "currentLocation";
+    private static final String TAGS = "tags";
+    private static final String TAG = "tag";
+    private static final String CUR_LOC = "currentLocation";
     private Location currentLocation;
     private DistanceCalculator distanceCalculator = new DistanceCalculator();
 
-    // TODO: Rename and change types of parameters
     private ArrayList<Tag> tags;
     private Tag tag;
 
@@ -62,8 +61,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public static MapFragment newInstance(ArrayList<Tag> tags, Location currentLocation) {
         MapFragment fragment = new MapFragment();
         Bundle args = new Bundle();
-        args.putParcelableArrayList(ARG_PARAM1, tags);
-        args.putParcelable(ARG_PARAM2, currentLocation);
+        args.putParcelableArrayList(TAGS, tags);
+        args.putParcelable(CUR_LOC, currentLocation);
         fragment.setArguments(args);
         return fragment;
     }
@@ -71,8 +70,8 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public static MapFragment newInstance(Tag tag, Location currentLocation) {
         MapFragment fragment = new MapFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_PARAM3, tag);
-        args.putParcelable(ARG_PARAM2, currentLocation);
+        args.putParcelable(TAG, tag);
+        args.putParcelable(CUR_LOC, currentLocation);
         fragment.setArguments(args);
         return fragment;
     }
@@ -81,11 +80,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            tags = getArguments().getParcelableArrayList(ARG_PARAM1);
+            tags = getArguments().getParcelableArrayList(TAGS);
             if (tags == null){
-                tag = getArguments().getParcelable(ARG_PARAM3);
+                tag = getArguments().getParcelable(TAG);
             }
-            currentLocation = getArguments().getParcelable(ARG_PARAM2);
+            currentLocation = getArguments().getParcelable(CUR_LOC);
         }
     }
 
@@ -137,13 +136,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         }
     }
 
-    public void updateNewTags(ArrayList<Tag> tags, Location currentLocation){
+    public void updateNewTagsLocations(ArrayList<Tag> tags, Location currentLocation){
         this.tags = tags;
         this.currentLocation = currentLocation;
         displayMarkers(this.tags);
     }
 
-    public void updateNewATag(Tag tag, Location currentLocation){
+    public void updateNewTagLocation(Tag tag, Location currentLocation){
         this.tag = tag;
         this.currentLocation = currentLocation;
         displayAMarker(this.tag);

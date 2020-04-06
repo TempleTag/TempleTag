@@ -17,20 +17,16 @@ import edu.temple.templetag.Tag;
 import edu.temple.templetag.adapters.TagRecyclerViewAdapter;
 
 public class TagRecyclerViewFragment extends Fragment {
-    // TODO: Rename parameter arguments, choose names that match
-    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String TAG_LIST = "tagList";
     RecyclerView tagRecyclerView;
     TagRecyclerViewAdapter tagRecyclerViewAdapter;
 
-    // TODO: Rename and change types of parameters
     private ArrayList<Tag> Tags;
 
     public TagRecyclerViewFragment() {
         // Required empty public constructor
     }
 
-    // TODO: Rename and change types and number of parameters
     public static TagRecyclerViewFragment newInstance(ArrayList<Tag> Tags) {
         TagRecyclerViewFragment fragment = new TagRecyclerViewFragment();
         Bundle args = new Bundle();

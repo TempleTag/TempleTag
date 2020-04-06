@@ -7,8 +7,12 @@ import android.location.Location;
 import android.os.Bundle;
 import android.view.View;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -20,6 +24,7 @@ public class TagDetailActivity extends AppCompatActivity {
 
     TextView tagLocationName, tagCreatedBy, tagUpVote, tagDownVote, tagPop, tagDesc;
     ImageButton closeBtn;
+    ImageView tagImageView;
     MapFragment mapFragment;
     private final String MAP_FRAG_IN_DETAIL = "MapFragmentInDetailActivity"; //MapFragment Tag to distinguish with MapFragment in HomeActivity
     Tag mTag;
@@ -39,6 +44,7 @@ public class TagDetailActivity extends AppCompatActivity {
         tagDownVote = findViewById(R.id.tag_down_vote);
         tagPop = findViewById(R.id.tag_popularity);
         tagDesc = findViewById(R.id.tag_description);
+        tagImageView = findViewById(R.id.tag_image_view);
 
         tagLocationName.setText(mTag.getmTagLocationName());
         tagCreatedBy.setText("created by " + mTag.getmTagCreatedBy());
@@ -48,12 +54,28 @@ public class TagDetailActivity extends AppCompatActivity {
         tagDesc.setText(mTag.getmTagDescription());
 
         closeBtn = findViewById(R.id.btn_delete);
+        if (!mTag.getmTagCreatedById().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){ //Show delete button if the tag belows to the current user, hide it otherwise
+            closeBtn.setVisibility(View.INVISIBLE);
+        } else {
+            closeBtn.setVisibility(View.VISIBLE);
+        }
         closeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(TagDetailActivity.this, "Implement delete function with Firebase", Toast.LENGTH_SHORT).show();
+                /*** TODO Add codes for delete button
+                 *
+                 *
+                 *
+                 * */
             }
         });
+
+        /*** TODO Add codes for showing tag image here
+         * tagImageView.setImageBitmap()..
+         *
+         *
+         * **/
 
         mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag(MAP_FRAG_IN_DETAIL);
 
@@ -70,7 +92,9 @@ public class TagDetailActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.mapContainer, mapFragment, MAP_FRAG_IN_DETAIL)
                     .commitAllowingStateLoss();
-            mapFragment.updateNewATag(mTag, mTagLoc);
+            mapFragment.updateNewTagLocation(mTag, mTagLoc);
         }
+
+        //TODO We might need to handle upvote/downvote inside this activity too
     }
 }
