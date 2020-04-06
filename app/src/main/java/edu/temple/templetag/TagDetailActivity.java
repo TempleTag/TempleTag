@@ -21,7 +21,7 @@ public class TagDetailActivity extends AppCompatActivity {
     TextView tagLocationName, tagCreatedBy, tagUpVote, tagDownVote, tagPop, tagDesc;
     ImageButton closeBtn;
     MapFragment mapFragment;
-    private final String MAP_FRAG_IN_DETAIL = "MapFragmentInDetailActivity";
+    private final String MAP_FRAG_IN_DETAIL = "MapFragmentInDetailActivity"; //MapFragment Tag to distinguish with MapFragment in HomeActivity
     Tag mTag;
 
     @Override
@@ -51,7 +51,7 @@ public class TagDetailActivity extends AppCompatActivity {
         closeBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(TagDetailActivity.this, "Implement detele fuction with Firebase", Toast.LENGTH_SHORT).show();
+                Toast.makeText(TagDetailActivity.this, "Implement delete function with Firebase", Toast.LENGTH_SHORT).show();
             }
         });
 
@@ -62,22 +62,15 @@ public class TagDetailActivity extends AppCompatActivity {
         mTagLoc.setLongitude(mTag.getmTagLocationLong());
 
         if (mapFragment == null) {
-            mapFragment = MapFragment.newInstance(mTagLoc);
+            mapFragment = MapFragment.newInstance(mTag, mTagLoc);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.mapContainer, mapFragment, MAP_FRAG_IN_DETAIL)
                     .commitAllowingStateLoss();
         } else {
-            mapFragment.focusOn(mTagLoc);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.mapContainer, mapFragment, MAP_FRAG_IN_DETAIL)
                     .commitAllowingStateLoss();
+            mapFragment.updateNewATag(mTag, mTagLoc);
         }
-
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-        mapFragment.displayAMarker(mTag);
     }
 }
