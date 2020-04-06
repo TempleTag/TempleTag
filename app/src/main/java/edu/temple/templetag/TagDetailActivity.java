@@ -23,7 +23,7 @@ import edu.temple.templetag.fragments.MapFragment;
 public class TagDetailActivity extends AppCompatActivity {
 
     TextView tagLocationName, tagCreatedBy, tagUpVote, tagDownVote, tagPop, tagDesc;
-    ImageButton closeBtn;
+    ImageButton delBtn;
     ImageView tagImageView;
     MapFragment mapFragment;
     private final String MAP_FRAG_IN_DETAIL = "MapFragmentInDetailActivity"; //MapFragment Tag to distinguish with MapFragment in HomeActivity
@@ -53,13 +53,13 @@ public class TagDetailActivity extends AppCompatActivity {
         tagPop.setText(mTag.getmTagPopularity() + " people are talking about this event");
         tagDesc.setText(mTag.getmTagDescription());
 
-        closeBtn = findViewById(R.id.btn_delete);
+        delBtn = findViewById(R.id.btn_delete);
         if (!mTag.getmTagCreatedById().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){ //Show delete button if the tag belows to the current user, hide it otherwise
-            closeBtn.setVisibility(View.INVISIBLE);
+            delBtn.setVisibility(View.INVISIBLE);
         } else {
-            closeBtn.setVisibility(View.VISIBLE);
+            delBtn.setVisibility(View.VISIBLE);
         }
-        closeBtn.setOnClickListener(new View.OnClickListener() {
+        delBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 Toast.makeText(TagDetailActivity.this, "Implement delete function with Firebase", Toast.LENGTH_SHORT).show();
