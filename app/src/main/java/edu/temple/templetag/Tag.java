@@ -37,6 +37,7 @@ public class Tag implements Parcelable {
 
     protected Tag(Parcel in) {
         mTagID = in.readString();
+        mTagLocationName = in.readString();
         mTagDuration = in.readString();
         mTagImageURI = in.readString();
         mTagDescription = in.readString();
@@ -70,7 +71,7 @@ public class Tag implements Parcelable {
     }
 
     public String getmTagLocationName() {
-        return mTagLocationName;
+        return this.mTagLocationName;
     }
 
     public void setmTagLocationName(String mTagLocationName) {
@@ -162,6 +163,7 @@ public class Tag implements Parcelable {
     public String toString() {
         return "Tag{" +
                 "mTagID=" + mTagID +
+                ",mTagLocationName=" + mTagLocationName +
                 ", mTagDuration=" + mTagDuration +
                 ", mTagImageURI='" + mTagImageURI + '\'' +
                 ", mTagDescription='" + mTagDescription + '\'' +
@@ -194,6 +196,7 @@ public class Tag implements Parcelable {
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(mTagID);
+        dest.writeString(mTagLocationName);
         dest.writeString(mTagImageURI);
         dest.writeString(mTagDuration);
         dest.writeString(mTagDescription);

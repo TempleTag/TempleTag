@@ -52,6 +52,8 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "You clicked Up Vote", Toast.LENGTH_SHORT).show();
+                /*** TODO Add codes for upvote button here
+                 * **/
             }
         });
 
@@ -59,6 +61,8 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             @Override
             public void onClick(View v) {
                 Toast.makeText(context, "You clicked Down Vote", Toast.LENGTH_SHORT).show();
+                /***TODO Add codes for downvote button here
+                 * **/
             }
         });
 
@@ -66,6 +70,9 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             @Override
             public void onClick(View v) {
                 //When tag is selected
+                Intent intent = new Intent(context, TagDetailActivity.class);
+                intent.putExtra(SELECTED_TAG, Tags.get(position));
+                context.startActivity(intent);
             }
         });
 

@@ -9,7 +9,7 @@
     <de.hdodenhof.circleimageview.CircleImageView
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:src="@mipmap/ic_account_profile_round"
+        android:src="@drawable/ic_tag"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
         android:id="@+id/tag_icon"/>
@@ -44,13 +44,13 @@
         android:layout_marginLeft="12dp"
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@+id/tag_location_name"
-        android:background="@mipmap/ic_thumb_up" />
+        android:background="@drawable/ic_action_thumb_up" />
 
     <ImageButton
         android:layout_width="40dp"
         android:layout_height="40dp"
         android:layout_toRightOf="@+id/tag_location_name"
-        android:background="@mipmap/ic_thumb_down"
+        android:background="@drawable/ic_action_thumb_down"
         android:layout_marginLeft="12dp"
         android:layout_marginTop="50dp"
         android:id="@+id/tag_down_vote"/>
@@ -60,8 +60,9 @@
         android:layout_height="30dp"
         android:layout_below="@+id/tag_icon"
         android:layout_marginLeft="19dp"
-        android:src="@mipmap/ic_popularity"
-        android:id="@+id/img_popularity" />
+        android:src="@drawable/ic_group"
+        android:id="@+id/img_popularity"
+        android:layout_marginTop="8dp"/>
 
     <TextView
         android:layout_width="wrap_content"

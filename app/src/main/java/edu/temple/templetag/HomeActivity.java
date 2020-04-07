@@ -28,15 +28,12 @@ import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
-import androidx.recyclerview.widget.RecyclerView;
 
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
 
 import java.util.ArrayList;
-import java.util.Timer;
-import java.util.TimerTask;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import edu.temple.templetag.fragments.MapFragment;
@@ -44,37 +41,41 @@ import edu.temple.templetag.fragments.TagRecyclerViewFragment;
 import edu.temple.templetag.tools.DistanceCalculator;
 
 public class HomeActivity extends AppCompatActivity {
-
+    //Firebase and Firestore
     private FirebaseAuth firebaseAuth;
     private FirebaseUser firebaseUser;
     private FirebaseFirestore firestore;
+
+    //Views
     private FloatingActionButton createTagBtn;
-    private Intent createTagIntent;
-    private String txt_username, txt_email;
+
     //Location
     private LocationManager locationManager;
     private LocationListener locationListener;
     private FusedLocationProviderClient fusedLocationClient;
-    //Current User
     public static Location currentLocation;
+
+    //Fragments
     private MapFragment mapFragment;
-    //Timer for periodic tag fetch from firestore
-    Timer timerRef;
+    TagRecyclerViewFragment tagRecyclerViewFragment;
+
     //Tags
     private ArrayList<Tag> Tags = new ArrayList<>();
-    TagRecyclerViewFragment tagRecyclerViewFragment;
+
     //Distance Calculator
     DistanceCalculator distanceCalculator = new DistanceCalculator();
 
+    //Other variables
+    private Intent createTagIntent;
+    private String txt_username, txt_email;
     public static final String TAG = "HomeActivity";
-    public static final String TAG_LIST_FRAGMENT = "TagRecyclerFragment_HOME";
-    public static final int RELOAD_TIME = 10000;
-    public static final int MAX_RADIUS = 2;
+    public static final String TAG_LIST_FRAGMENT = "TagRecyclerFragment_HOME"; //This is the tag for TagRecyclerViewFragment for HomeActivity. This is not to be confused with the one in UserProfileActivity
+    public static final int MAX_RADIUS = 2; //This is the radius of tags that will be displayed to the user
 
     @Override
     protected void onStart() {
         super.onStart();
-
+        // Redirect user to LoginActivity if current active user is not found
         firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
         if (firebaseUser == null) {
             Intent loginIntent = new Intent(HomeActivity.this, LoginActivity.class);
@@ -99,7 +100,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        //Profile On CLick
+        //Profile Icon On CLick
         CircleImageView profile = findViewById(R.id.userProfile);
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -113,7 +114,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        //Check permission and display tags
+        //Check location permission
         if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 123);
         }
@@ -123,16 +124,16 @@ public class HomeActivity extends AppCompatActivity {
         if (null != mapFragment) {
             getSupportFragmentManager().beginTransaction()
                     .remove(mapFragment)
-                    .add(R.id.mapContainer, MapFragment.newInstance(currentLocation), "mapfragment")
+                    .add(R.id.mapContainer, MapFragment.newInstance(Tags, currentLocation), "mapfragment")
                     .commit();
         } else {
-            mapFragment = MapFragment.newInstance(currentLocation);
+            mapFragment = MapFragment.newInstance(Tags, currentLocation);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.mapContainer, mapFragment, "mapfragment")
                     .commit();
         }
 
-        // Get currentUser's location using device permission
+        // Get currentUser's last known location while waiting for OnLocationChanged
         getLastKnownLocation();
 
         locationManager = getSystemService(LocationManager.class);
@@ -159,9 +160,8 @@ public class HomeActivity extends AppCompatActivity {
         };
     }
 
-    private void displayUserInfo() {
+    private void displayUserInfo() { //Display current username to the app bar -- Welcome, user123
         firestore = FirebaseFirestore.getInstance();
-
         firestore.collection("Users")
                 .get()
                 .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
@@ -170,7 +170,6 @@ public class HomeActivity extends AppCompatActivity {
                         if (task.isSuccessful()) {
                             for (QueryDocumentSnapshot document : task.getResult()) {
                                 if (document.getData().get("id").equals(firebaseUser.getUid())) {
-                                    Log.d(TAG, document.getId() + " => " + document.getData());
                                     txt_username = (String) document.getData().get("username");
                                     txt_email = (String) document.getData().get("email");
                                     getSupportActionBar().setTitle("Welcome, " + txt_username);
@@ -219,7 +218,7 @@ public class HomeActivity extends AppCompatActivity {
                         // Got last known location. In some rare situations this can be null.
                         if (location != null) {
                             currentLocation = new Location(location);
-                            fetchTags();
+                            fetchTags(); //after getting last known location, start fetching tags from Firestore
                         }
                     }
                 });
@@ -237,29 +236,34 @@ public class HomeActivity extends AppCompatActivity {
         firestore = FirebaseFirestore.getInstance();
         firestore.collection("Tags").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) {
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) { //addSnapshotListener will listen to data changes from Firestore and be triggered if there are changes made
                 for (DocumentChange documentChange : queryDocumentSnapshots.getDocumentChanges()) {
                     switch (documentChange.getType()) {
                         case ADDED:
-                            double mTagLocationLatitude = (Double) documentChange.getDocument().getData().get("locationLat"); // we set based off user's current location
-                            double mTagLocationLongitude = (Double) documentChange.getDocument().getData().get("locationLong"); // we set based off user's current location
+                            double mTagLocationLatitude = (Double) documentChange.getDocument().getData().get("locationLat");
+                            double mTagLocationLongitude = (Double) documentChange.getDocument().getData().get("locationLong");
                             if (distanceCalculator.distanceFromTo(mTagLocationLatitude, mTagLocationLongitude, currentLocation.getLatitude(), currentLocation.getLongitude()) <= MAX_RADIUS) {
-                                String mTagID = documentChange.getDocument().getData().get("id").toString(); // need to generate a unique tag ID for each tag
-                                String mTagDuration = documentChange.getDocument().getData().get("duration").toString(); // current Date tag was created, used to compare two dates later to determine which Tags get deleted in the database and which don't
-                                String mTagImage = documentChange.getDocument().getData().get("imageRef").toString(); // user has option to take a picture to represent the tag, otherwise we show no image (null)
-                                String mTagDescription = documentChange.getDocument().getData().get("description").toString(); // user sets when creating describing what's in the tag
-                                String mTagLocationName = documentChange.getDocument().getData().get("locationName").toString(); // user sets when creating, naming the tag location
-                                int mTagUpvoteCount = Integer.valueOf(documentChange.getDocument().getData().get("upvoteCount").toString()); // changes as other users upvote
-                                int mTagDownvoteCount = Integer.valueOf(documentChange.getDocument().getData().get("downvoteCount").toString()); // changes as other users downvote
-                                int mTagPopularity = Integer.valueOf(documentChange.getDocument().getData().get("popularityCount").toString()); // if multiple users tag the same location, we increase the marker size on the map using this field
-                                String mTagCreatedBy = documentChange.getDocument().getData().get("createdBy").toString(); // name of user that created the tag
+                                String mTagID = documentChange.getDocument().getData().get("id").toString();
+                                String mTagDuration = documentChange.getDocument().getData().get("duration").toString();
+                                String mTagImage = documentChange.getDocument().getData().get("imageRef").toString();
+                                String mTagDescription = documentChange.getDocument().getData().get("description").toString();
+                                String mTagLocationName = documentChange.getDocument().getData().get("locationName").toString();
+                                int mTagUpvoteCount = Integer.valueOf(documentChange.getDocument().getData().get("upvoteCount").toString());
+                                int mTagDownvoteCount = Integer.valueOf(documentChange.getDocument().getData().get("downvoteCount").toString());
+                                int mTagPopularity = Integer.valueOf(documentChange.getDocument().getData().get("popularityCount").toString());
+                                String mTagCreatedBy = documentChange.getDocument().getData().get("createdBy").toString();
                                 String mTagCreatedById = documentChange.getDocument().getData().get("createdById").toString();
                                 Tag tag = new Tag(mTagID, mTagLocationName, mTagDuration, mTagImage, mTagDescription, mTagLocationLatitude,
                                         mTagLocationLongitude, mTagUpvoteCount, mTagDownvoteCount, mTagPopularity, mTagCreatedBy, mTagCreatedById);
                                 Tags.add(tag);
                             }
+                        case REMOVED:
+                            //Do something
+                        case MODIFIED:
+                            //Do something
                     }
                 }
+
                 //Create a tag recycler list fragment after fetching tags
                 tagRecyclerViewFragment = (TagRecyclerViewFragment) getSupportFragmentManager().findFragmentByTag(TAG_LIST_FRAGMENT);
                 if (null != tagRecyclerViewFragment) {
@@ -271,7 +275,7 @@ public class HomeActivity extends AppCompatActivity {
                             .commitAllowingStateLoss();
                 }
 
-                mapFragment.displayMarkers(Tags, currentLocation);
+                mapFragment.updateNewTagsLocations(Tags, currentLocation);
             }
         });
     }

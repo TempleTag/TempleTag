@@ -40,27 +40,38 @@ import edu.temple.templetag.Tag;
 import edu.temple.templetag.tools.DistanceCalculator;
 
 public class MapFragment extends Fragment implements OnMapReadyCallback {
-    private static final String ARG_PARAM1 = "tags";
-    private static final String ARG_PARAM2 = "currentLocation";
+    private static final String TAGS = "tags";
+    private static final String TAG = "tag";
+    private static final String CUR_LOC = "currentLocation";
     private Location currentLocation;
     private DistanceCalculator distanceCalculator = new DistanceCalculator();
 
-    // TODO: Rename and change types of parameters
     private ArrayList<Tag> tags;
+    private Tag tag;
 
     //Initiate Map Stuff
     MapView mapView;
-    GoogleMap googleMap;
+    public GoogleMap googleMap;
 
     public MapFragment() {
         // Required empty public constructor
     }
 
 
-    public static MapFragment newInstance(Location currentLocation) {
+    public static MapFragment newInstance(ArrayList<Tag> tags, Location currentLocation) {
         MapFragment fragment = new MapFragment();
         Bundle args = new Bundle();
-        args.putParcelable(ARG_PARAM2, currentLocation);
+        args.putParcelableArrayList(TAGS, tags);
+        args.putParcelable(CUR_LOC, currentLocation);
+        fragment.setArguments(args);
+        return fragment;
+    }
+
+    public static MapFragment newInstance(Tag tag, Location currentLocation) {
+        MapFragment fragment = new MapFragment();
+        Bundle args = new Bundle();
+        args.putParcelable(TAG, tag);
+        args.putParcelable(CUR_LOC, currentLocation);
         fragment.setArguments(args);
         return fragment;
     }
@@ -69,7 +80,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            currentLocation = getArguments().getParcelable(ARG_PARAM2);
+            tags = getArguments().getParcelableArrayList(TAGS);
+            if (tags == null){
+                tag = getArguments().getParcelable(TAG);
+            }
+            currentLocation = getArguments().getParcelable(CUR_LOC);
         }
     }
 
@@ -89,9 +104,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         return v;
     }
 
-    public void displayMarkers(ArrayList<Tag> Tags, Location currentLocation){
-        this.currentLocation = currentLocation;
-
+    private void displayMarkers(ArrayList<Tag> Tags){
         if (googleMap != null && currentLocation != null) {
             googleMap.clear();
             for (Tag tag : Tags){
@@ -105,14 +118,34 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                             .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
                 }
             }
-            //Create user location marker
-            LatLng latLng = new LatLng(currentLocation.getLatitude(), currentLocation.getLongitude());
-            googleMap.addMarker(new MarkerOptions()
-                    .position(latLng)
-                    .title("You are here!")
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_GREEN)));
             focusOn(currentLocation);
         }
+    }
+
+    private void displayAMarker(Tag tag){
+        if (googleMap != null && currentLocation != null) {
+            googleMap.clear();
+            LatLng latLng = new LatLng(tag.getmTagLocationLat(), tag.getmTagLocationLong());
+            googleMap.addMarker(new MarkerOptions()
+                    .position(latLng)
+                    .title(tag.getmTagLocationName())
+                    .snippet(tag.getmTagDescription())
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+
+            focusOn(currentLocation);
+        }
+    }
+
+    public void updateNewTagsLocations(ArrayList<Tag> tags, Location currentLocation){
+        this.tags = tags;
+        this.currentLocation = currentLocation;
+        displayMarkers(this.tags);
+    }
+
+    public void updateNewTagLocation(Tag tag, Location currentLocation){
+        this.tag = tag;
+        this.currentLocation = currentLocation;
+        displayAMarker(this.tag);
     }
 
     public void focusOn(Location location){
@@ -177,6 +210,10 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
     @Override
     public void onMapReady(GoogleMap googleMap) {
         this.googleMap = googleMap;
-        focusOn(currentLocation);
+        if (tags != null) {
+            displayMarkers(this.tags);
+        } else if (tag != null){
+            displayAMarker(this.tag);
+        }
     }
 }
