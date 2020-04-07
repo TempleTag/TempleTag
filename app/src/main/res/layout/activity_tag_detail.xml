@@ -34,7 +34,8 @@
         android:gravity="center_horizontal"
         android:fontFamily="monospace"
         android:textStyle="bold"
-        android:id="@+id/tag_location_name"/>
+        android:id="@+id/tag_location_name"
+        android:textColor="@color/TempleTagTheme"/>
 
     <TextView
         android:layout_width="match_parent"
@@ -42,7 +43,9 @@
         android:text="created by Dillion"
         android:gravity="center_horizontal"
         android:textSize="20dp"
-        android:id="@+id/tag_created_by"/>
+        android:id="@+id/tag_created_by"
+        android:fontFamily="monospace"
+        android:textColor="#000000"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -61,7 +64,9 @@
             android:text="30 upvotes"
             android:textSize="20dp"
             android:gravity="center_vertical"
-            android:id="@+id/tag_up_vote"/>
+            android:id="@+id/tag_up_vote"
+            android:fontFamily="monospace"
+            android:textColor="#000000"/>
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="40dp"
@@ -74,7 +79,9 @@
             android:text="20 downvotes"
             android:textSize="20dp"
             android:gravity="center_vertical"
-            android:id="@+id/tag_down_vote"/>
+            android:id="@+id/tag_down_vote"
+            android:fontFamily="monospace"
+            android:textColor="#000000"/>
 
     </LinearLayout>
 
@@ -93,7 +100,9 @@
             android:layout_height="match_parent"
             android:text="20 People are talking about this event"
             android:gravity="center_vertical"
-            android:id="@+id/tag_popularity"/>
+            android:id="@+id/tag_popularity"
+            android:fontFamily="monospace"
+            android:textColor="#000000"/>
 
     </LinearLayout>
 
@@ -112,18 +121,22 @@
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:text="Description"
-        android:textSize="20dp"
+        android:textSize="25dp"
         android:textStyle="bold"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
-        android:textColor="@color/colorPrimaryDark"/>
+        android:textColor="@color/colorPrimaryDark"
+        android:fontFamily="monospace"/>
 
     <TextView
+        android:id="@+id/tag_description"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:text="Washington (CNN)The commander of a US aircraft carrier that has been hit by a major outbreak of coronavirus has been relieved of command for showing poor judgment days after writing a memo warning Navy leadership that decisive action was needed to save the lives of the ship's crew, acting Secretary of the Navy Thomas Modly announced on Thursday."
-        android:fontFamily="monospace"
+        android:layout_height="150dp"
         android:layout_marginLeft="10dp"
         android:layout_marginRight="10dp"
-        android:id="@+id/tag_description"/>
+        android:fontFamily="monospace"
+        android:text="Washington (CNN)The commander of a US aircraft carrier that has been hit by a major outbreak of coronavirus has been relieved of command for showing poor judgment days after writing a memo warning Navy leadership that decisive action was needed to save the lives of the ship's crew, acting Secretary of the Navy Thomas Modly announced on Thursday."
+        android:textSize="20sp"
+        android:textColor="#000000"
+        android:scrollbars = "vertical"/>
 </LinearLayout>

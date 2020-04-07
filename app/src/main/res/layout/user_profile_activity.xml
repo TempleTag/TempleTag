@@ -14,15 +14,25 @@
         android:textSize="35sp"
         android:textStyle="bold"
         android:fontFamily="monospace"
-        android:layout_marginTop="40dp"/>
-
-    <TextView
+        android:layout_marginTop="30dp"/>
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/change_username"
-        android:textSize="20sp"
-        android:fontFamily="monospace"
-        android:text="Change username"/>
+        android:orientation="horizontal">
+        <ImageButton
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:src="@drawable/ic_action_edit"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/change_username"
+            android:textSize="20sp"
+            android:fontFamily="monospace"
+            android:text="Change username"/>
+    </LinearLayout>
+
 
     <TextView
         android:layout_width="match_parent"
@@ -73,7 +83,7 @@
     <FrameLayout
         android:id="@+id/tag_recycler_fragment_container"
         android:layout_width="match_parent"
-        android:layout_height="380dp" />
+        android:layout_height="330dp" />
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -81,15 +91,15 @@
         android:orientation="vertical">
 
         <Button
+            android:id="@+id/btn_logout"
             android:layout_width="wrap_content"
             android:layout_height="45dp"
+            android:layout_gravity="center|bottom"
+            android:background="@drawable/rounded"
+            android:fontFamily="monospace"
             android:text="Log Out"
             android:textColor="@color/white"
-            android:textStyle="bold"
-            android:fontFamily="monospace"
-            android:background="@drawable/rounded"
-            android:layout_gravity="center|bottom"
-            android:id="@+id/btn_logout"/>
+            android:textStyle="bold" />
     </LinearLayout>
 
 </LinearLayout>

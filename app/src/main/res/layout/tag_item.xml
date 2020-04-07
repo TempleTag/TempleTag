@@ -24,6 +24,7 @@
         android:text="Tennis Course"
         android:textSize="20dp"
         android:layout_marginTop="10dp"
+        android:textColor="@color/TempleTagTheme"
         />
 
     <TextView
@@ -35,7 +36,8 @@
         android:layout_toRightOf="@id/tag_icon"
         android:maxLength="70"
         android:text="There is a big party that is going on at this place, chaeck this out!! Can't wait to do this OMG this is so cool..."
-        android:textSize="15dp" />
+        android:textSize="15dp"
+        android:textColor="#FFFFFF"/>
 
     <ImageButton
         android:id="@+id/tag_up_vote"
@@ -72,7 +74,8 @@
         android:layout_toRightOf="@id/img_popularity"
         android:text="9 People are talking about this"
         android:id="@+id/tag_popularity"
-        android:layout_marginLeft="5dp"/>
+        android:layout_marginLeft="5dp"
+        android:textColor="#FFFFFF"/>
 
 
 </RelativeLayout>

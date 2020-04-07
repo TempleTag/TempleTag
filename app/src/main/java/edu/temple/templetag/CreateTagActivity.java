@@ -15,7 +15,9 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -66,8 +68,13 @@ public class CreateTagActivity extends AppCompatActivity {
     private MaterialEditText tagLocationNameInput;
     private MaterialEditText tagDescriptionInput;
     private ImageView mTagImageView = null;
-    private Button takeTagPictureBtn;
+    private ImageButton takeTagPictureBtn;
     private Button createTagBtn;
+    private TextView expiration_text_view;
+
+    //Date
+    Date c = Calendar.getInstance().getTime();
+    SimpleDateFormat df = new SimpleDateFormat("MMM-dd-yyyy");
 
     private static final String TAG = "CreateTagActivity";
 
@@ -93,6 +100,7 @@ public class CreateTagActivity extends AppCompatActivity {
         mTagImageView = findViewById(R.id.tagImage);
         takeTagPictureBtn = findViewById(R.id.takeTagPictureBtn);
         createTagBtn = findViewById(R.id.createTagBtn);
+        expiration_text_view = findViewById(R.id.expiration_text_view);
 
         // Get currentUser's location using device permission
         locationManager = getSystemService(LocationManager.class);
@@ -141,6 +149,9 @@ public class CreateTagActivity extends AppCompatActivity {
                 createInDatabase();
             }
         });
+
+        //Inform expiration date to user
+        expiration_text_view.setText("This tag will expired on "+df.format(c));
     }
 
     private boolean createInDatabase() {
@@ -186,9 +197,7 @@ public class CreateTagActivity extends AppCompatActivity {
 
     private void createTag() {
         // Get date tag was created
-        Date c = Calendar.getInstance().getTime();
-        System.out.println("Current time => " + c);
-        SimpleDateFormat df = new SimpleDateFormat("MMM-dd-yyyy");
+
         String formattedDate = df.format(c);
 
         mTagID = UUID.randomUUID().toString();
