@@ -73,12 +73,7 @@ public class TagDetailActivity extends AppCompatActivity {
             }
         });
 
-        /*** TODO Add codes for showing tag image here
-         * tagImageView.setImageBitmap()..
-         *
-         *
-         * **/
-        Log.d("mTagImageURI = ", mTag.getmTagImageURI());
+        // code for showing tag image 
         Picasso.with(this).load(mTag.getmTagImageURI()).into(tagImageView);
 
         mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag(MAP_FRAG_IN_DETAIL);
