@@ -33,6 +33,10 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.rengwuxian.materialedittext.MaterialEditText;
 import com.squareup.picasso.Picasso;
 
@@ -65,6 +69,7 @@ public class CreateTagActivity extends AppCompatActivity {
     private FirebaseUser firebaseUser = FirebaseAuth.getInstance().getCurrentUser();
     private FirebaseAuth firebaseAuth;
     private FirebaseFirestore firestore = FirebaseFirestore.getInstance();
+    private FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
 
     // Location
     LocationManager locationManager;
@@ -177,7 +182,8 @@ public class CreateTagActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 // Create new tag in database
-                createInDatabase();
+                uploadImageToDatabase(mImageUri);
+                //createInDatabase();
             }
         });
     }
@@ -230,9 +236,10 @@ public class CreateTagActivity extends AppCompatActivity {
         SimpleDateFormat df = new SimpleDateFormat("MMM-dd-yyyy");
         String formattedDate = df.format(c);
 
-        mTagID = UUID.randomUUID().toString();
+        //mTagID = UUID.randomUUID().toString();  // Moved this to the image upload so we could associate files with tags
         mTagDuration = formattedDate;
-        mTagImage = "tag-image-storage-reference" ; // TODO Figure out saving an image to Firebase Storage and holding reference to where that image is stored in Firestore
+        if (mTagImage == null)
+            mTagImage = "tag-image-storage-reference" ; // TODO Figure out saving an image to Firebase Storage and holding reference to where that image is stored in Firestore
         mTagLocationName = Objects.requireNonNull(tagLocationNameInput.getText()).toString();
         mTagDescription = Objects.requireNonNull(tagDescriptionInput.getText()).toString();
         mTagUpvoteCount = 0;
@@ -336,7 +343,7 @@ public class CreateTagActivity extends AppCompatActivity {
         if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
             //Bundle extras = data.getExtras();                   // These three lines are boiler plate from Google
             //Bitmap imageBitmap = (Bitmap) extras.get("data");   // leaving them in for now just in case
-            //mTagImageView.setImageBitmap(imageBitmap);            //
+            //mTagImageView.setImageBitmap(imageBitmap);          //
 
             if (mImageUri == null)
                 Log.d("onActivityResult - ", "Uri is null");
@@ -344,5 +351,43 @@ public class CreateTagActivity extends AppCompatActivity {
                 Log.d("onActivityResult - ", mImageUri.toString());
             Picasso.with(this).load(mImageUri).into(mTagImageView);
         }
+    }
+
+    private void uploadImageToDatabase(Uri uri) {
+        mTagID = UUID.randomUUID().toString();
+
+        StorageReference storageReference = firebaseStorage.getReference();
+        final StorageReference tagImageReference = storageReference.child(mTagID + ".jpg");
+        UploadTask uploadTask = tagImageReference.putFile(uri);
+
+        // Register observers to listen for when the download is done or if it fails
+        uploadTask.addOnFailureListener(new OnFailureListener() {
+            @Override
+            public void onFailure(@NonNull Exception exception) {
+                Toast.makeText(CreateTagActivity.this, "Failed to upload image to cloud", Toast.LENGTH_LONG).show();
+            }
+        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                tagImageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                    @Override
+                    public void onSuccess(Uri uri) {
+                        mTagImage = uri.toString();
+                        if (mTagImage != null)
+                            Toast.makeText(CreateTagActivity.this, mTagImage, Toast.LENGTH_LONG).show();
+                        else
+                            Toast.makeText(CreateTagActivity.this, "Failed to upload image to cloud", Toast.LENGTH_LONG).show();
+                        createInDatabase();
+                    }
+                });
+            }
+        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+            @Override
+            public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                double progress = 100.0 * taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount();
+                progressBar.setProgress((int)progress);
+            }
+        });
+
     }
 }
