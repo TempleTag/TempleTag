@@ -181,9 +181,21 @@ public class CreateTagActivity extends AppCompatActivity {
         createTagBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Create new tag in database
-                uploadImageToDatabase(mImageUri);
-                //createInDatabase();
+                // generate tag UUID
+                mTagID = UUID.randomUUID().toString();
+
+                // Create new tag in database enforcing photo
+                if (mImageUri == null)
+                    Toast.makeText(CreateTagActivity.this, "You must take a picture", Toast.LENGTH_LONG).show();
+                else
+                    uploadImageToDatabase(mImageUri);
+
+                /* Create tag without enforcing photo
+                 *if (mImageUri == null)
+                 *    createInDatabase();
+                 *else
+                 *    uploadImageToDatabase(mImageUri);
+                 */
             }
         });
     }
@@ -239,7 +251,7 @@ public class CreateTagActivity extends AppCompatActivity {
         //mTagID = UUID.randomUUID().toString();  // Moved this to the image upload so we could associate files with tags
         mTagDuration = formattedDate;
         if (mTagImage == null)
-            mTagImage = "tag-image-storage-reference" ; // TODO Figure out saving an image to Firebase Storage and holding reference to where that image is stored in Firestore
+            mTagImage = getResources().getString(R.string.logo_uri); // This shouldn't happen
         mTagLocationName = Objects.requireNonNull(tagLocationNameInput.getText()).toString();
         mTagDescription = Objects.requireNonNull(tagDescriptionInput.getText()).toString();
         mTagUpvoteCount = 0;
@@ -354,8 +366,6 @@ public class CreateTagActivity extends AppCompatActivity {
     }
 
     private void uploadImageToDatabase(Uri uri) {
-        mTagID = UUID.randomUUID().toString();
-
         StorageReference storageReference = firebaseStorage.getReference();
         final StorageReference tagImageReference = storageReference.child(mTagID + ".jpg");
         UploadTask uploadTask = tagImageReference.putFile(uri);
