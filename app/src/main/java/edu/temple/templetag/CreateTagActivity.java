@@ -187,8 +187,40 @@ public class CreateTagActivity extends AppCompatActivity {
                 // Create new tag in database enforcing photo
                 if (mImageUri == null)
                     Toast.makeText(CreateTagActivity.this, "You must take a picture", Toast.LENGTH_LONG).show();
-                else
-                    uploadImageToDatabase(mImageUri);
+                else {
+                    StorageReference storageReference = firebaseStorage.getReference();
+                    final StorageReference tagImageReference = storageReference.child(mTagID + ".jpg");
+                    UploadTask uploadTask = tagImageReference.putFile(mImageUri);
+
+                    // Register observers to listen for when the download is done or if it fails
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Toast.makeText(CreateTagActivity.this, "Failed to upload image to cloud", Toast.LENGTH_LONG).show();
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            tagImageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    mTagImage = uri.toString();
+                                    if (mTagImage != null)
+                                        Toast.makeText(CreateTagActivity.this, mTagImage, Toast.LENGTH_LONG).show();
+                                    else
+                                        Toast.makeText(CreateTagActivity.this, "Failed to upload image to cloud", Toast.LENGTH_LONG).show();
+                                    createInDatabase();
+                                }
+                            });
+                        }
+                    }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = 100.0 * taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount();
+                            progressBar.setProgress((int)progress);
+                        }
+                    });
+                }
 
                 /* Create tag without enforcing photo
                  *if (mImageUri == null)
@@ -363,41 +395,5 @@ public class CreateTagActivity extends AppCompatActivity {
                 Log.d("onActivityResult - ", mImageUri.toString());
             Picasso.with(this).load(mImageUri).into(mTagImageView);
         }
-    }
-
-    private void uploadImageToDatabase(Uri uri) {
-        StorageReference storageReference = firebaseStorage.getReference();
-        final StorageReference tagImageReference = storageReference.child(mTagID + ".jpg");
-        UploadTask uploadTask = tagImageReference.putFile(uri);
-
-        // Register observers to listen for when the download is done or if it fails
-        uploadTask.addOnFailureListener(new OnFailureListener() {
-            @Override
-            public void onFailure(@NonNull Exception exception) {
-                Toast.makeText(CreateTagActivity.this, "Failed to upload image to cloud", Toast.LENGTH_LONG).show();
-            }
-        }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
-                tagImageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
-                    @Override
-                    public void onSuccess(Uri uri) {
-                        mTagImage = uri.toString();
-                        if (mTagImage != null)
-                            Toast.makeText(CreateTagActivity.this, mTagImage, Toast.LENGTH_LONG).show();
-                        else
-                            Toast.makeText(CreateTagActivity.this, "Failed to upload image to cloud", Toast.LENGTH_LONG).show();
-                        createInDatabase();
-                    }
-                });
-            }
-        }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
-            @Override
-            public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                double progress = 100.0 * taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount();
-                progressBar.setProgress((int)progress);
-            }
-        });
-
     }
 }
