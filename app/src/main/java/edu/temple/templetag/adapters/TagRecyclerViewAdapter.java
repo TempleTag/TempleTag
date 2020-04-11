@@ -24,13 +24,18 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     ArrayList<Tag> Tags;
     public static final String SELECTED_TAG = "theTag";
 
-    public TagRecyclerViewAdapter(Context context, ArrayList<Tag> Tags){
+    public TagRecyclerViewAdapter(Context context, ArrayList<Tag> Tags) {
         this.context = context;
-        this.Tags = (ArrayList<Tag>) Tags.clone();
+        this.Tags = Tags;
     }
 
-    public void updateDataSet(ArrayList<Tag> Tags){
-        this.Tags = (ArrayList<Tag>) Tags.clone();
+    public void updateDataSet(ArrayList<Tag> Tags) {
+        this.Tags = Tags;
+        notifyDataSetChanged();
+    }
+
+    public void clearDataSet() {
+        this.Tags = null;
         notifyDataSetChanged();
     }
 
