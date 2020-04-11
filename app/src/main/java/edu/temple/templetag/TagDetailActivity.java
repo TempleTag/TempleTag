@@ -54,10 +54,12 @@ public class TagDetailActivity extends AppCompatActivity {
         tagDesc.setText(mTag.getmTagDescription());
 
         delBtn = findViewById(R.id.btn_delete);
-        if (!mTag.getmTagCreatedById().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){ //Show delete button if the tag belows to the current user, hide it otherwise
-            delBtn.setVisibility(View.INVISIBLE);
-        } else {
-            delBtn.setVisibility(View.VISIBLE);
+        if (mTag.getmTagCreatedById() != null) {
+            if (!mTag.getmTagCreatedById().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){ //Show delete button if the tag belows to the current user, hide it otherwise
+                delBtn.setVisibility(View.INVISIBLE);
+            } else {
+                delBtn.setVisibility(View.VISIBLE);
+            }
         }
         delBtn.setOnClickListener(new View.OnClickListener() {
             @Override

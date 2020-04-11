@@ -100,7 +100,7 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        //Profile Icon On CLick
+        // Profile Icon On CLick
         CircleImageView profile = findViewById(R.id.userProfile);
         profile.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -114,33 +114,14 @@ public class HomeActivity extends AppCompatActivity {
             }
         });
 
-        //Check location permission
-        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 123);
-        }
-
-        // Attach mapFragment
-        mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag("mapfragment");
-        if (null != mapFragment) {
-            getSupportFragmentManager().beginTransaction()
-                    .remove(mapFragment)
-                    .add(R.id.mapContainer, MapFragment.newInstance(Tags, currentLocation), "mapfragment")
-                    .commit();
-        } else {
-            mapFragment = MapFragment.newInstance(Tags, currentLocation);
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.mapContainer, mapFragment, "mapfragment")
-                    .commit();
-        }
-
-        // Get currentUser's last known location while waiting for OnLocationChanged
-        getLastKnownLocation();
-
         locationManager = getSystemService(LocationManager.class);
         locationListener = new LocationListener() {
+            @SuppressLint("MissingPermission")
             @Override
             public void onLocationChanged(Location location) {
-                currentLocation = location;
+                    // Fetch new tags for currentLocation
+                    currentLocation = location;
+                    fetchTags();
             }
 
             @Override
@@ -158,6 +139,27 @@ public class HomeActivity extends AppCompatActivity {
 
             }
         };
+
+        // Check location permission
+        if (checkSelfPermission(Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 123);
+        } else {
+            showLocationUpdates();
+        }
+
+        // Attach mapFragment
+        mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag("mapfragment");
+        if (mapFragment != null) {
+            getSupportFragmentManager().beginTransaction()
+                    .remove(mapFragment)
+                    .add(R.id.mapContainer, MapFragment.newInstance(Tags, currentLocation), "mapfragment")
+                    .commit();
+        } else {
+            mapFragment = MapFragment.newInstance(Tags, currentLocation);
+            getSupportFragmentManager().beginTransaction()
+                    .add(R.id.mapContainer, mapFragment, "mapfragment")
+                    .commit();
+        }
     }
 
     private void displayUserInfo() { //Display current username to the app bar -- Welcome, user123
@@ -204,36 +206,19 @@ public class HomeActivity extends AppCompatActivity {
     public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults);
         if (grantResults[0] == PackageManager.PERMISSION_GRANTED) {
-            getLastKnownLocation();
             showLocationUpdates();
         }
     }
 
-    private void getLastKnownLocation(){
-        fusedLocationClient = LocationServices.getFusedLocationProviderClient(this);
-        fusedLocationClient.getLastLocation()
-                .addOnSuccessListener(this, new OnSuccessListener<Location>() {
-                    @Override
-                    public void onSuccess(Location location) {
-                        // Got last known location. In some rare situations this can be null.
-                        if (location != null) {
-                            currentLocation = new Location(location);
-                            fetchTags(); //after getting last known location, start fetching tags from Firestore
-                        }
-                    }
-                });
-    }
-
-    @SuppressLint("MissingPermission")
     // Already checking necessary permission before calling requestLocationUpdates
+    @SuppressLint("MissingPermission")
     private void showLocationUpdates() {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, this.locationListener); // GPS
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 10, this.locationListener); // Cell sites
-        locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0, 10, this.locationListener); // WiFi
     }
 
     private void fetchTags(){
         firestore = FirebaseFirestore.getInstance();
+        Tags.clear(); // clear the current tags - if fetchTags is being called again it is because of a location change and we only want to show the tags closest to the user's current location
         firestore.collection("Tags").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
             public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) { //addSnapshotListener will listen to data changes from Firestore and be triggered if there are changes made
@@ -248,11 +233,14 @@ public class HomeActivity extends AppCompatActivity {
                                 String mTagImage = documentChange.getDocument().getData().get("imageRef").toString();
                                 String mTagDescription = documentChange.getDocument().getData().get("description").toString();
                                 String mTagLocationName = documentChange.getDocument().getData().get("locationName").toString();
-                                int mTagUpvoteCount = Integer.valueOf(documentChange.getDocument().getData().get("upvoteCount").toString());
-                                int mTagDownvoteCount = Integer.valueOf(documentChange.getDocument().getData().get("downvoteCount").toString());
-                                int mTagPopularity = Integer.valueOf(documentChange.getDocument().getData().get("popularityCount").toString());
+                                int mTagUpvoteCount = Integer.parseInt(documentChange.getDocument().getData().get("upvoteCount").toString());
+                                int mTagDownvoteCount = Integer.parseInt(documentChange.getDocument().getData().get("downvoteCount").toString());
+                                int mTagPopularity = Integer.parseInt(documentChange.getDocument().getData().get("popularityCount").toString());
                                 String mTagCreatedBy = documentChange.getDocument().getData().get("createdBy").toString();
-                                String mTagCreatedById = documentChange.getDocument().getData().get("createdById").toString();
+                                String mTagCreatedById = null;
+                                if (documentChange.getDocument().getData().get("createdById") != null) {
+                                    mTagCreatedById = documentChange.getDocument().getData().get("createdById").toString();
+                                }
                                 Tag tag = new Tag(mTagID, mTagLocationName, mTagDuration, mTagImage, mTagDescription, mTagLocationLatitude,
                                         mTagLocationLongitude, mTagUpvoteCount, mTagDownvoteCount, mTagPopularity, mTagCreatedBy, mTagCreatedById);
                                 Tags.add(tag);
@@ -264,15 +252,14 @@ public class HomeActivity extends AppCompatActivity {
                     }
                 }
 
-                //Create a tag recycler list fragment after fetching tags
+                // Create a TagRecyclerViewFragment after fetching new tags near user's current location
                 tagRecyclerViewFragment = (TagRecyclerViewFragment) getSupportFragmentManager().findFragmentByTag(TAG_LIST_FRAGMENT);
-                if (null != tagRecyclerViewFragment) {
+                if (tagRecyclerViewFragment != null) {
                     tagRecyclerViewFragment.updateDataSet(Tags);
                 } else {
-                    tagRecyclerViewFragment = TagRecyclerViewFragment.newInstance(Tags);
                     getSupportFragmentManager().beginTransaction()
-                            .add(R.id.tag_recycler_fragment_container, tagRecyclerViewFragment, TAG_LIST_FRAGMENT)
-                            .commitAllowingStateLoss();
+                            .add(R.id.tag_recycler_fragment_container, TagRecyclerViewFragment.newInstance(Tags) , TAG_LIST_FRAGMENT)
+                            .commit();
                 }
 
                 mapFragment.updateNewTagsLocations(Tags, currentLocation);
