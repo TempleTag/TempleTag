@@ -2,6 +2,7 @@ package edu.temple.templetag;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -11,11 +12,15 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,7 +34,10 @@ import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 import com.rengwuxian.materialedittext.MaterialEditText;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -68,8 +76,12 @@ public class CreateTagActivity extends AppCompatActivity {
     private ImageView mTagImageView = null;
     private Button takeTagPictureBtn;
     private Button createTagBtn;
+    private ProgressBar progressBar;
+
+    private Uri mImageUri;
 
     private static final String TAG = "CreateTagActivity";
+    private static final int CAMERA_REQUEST_CODE = 1;
 
     @Override
     protected void onStart() {
@@ -93,6 +105,7 @@ public class CreateTagActivity extends AppCompatActivity {
         mTagImageView = findViewById(R.id.tagImage);
         takeTagPictureBtn = findViewById(R.id.takeTagPictureBtn);
         createTagBtn = findViewById(R.id.createTagBtn);
+        progressBar = findViewById(R.id.progress_bar);
 
         // Get currentUser's location using device permission
         locationManager = getSystemService(LocationManager.class);
@@ -128,6 +141,32 @@ public class CreateTagActivity extends AppCompatActivity {
         takeTagPictureBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+                    // Create an image file name
+                    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                    String imageFileName = "JPEG_" + timeStamp + "_";
+                    File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                    File image = null;
+                    try {
+                        image = File.createTempFile(
+                                imageFileName,  /* prefix */
+                                ".jpg",         /* suffix */
+                                storageDir      /* directory */
+                        );
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (image != null) {
+                        mImageUri = FileProvider.getUriForFile(CreateTagActivity.this,
+                                BuildConfig.APPLICATION_ID + ".provider",
+                                image);
+                        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+                        startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
+                    }
+                }
                 // TODO Handle Android Camera API work here
                 // TODO Use Picasso to load the picture Bitmap taken into the mTagImageView
                 Toast.makeText(CreateTagActivity.this, "Implement camera API and Firebase Storage to handle this feature.", Toast.LENGTH_LONG).show();
@@ -288,5 +327,22 @@ public class CreateTagActivity extends AppCompatActivity {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, this.locationListener); // GPS
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 10, this.locationListener); // Cell sites
         locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0, 10, this.locationListener); // WiFi
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("Returned from camera ", " " + resultCode);
+        if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
+            //Bundle extras = data.getExtras();                   // These three lines are boiler plate from Google
+            //Bitmap imageBitmap = (Bitmap) extras.get("data");   // leaving them in for now just in case
+            //mTagImageView.setImageBitmap(imageBitmap);            //
+
+            if (mImageUri == null)
+                Log.d("onActivityResult - ", "Uri is null");
+            else
+                Log.d("onActivityResult - ", mImageUri.toString());
+            Picasso.with(this).load(mImageUri).into(mTagImageView);
+        }
     }
 }
