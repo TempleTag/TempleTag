@@ -1,6 +1,8 @@
 package edu.temple.templetag.fragments;
 
 import android.app.Application;
+import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.drawable.BitmapDrawable;
@@ -23,6 +25,7 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
@@ -37,9 +40,11 @@ import java.util.ArrayList;
 import edu.temple.templetag.HomeActivity;
 import edu.temple.templetag.R;
 import edu.temple.templetag.Tag;
+import edu.temple.templetag.TagDetailActivity;
 import edu.temple.templetag.tools.DistanceCalculator;
 
-public class MapFragment extends Fragment implements OnMapReadyCallback {
+public class MapFragment extends Fragment implements OnMapReadyCallback,
+        GoogleMap.OnInfoWindowClickListener {
     private static final String TAGS = "tags";
     private static final String TAG = "tag";
     private static final String CUR_LOC = "currentLocation";
@@ -48,6 +53,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
 
     private ArrayList<Tag> tags;
     private Tag tag;
+    private Context mContext;
 
     //Initiate Map Stuff
     MapView mapView;
@@ -87,6 +93,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
             currentLocation = getArguments().getParcelable(CUR_LOC);
         }
     }
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+        mContext = context; // TODO: should we mirror in detach?
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
@@ -111,11 +122,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
                 if (distanceCalculator.distanceFromTo(tag.getmTagLocationLat(), tag.getmTagLocationLong(), currentLocation.getLatitude(),
                         currentLocation.getLongitude()) < HomeActivity.MAX_RADIUS){ //if tag is close to the user --> display
                     LatLng latLng = new LatLng(tag.getmTagLocationLat(), tag.getmTagLocationLong());
-                    googleMap.addMarker(new MarkerOptions()
+                    (googleMap.addMarker(new MarkerOptions()
                             .position(latLng)
                             .title(tag.getmTagLocationName())
                             .snippet(tag.getmTagDescription())
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)))).setTag(tag);
                 }
             }
             focusOn(currentLocation);
@@ -126,11 +137,11 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         if (googleMap != null && currentLocation != null) {
             googleMap.clear();
             LatLng latLng = new LatLng(tag.getmTagLocationLat(), tag.getmTagLocationLong());
-            googleMap.addMarker(new MarkerOptions()
+            (googleMap.addMarker(new MarkerOptions()
                     .position(latLng)
                     .title(tag.getmTagLocationName())
                     .snippet(tag.getmTagDescription())
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)));
+                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)))).setTag(tag);
 
             focusOn(currentLocation);
         }
@@ -215,5 +226,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback {
         } else if (tag != null){
             displayAMarker(this.tag);
         }
+        this.googleMap.setOnInfoWindowClickListener(this);
+    }
+
+    @Override
+    public void onInfoWindowClick(Marker marker) {
+        //Toast.makeText(mContext, "tag creator - " + ((Tag)marker.getTag()).getmTagCreatedBy(), Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(mContext, TagDetailActivity.class);
+        intent.putExtra("theTag", ((Tag)marker.getTag()));
+        mContext.startActivity(intent);
     }
 }
