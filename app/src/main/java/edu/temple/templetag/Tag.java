@@ -162,9 +162,9 @@ public class Tag implements Parcelable {
     @Override
     public String toString() {
         return "Tag{" +
-                "mTagID=" + mTagID +
-                ",mTagLocationName=" + mTagLocationName +
-                ", mTagDuration=" + mTagDuration +
+                "mTagID='" + mTagID + '\'' +
+                ", mTagLocationName='" + mTagLocationName + '\'' +
+                ", mTagDuration='" + mTagDuration + '\'' +
                 ", mTagImageURI='" + mTagImageURI + '\'' +
                 ", mTagDescription='" + mTagDescription + '\'' +
                 ", mTagLocationLat=" + mTagLocationLat +
@@ -173,6 +173,7 @@ public class Tag implements Parcelable {
                 ", mTagDownvoteCount=" + mTagDownvoteCount +
                 ", mTagPopularity=" + mTagPopularity +
                 ", mTagCreatedBy='" + mTagCreatedBy + '\'' +
+                ", mTagCreatedById='" + mTagCreatedById + '\'' +
                 '}';
     }
 
@@ -197,8 +198,8 @@ public class Tag implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(mTagID);
         dest.writeString(mTagLocationName);
-        dest.writeString(mTagImageURI);
         dest.writeString(mTagDuration);
+        dest.writeString(mTagImageURI);
         dest.writeString(mTagDescription);
         dest.writeDouble(mTagLocationLat);
         dest.writeDouble(mTagLocationLong);

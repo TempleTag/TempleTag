@@ -2,6 +2,7 @@ package edu.temple.templetag;
 
 import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.FileProvider;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -11,12 +12,16 @@ import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
+import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -30,8 +35,15 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.OnProgressListener;
+import com.google.firebase.storage.StorageReference;
+import com.google.firebase.storage.UploadTask;
 import com.rengwuxian.materialedittext.MaterialEditText;
+import com.squareup.picasso.Picasso;
 
+import java.io.File;
+import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
@@ -75,8 +87,12 @@ public class CreateTagActivity extends AppCompatActivity {
     //Date
     Date c = Calendar.getInstance().getTime();
     SimpleDateFormat df = new SimpleDateFormat("MMM-dd-yyyy");
+    private ProgressBar progressBar;
+
+    private Uri mImageUri;
 
     private static final String TAG = "CreateTagActivity";
+    private static final int CAMERA_REQUEST_CODE = 1;
 
     @Override
     protected void onStart() {
@@ -101,6 +117,7 @@ public class CreateTagActivity extends AppCompatActivity {
         takeTagPictureBtn = findViewById(R.id.takeTagPictureBtn);
         createTagBtn = findViewById(R.id.createTagBtn);
         expiration_text_view = findViewById(R.id.expiration_text_view);
+        progressBar = findViewById(R.id.progress_bar);
 
         // Get currentUser's location using device permission
         locationManager = getSystemService(LocationManager.class);
@@ -136,6 +153,32 @@ public class CreateTagActivity extends AppCompatActivity {
         takeTagPictureBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                Intent cameraIntent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
+
+                if (cameraIntent.resolveActivity(getPackageManager()) != null) {
+                    // Create an image file name
+                    String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+                    String imageFileName = "JPEG_" + timeStamp + "_";
+                    File storageDir = getExternalFilesDir(Environment.DIRECTORY_PICTURES);
+                    File image = null;
+                    try {
+                        image = File.createTempFile(
+                                imageFileName,  /* prefix */
+                                ".jpg",         /* suffix */
+                                storageDir      /* directory */
+                        );
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+
+                    if (image != null) {
+                        mImageUri = FileProvider.getUriForFile(CreateTagActivity.this,
+                                BuildConfig.APPLICATION_ID + ".provider",
+                                image);
+                        cameraIntent.putExtra(MediaStore.EXTRA_OUTPUT, mImageUri);
+                        startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
+                    }
+                }
                 // TODO Handle Android Camera API work here
                 // TODO Use Picasso to load the picture Bitmap taken into the mTagImageView
                 Toast.makeText(CreateTagActivity.this, "Implement camera API and Firebase Storage to handle this feature.", Toast.LENGTH_LONG).show();
@@ -145,8 +188,53 @@ public class CreateTagActivity extends AppCompatActivity {
         createTagBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                // Create new tag in database
-                createInDatabase();
+                // generate tag UUID
+                mTagID = UUID.randomUUID().toString();
+
+                // Create new tag in database enforcing photo
+                if (mImageUri == null)
+                    Toast.makeText(CreateTagActivity.this, "You must take a picture", Toast.LENGTH_LONG).show();
+                else {
+                    StorageReference storageReference = firebaseStorage.getReference();
+                    final StorageReference tagImageReference = storageReference.child(mTagID + ".jpg");
+                    UploadTask uploadTask = tagImageReference.putFile(mImageUri);
+
+                    // Register observers to listen for when the download is done or if it fails
+                    uploadTask.addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception exception) {
+                            Toast.makeText(CreateTagActivity.this, "Failed to upload image to cloud", Toast.LENGTH_LONG).show();
+                        }
+                    }).addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
+                            tagImageReference.getDownloadUrl().addOnSuccessListener(new OnSuccessListener<Uri>() {
+                                @Override
+                                public void onSuccess(Uri uri) {
+                                    mTagImage = uri.toString();
+                                    if (mTagImage != null)
+                                        Toast.makeText(CreateTagActivity.this, mTagImage, Toast.LENGTH_LONG).show();
+                                    else
+                                        Toast.makeText(CreateTagActivity.this, "Failed to upload image to cloud", Toast.LENGTH_LONG).show();
+                                    createInDatabase();
+                                }
+                            });
+                        }
+                    }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
+                        @Override
+                        public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
+                            double progress = 100.0 * taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount();
+                            progressBar.setProgress((int)progress);
+                        }
+                    });
+                }
+
+                /* Create tag without enforcing photo
+                 *if (mImageUri == null)
+                 *    createInDatabase();
+                 *else
+                 *    uploadImageToDatabase(mImageUri);
+                 */
             }
         });
 
@@ -200,9 +288,10 @@ public class CreateTagActivity extends AppCompatActivity {
 
         String formattedDate = df.format(c);
 
-        mTagID = UUID.randomUUID().toString();
+        //mTagID = UUID.randomUUID().toString();  // Moved this to the image upload so we could associate files with tags
         mTagDuration = formattedDate;
-        mTagImage = "tag-image-storage-reference" ; // TODO Figure out saving an image to Firebase Storage and holding reference to where that image is stored in Firestore
+        if (mTagImage == null)
+            mTagImage = getResources().getString(R.string.logo_uri); // This shouldn't happen
         mTagLocationName = Objects.requireNonNull(tagLocationNameInput.getText()).toString();
         mTagDescription = Objects.requireNonNull(tagDescriptionInput.getText()).toString();
         mTagUpvoteCount = 0;
@@ -297,5 +386,22 @@ public class CreateTagActivity extends AppCompatActivity {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, this.locationListener); // GPS
         locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 10, this.locationListener); // Cell sites
         locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0, 10, this.locationListener); // WiFi
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        Log.d("Returned from camera ", " " + resultCode);
+        if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
+            //Bundle extras = data.getExtras();                   // These three lines are boiler plate from Google
+            //Bitmap imageBitmap = (Bitmap) extras.get("data");   // leaving them in for now just in case
+            //mTagImageView.setImageBitmap(imageBitmap);          //
+
+            if (mImageUri == null)
+                Log.d("onActivityResult - ", "Uri is null");
+            else
+                Log.d("onActivityResult - ", mImageUri.toString());
+            Picasso.with(this).load(mImageUri).into(mTagImageView);
+        }
     }
 }

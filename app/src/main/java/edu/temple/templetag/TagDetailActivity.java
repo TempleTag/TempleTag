@@ -7,6 +7,7 @@ import android.location.Location;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.view.MenuItem;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -15,6 +16,7 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -57,10 +59,12 @@ public class TagDetailActivity extends AppCompatActivity {
         tagDesc.setMovementMethod(new ScrollingMovementMethod());
 
         delBtn = findViewById(R.id.btn_delete);
-        if (!mTag.getmTagCreatedById().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){ //Show delete button if the tag belows to the current user, hide it otherwise
-            delBtn.setVisibility(View.INVISIBLE);
-        } else {
-            delBtn.setVisibility(View.VISIBLE);
+        if (mTag.getmTagCreatedById() != null) {
+            if (!mTag.getmTagCreatedById().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){ //Show delete button if the tag belows to the current user, hide it otherwise
+                delBtn.setVisibility(View.INVISIBLE);
+            } else {
+                delBtn.setVisibility(View.VISIBLE);
+            }
         }
         delBtn.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -74,11 +78,8 @@ public class TagDetailActivity extends AppCompatActivity {
             }
         });
 
-        /*** TODO Add codes for showing tag image here
-         * tagImageView.setImageBitmap()..
-         *
-         *
-         * **/
+        // code for showing tag image
+        Picasso.with(this).load(mTag.getmTagImageURI()).into(tagImageView);
 
         mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag(MAP_FRAG_IN_DETAIL);
 
