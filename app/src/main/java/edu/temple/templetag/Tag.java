@@ -198,8 +198,8 @@ public class Tag implements Parcelable {
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(mTagID);
         dest.writeString(mTagLocationName);
-        dest.writeString(mTagImageURI);
         dest.writeString(mTagDuration);
+        dest.writeString(mTagImageURI);
         dest.writeString(mTagDescription);
         dest.writeDouble(mTagLocationLat);
         dest.writeDouble(mTagLocationLong);

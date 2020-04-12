@@ -5,6 +5,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -13,6 +14,7 @@ import android.widget.Toast;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Map;
@@ -73,11 +75,8 @@ public class TagDetailActivity extends AppCompatActivity {
             }
         });
 
-        /*** TODO Add codes for showing tag image here
-         * tagImageView.setImageBitmap()..
-         *
-         *
-         * **/
+        // code for showing tag image 
+        Picasso.with(this).load(mTag.getmTagImageURI()).into(tagImageView);
 
         mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag(MAP_FRAG_IN_DETAIL);
 
