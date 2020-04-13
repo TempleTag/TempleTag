@@ -172,9 +172,6 @@ public class CreateTagActivity extends AppCompatActivity {
                         startActivityForResult(cameraIntent, CAMERA_REQUEST_CODE);
                     }
                 }
-                // TODO Handle Android Camera API work here
-                // TODO Use Picasso to load the picture Bitmap taken into the mTagImageView
-                Toast.makeText(CreateTagActivity.this, "Implement camera API and Firebase Storage to handle this feature.", Toast.LENGTH_LONG).show();
             }
         });
 
@@ -221,13 +218,6 @@ public class CreateTagActivity extends AppCompatActivity {
                         }
                     });
                 }
-
-                /* Create tag without enforcing photo
-                 *if (mImageUri == null)
-                 *    createInDatabase();
-                 *else
-                 *    uploadImageToDatabase(mImageUri);
-                 */
             }
         });
     }
@@ -376,8 +366,6 @@ public class CreateTagActivity extends AppCompatActivity {
     @SuppressLint("MissingPermission") // Already checking necessary permission before calling requestLocationUpdates
     private void showLocationUpdates() {
         locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 0, 10, this.locationListener); // GPS
-        locationManager.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 0, 10, this.locationListener); // Cell sites
-        locationManager.requestLocationUpdates(LocationManager.PASSIVE_PROVIDER, 0, 10, this.locationListener); // WiFi
     }
 
     @Override
@@ -385,10 +373,6 @@ public class CreateTagActivity extends AppCompatActivity {
         super.onActivityResult(requestCode, resultCode, data);
         Log.d("Returned from camera ", " " + resultCode);
         if (requestCode == CAMERA_REQUEST_CODE && resultCode == RESULT_OK) {
-            //Bundle extras = data.getExtras();                   // These three lines are boiler plate from Google
-            //Bitmap imageBitmap = (Bitmap) extras.get("data");   // leaving them in for now just in case
-            //mTagImageView.setImageBitmap(imageBitmap);          //
-
             if (mImageUri == null)
                 Log.d("onActivityResult - ", "Uri is null");
             else
