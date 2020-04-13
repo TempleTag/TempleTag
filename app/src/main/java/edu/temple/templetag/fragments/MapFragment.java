@@ -231,7 +231,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
     @Override
     public void onInfoWindowClick(Marker marker) {
-        //Toast.makeText(mContext, "tag creator - " + ((Tag)marker.getTag()).getmTagCreatedBy(), Toast.LENGTH_SHORT).show();
         Intent intent = new Intent(mContext, TagDetailActivity.class);
         intent.putExtra("theTag", ((Tag)marker.getTag()));
         mContext.startActivity(intent);
