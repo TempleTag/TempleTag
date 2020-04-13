@@ -13,6 +13,8 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.squareup.picasso.Picasso;
+
 import java.util.ArrayList;
 
 import edu.temple.templetag.R;
@@ -53,6 +55,7 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         ((TagView)holder).tagName.setText(Tags.get(position).getmTagLocationName());
         ((TagView)holder).tagDesc.setText(Tags.get(position).getmTagDescription());
         ((TagView)holder).tagPop.setText(Tags.get(position).getmTagPopularity() + " people are talking about this.");
+        Picasso.with(context).load(Tags.get(position).getmTagImageURI()).into(((TagView)holder).tagImgView);
         ((TagView)holder).tagUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
