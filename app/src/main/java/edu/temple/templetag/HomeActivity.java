@@ -332,7 +332,7 @@ public class HomeActivity extends AppCompatActivity {
                 } else {
                     getSupportFragmentManager().beginTransaction()
                             .add(R.id.tag_recycler_fragment_container, TagRecyclerViewFragment.newInstance(Tags), TAG_LIST_FRAGMENT)
-                            .commit();
+                            .commitAllowingStateLoss();
                 }
 
                 mapFragment.updateNewTagsLocations(Tags, currentLocation);
