@@ -10,7 +10,6 @@ import android.location.LocationManager;
 import android.os.Bundle;
 
 import com.google.android.gms.location.FusedLocationProviderClient;
-import com.google.android.gms.location.LocationServices;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
@@ -242,7 +241,7 @@ public class HomeActivity extends AppCompatActivity {
         Tags.clear(); // clear the current tags - if fetchTags is being called again it is because of a location change and we only want to show the tags closest to the user's current location
         firestore.collection("Tags").addSnapshotListener(new EventListener<QuerySnapshot>() {
             @Override
-            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) { //addSnapshotListener will listen to data changes from Firestore and be triggered if there are changes made
+            public void onEvent(@Nullable QuerySnapshot queryDocumentSnapshots, @Nullable FirebaseFirestoreException e) { // addSnapshotListener will listen to data changes from Firestore and be triggered if there are changes made
                 for (final DocumentChange documentChange : queryDocumentSnapshots.getDocumentChanges()) {
                     Log.d(TAG, "Tag document: " + documentChange.toString());
                     switch (documentChange.getType()) {
@@ -319,9 +318,9 @@ public class HomeActivity extends AppCompatActivity {
                                 }
                             }
                         case REMOVED:
-                            //Do something
+                            // Do something
                         case MODIFIED:
-                            //Do something
+                            // Do something
                     }
                 }
 
@@ -332,7 +331,7 @@ public class HomeActivity extends AppCompatActivity {
                 } else {
                     getSupportFragmentManager().beginTransaction()
                             .add(R.id.tag_recycler_fragment_container, TagRecyclerViewFragment.newInstance(Tags), TAG_LIST_FRAGMENT)
-                            .commit();
+                            .commitAllowingStateLoss();
                 }
 
                 mapFragment.updateNewTagsLocations(Tags, currentLocation);
