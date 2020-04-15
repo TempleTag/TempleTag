@@ -260,8 +260,8 @@ public class CreateTagActivity extends AppCompatActivity {
                                         if (task.isSuccessful()) {
                                             for (QueryDocumentSnapshot document : task.getResult()) {
                                                 if (document.getData().get("locationName").equals(mTagLocationName)) {
-                                                    mTagPopularity = Integer.parseInt(document.getData().get("popularityCount").toString());
-                                                    break;
+                                                    mTagPopularity = Integer.parseInt(document.getData().get("popularityCount").toString()); // get actual popularityCount
+                                                    break; // only need to check the popularityCount for one tag at the same location name as the new tag being created
                                                 }
                                             }
                                         } else {
