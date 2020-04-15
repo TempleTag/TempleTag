@@ -52,7 +52,11 @@ public class TagDetailActivity extends AppCompatActivity {
         tagCreatedBy.setText("created by " + mTag.getmTagCreatedBy());
         tagUpVote.setText(mTag.getmTagUpvoteCount() + " Upvotes");
         tagDownVote.setText(mTag.getmTagDownvoteCount() + " Downvotes");
-        tagPop.setText(mTag.getmTagPopularity() + " people are talking about this event");
+        if (mTag.getmTagPopularity() == 1) {
+            tagPop.setText(mTag.getmTagPopularity() + " person is talking about this event");
+        } else {
+            tagPop.setText(mTag.getmTagPopularity() + " people are talking about this event");
+        }
         tagDesc.setText(mTag.getmTagDescription());
 
         delBtn = findViewById(R.id.btn_delete);

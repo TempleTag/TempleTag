@@ -54,7 +54,11 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
         ((TagView)holder).tagName.setText(Tags.get(position).getmTagLocationName());
         ((TagView)holder).tagDesc.setText(Tags.get(position).getmTagDescription());
-        ((TagView)holder).tagPop.setText(Tags.get(position).getmTagPopularity() + " people are talking about this.");
+        if (Tags.get(position).getmTagPopularity() == 1) {
+            ((TagView)holder).tagPop.setText(Tags.get(position).getmTagPopularity() + " person is talking about this event");
+        } else {
+            ((TagView)holder).tagPop.setText(Tags.get(position).getmTagPopularity() + " people are talking about this event");
+        }
         Picasso.with(context).load(Tags.get(position).getmTagImageURI()).into(((TagView)holder).tagImgView);
         ((TagView)holder).tagUp.setOnClickListener(new View.OnClickListener() {
             @Override
