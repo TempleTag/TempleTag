@@ -279,7 +279,6 @@ public class CreateTagActivity extends AppCompatActivity {
                                 });
 
                         // Update new tag's popularity count to be the same as the other tag's at that location name
-                        Log.d(TAG, "onSuccess: tag's POPULARITY IS: " + mTagPopularity);
                         firestore.collection("Tags").document(documentReference.getId()).update("popularityCount", mTagPopularity);
                         Toast.makeText(CreateTagActivity.this, "Created your Tag!", Toast.LENGTH_SHORT).show();
                         finish();
