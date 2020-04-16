@@ -61,7 +61,7 @@ public class CreateTagActivity extends AppCompatActivity {
     private double mTagLocationLongitude; // we set based off user's current location
     private int mTagUpvoteCount; // changes as other users upvote
     private int mTagDownvoteCount; // changes as other users downvote
-    private int mTagPopularity = 0; // if multiple users tag the same location, we increase the marker size on the map using this field
+    private int mTagPopularity = 1; // if multiple users tag the same location, we increase the marker size on the map using this field
     private String mTagCreatedBy; // name of user that created the tag
     private String mTagCreatedById;
 
@@ -183,7 +183,7 @@ public class CreateTagActivity extends AppCompatActivity {
 
                 // Create new tag in database enforcing photo
                 if (mImageUri == null)
-                    Toast.makeText(CreateTagActivity.this, "You must take a picture", Toast.LENGTH_LONG).show();
+                    Toast.makeText(CreateTagActivity.this, "You must take a picture for your tag", Toast.LENGTH_LONG).show();
                 else {
                     StorageReference storageReference = firebaseStorage.getReference();
                     final StorageReference tagImageReference = storageReference.child(mTagID + ".jpg");
@@ -203,9 +203,7 @@ public class CreateTagActivity extends AppCompatActivity {
                                 public void onSuccess(Uri uri) {
                                     mTagImage = uri.toString();
                                     if (mTagImage != null)
-                                        Toast.makeText(CreateTagActivity.this, mTagImage, Toast.LENGTH_LONG).show();
-                                    else
-                                        Toast.makeText(CreateTagActivity.this, "Failed to upload image to cloud", Toast.LENGTH_LONG).show();
+                                        Log.d(TAG, "onSuccess: Uploaded tag image to the cloud");
                                     createInDatabase();
                                 }
                             });
@@ -213,8 +211,13 @@ public class CreateTagActivity extends AppCompatActivity {
                     }).addOnProgressListener(new OnProgressListener<UploadTask.TaskSnapshot>() {
                         @Override
                         public void onProgress(@NonNull UploadTask.TaskSnapshot taskSnapshot) {
-                            double progress = 100.0 * taskSnapshot.getBytesTransferred()/taskSnapshot.getTotalByteCount();
+                            double progress = (100.0 * taskSnapshot.getBytesTransferred()) / taskSnapshot.getTotalByteCount();
                             progressBar.setProgress((int)progress);
+                        }
+                    }).addOnFailureListener(new OnFailureListener() {
+                        @Override
+                        public void onFailure(@NonNull Exception e) {
+                            Log.d(TAG, "onFailure: Failed to upload tag image to the cloud");
                         }
                     });
                 }
@@ -248,6 +251,35 @@ public class CreateTagActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(DocumentReference documentReference) {
                         createdInDatabase[0] = true;
+                        // Get a tag at the same location name
+                        firestore.collection("Tags")
+                                .get()
+                                .addOnCompleteListener(new OnCompleteListener<QuerySnapshot>() {
+                                    @Override
+                                    public void onComplete(@NonNull Task<QuerySnapshot> task) {
+                                        if (task.isSuccessful()) {
+                                            for (QueryDocumentSnapshot document : task.getResult()) {
+                                                if (document.getData().get("locationName").equals(mTagLocationName)) {
+                                                    mTagPopularity = Integer.parseInt(document.getData().get("popularityCount").toString()); // get actual popularityCount
+                                                    break; // only need to check the popularityCount for one tag at the same location name as the new tag being created
+                                                }
+                                            }
+                                        } else {
+                                            Log.d(TAG, "Error getting documents but task completed", task.getException());
+                                            Toast.makeText(CreateTagActivity.this, "There was an error getting documents to compare", Toast.LENGTH_LONG).show();
+                                        }
+                                    }
+                                })
+                                .addOnFailureListener(new OnFailureListener() {
+                                    @Override
+                                    public void onFailure(@NonNull Exception e) {
+                                        Log.d(TAG, "Failed to get data from Firestore database..", e);
+                                        Toast.makeText(CreateTagActivity.this, "Failed to get data from Firestore database..", Toast.LENGTH_LONG).show();
+                                    }
+                                });
+
+                        // Update new tag's popularity count to be the same as the other tag's at that location name
+                        firestore.collection("Tags").document(documentReference.getId()).update("popularityCount", mTagPopularity);
                         Toast.makeText(CreateTagActivity.this, "Created your Tag!", Toast.LENGTH_SHORT).show();
                         finish();
                     }

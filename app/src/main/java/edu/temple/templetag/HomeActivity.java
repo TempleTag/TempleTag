@@ -62,15 +62,17 @@ public class HomeActivity extends AppCompatActivity {
     private FusedLocationProviderClient fusedLocationClient;
     public static Location currentLocation;
 
-    //Fragments
+    // Fragments
     private MapFragment mapFragment;
     TagRecyclerViewFragment tagRecyclerViewFragment;
 
-    //Tags
+    // Tags
     private ArrayList<Tag> Tags = new ArrayList<>();
 
-    //Distance Calculator
+    // Distance Calculator
     DistanceCalculator distanceCalculator = new DistanceCalculator();
+
+    private boolean firstStart = true;
 
     //Other variables
     private Intent createTagIntent;
@@ -88,6 +90,14 @@ public class HomeActivity extends AppCompatActivity {
             Intent loginIntent = new Intent(HomeActivity.this, LoginActivity.class);
             startActivity(loginIntent);
             finish();
+        }
+
+        if (!firstStart) {
+            try {
+                fetchTags();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -130,6 +140,7 @@ public class HomeActivity extends AppCompatActivity {
                 currentLocation = location;
                 try {
                     fetchTags();
+                    firstStart = false;
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
