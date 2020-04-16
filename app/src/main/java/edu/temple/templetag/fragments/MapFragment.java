@@ -128,14 +128,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                         int height = 100;
                         int width = 100;
                         Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.bluemarker);
-                        Bitmap mediumMarker = Bitmap.createScaledBitmap(b, width, height, false);
-                        BitmapDescriptor mediumMarkerIcon = BitmapDescriptorFactory.fromBitmap(mediumMarker);
+                        Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+                        BitmapDescriptor smallMarkerIcon = BitmapDescriptorFactory.fromBitmap(smallMarker);
                         // Add marker with custom marker icon
                         (googleMap.addMarker(new MarkerOptions()
                                 .position(latLng)
                                 .title(tag.getmTagLocationName())
                                 .snippet(tag.getmTagDescription())
-                                .icon(mediumMarkerIcon))).setTag(tag);
+                                .icon(smallMarkerIcon))).setTag(tag);
                     }
                     else if (tag.getmTagPopularity() == 3) {
                         // Map marker should be larger
@@ -179,14 +179,14 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 int height = 85;
                 int width = 85;
                 Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.bluemarker);
-                Bitmap mediumMarker = Bitmap.createScaledBitmap(b, width, height, false);
-                BitmapDescriptor mediumMarkerIcon = BitmapDescriptorFactory.fromBitmap(mediumMarker);
+                Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+                BitmapDescriptor smallMarkerIcon = BitmapDescriptorFactory.fromBitmap(smallMarker);
                 // Add map marker with custom marker icon
                 (googleMap.addMarker(new MarkerOptions()
                         .position(latLng)
                         .title(tag.getmTagLocationName())
                         .snippet(tag.getmTagDescription())
-                        .icon(mediumMarkerIcon))).setTag(tag);
+                        .icon(smallMarkerIcon))).setTag(tag);
             }
             else if (tag.getmTagPopularity() == 3) {
                 // Map marker should be larger
