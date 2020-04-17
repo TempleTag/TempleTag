@@ -75,8 +75,7 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             public void onClick(View v) {
 
                 tagRef.update(
-                        "upvoteCount", Tags.get(position).getmTagUpvoteCount()+1,
-                        "popularityCount", Tags.get(position).getmTagPopularity()+1
+                        "upvoteCount", Tags.get(position).getmTagUpvoteCount()+1
                 ).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
@@ -95,8 +94,7 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
             @Override
             public void onClick(View v) {
                 tagRef.update(
-                        "downvoteCount", Tags.get(position).getmTagDownvoteCount()+1,
-                        "popularityCount", Tags.get(position).getmTagPopularity()-1
+                        "downvoteCount", Tags.get(position).getmTagDownvoteCount()+1
                 ).addOnCompleteListener(new OnCompleteListener<Void>() {
                     @Override
                     public void onComplete(@NonNull Task<Void> task) {
