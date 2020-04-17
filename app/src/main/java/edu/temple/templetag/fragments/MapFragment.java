@@ -23,6 +23,7 @@ import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
 import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
@@ -122,11 +123,47 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
                 if (distanceCalculator.distanceFromTo(tag.getmTagLocationLat(), tag.getmTagLocationLong(), currentLocation.getLatitude(),
                         currentLocation.getLongitude()) < HomeActivity.MAX_RADIUS){ //if tag is close to the user --> display
                     LatLng latLng = new LatLng(tag.getmTagLocationLat(), tag.getmTagLocationLong());
-                    (googleMap.addMarker(new MarkerOptions()
-                            .position(latLng)
-                            .title(tag.getmTagLocationName())
-                            .snippet(tag.getmTagDescription())
-                            .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)))).setTag(tag);
+                    if (tag.getmTagPopularity() < 3) {
+                        // Default map marker size
+                        int height = 100;
+                        int width = 100;
+                        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.bluemarker);
+                        Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+                        BitmapDescriptor smallMarkerIcon = BitmapDescriptorFactory.fromBitmap(smallMarker);
+                        // Add marker with custom marker icon
+                        (googleMap.addMarker(new MarkerOptions()
+                                .position(latLng)
+                                .title(tag.getmTagLocationName())
+                                .snippet(tag.getmTagDescription())
+                                .icon(smallMarkerIcon))).setTag(tag);
+                    }
+                    else if (tag.getmTagPopularity() == 3) {
+                        // Map marker should be larger
+                        int height = 150;
+                        int width = 150;
+                        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.bluemarker);
+                        Bitmap mediumMarker = Bitmap.createScaledBitmap(b, width, height, false);
+                        BitmapDescriptor mediumMarkerIcon = BitmapDescriptorFactory.fromBitmap(mediumMarker);
+                        // Add marker with custom marker icon
+                        (googleMap.addMarker(new MarkerOptions()
+                                .position(latLng)
+                                .title(tag.getmTagLocationName())
+                                .snippet(tag.getmTagDescription())
+                                .icon(mediumMarkerIcon))).setTag(tag);
+                    } else {
+                        // Map marker should be even larger
+                        int height = 200;
+                        int width = 200;
+                        Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.bluemarker);
+                        Bitmap largeMarker = Bitmap.createScaledBitmap(b, width, height, false);
+                        BitmapDescriptor largeMarkerIcon = BitmapDescriptorFactory.fromBitmap(largeMarker);
+                        // Add marker with custom marker icon
+                        (googleMap.addMarker(new MarkerOptions()
+                                .position(latLng)
+                                .title(tag.getmTagLocationName())
+                                .snippet(tag.getmTagDescription())
+                                .icon(largeMarkerIcon))).setTag(tag);
+                    }
                 }
             }
             focusOn(currentLocation);
@@ -137,12 +174,47 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         if (googleMap != null && currentLocation != null) {
             googleMap.clear();
             LatLng latLng = new LatLng(tag.getmTagLocationLat(), tag.getmTagLocationLong());
-            (googleMap.addMarker(new MarkerOptions()
-                    .position(latLng)
-                    .title(tag.getmTagLocationName())
-                    .snippet(tag.getmTagDescription())
-                    .icon(BitmapDescriptorFactory.defaultMarker(BitmapDescriptorFactory.HUE_AZURE)))).setTag(tag);
-
+            if (tag.getmTagPopularity() < 3) {
+                // Default map marker size
+                int height = 85;
+                int width = 85;
+                Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.bluemarker);
+                Bitmap smallMarker = Bitmap.createScaledBitmap(b, width, height, false);
+                BitmapDescriptor smallMarkerIcon = BitmapDescriptorFactory.fromBitmap(smallMarker);
+                // Add map marker with custom marker icon
+                (googleMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .title(tag.getmTagLocationName())
+                        .snippet(tag.getmTagDescription())
+                        .icon(smallMarkerIcon))).setTag(tag);
+            }
+            else if (tag.getmTagPopularity() == 3) {
+                // Map marker should be larger
+                int height = 120;
+                int width = 120;
+                Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.bluemarker);
+                Bitmap mediumMarker = Bitmap.createScaledBitmap(b, width, height, false);
+                BitmapDescriptor mediumMarkerIcon = BitmapDescriptorFactory.fromBitmap(mediumMarker);
+                // Add map marker with custom marker icon
+                (googleMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .title(tag.getmTagLocationName())
+                        .snippet(tag.getmTagDescription())
+                        .icon(mediumMarkerIcon))).setTag(tag);
+            } else {
+                // Map marker should be even larger
+                int height = 200;
+                int width = 200;
+                Bitmap b = BitmapFactory.decodeResource(getResources(), R.drawable.bluemarker);
+                Bitmap largeMarker = Bitmap.createScaledBitmap(b, width, height, false);
+                BitmapDescriptor largeMarkerIcon = BitmapDescriptorFactory.fromBitmap(largeMarker);
+                // Add map marker with custom marker icon
+                (googleMap.addMarker(new MarkerOptions()
+                        .position(latLng)
+                        .title(tag.getmTagLocationName())
+                        .snippet(tag.getmTagDescription())
+                        .icon(largeMarkerIcon))).setTag(tag);
+            }
             focusOn(currentLocation);
         }
     }
