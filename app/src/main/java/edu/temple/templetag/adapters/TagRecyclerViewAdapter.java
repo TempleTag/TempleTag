@@ -13,6 +13,10 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -24,6 +28,8 @@ import edu.temple.templetag.TagDetailActivity;
 public class TagRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
     Context context;
     ArrayList<Tag> Tags;
+    public FirebaseFirestore firestore;
+
     public static final String SELECTED_TAG = "theTag";
 
     public TagRecyclerViewAdapter(Context context, ArrayList<Tag> Tags) {
@@ -52,6 +58,10 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
 
     @Override
     public void onBindViewHolder(@NonNull RecyclerView.ViewHolder holder, final int position) {
+        firestore = FirebaseFirestore.getInstance();
+        final DocumentReference tagRef = firestore
+                .collection("Tags")
+                .document(Tags.get(position).getmTagID());
         ((TagView)holder).tagName.setText(Tags.get(position).getmTagLocationName());
         ((TagView)holder).tagDesc.setText(Tags.get(position).getmTagDescription());
         if (Tags.get(position).getmTagPopularity() == 1) {
@@ -63,18 +73,41 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         ((TagView)holder).tagUp.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "You clicked Up Vote", Toast.LENGTH_SHORT).show();
-                /*** TODO Add codes for upvote button here
-                 * **/
+
+                tagRef.update(
+                        "upvoteCount", Tags.get(position).getmTagUpvoteCount()+1,
+                        "popularityCount", Tags.get(position).getmTagPopularity()+1
+                ).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(context, "Tag Voted Up", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Toast.makeText(context, "Up Vote Failed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
 
         ((TagView)holder).tagDown.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(context, "You clicked Down Vote", Toast.LENGTH_SHORT).show();
-                /***TODO Add codes for downvote button here
-                 * **/
+                tagRef.update(
+                        "downvoteCount", Tags.get(position).getmTagDownvoteCount()+1,
+                        "popularityCount", Tags.get(position).getmTagPopularity()-1
+                ).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(context, "Tag Voted Down", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Toast.makeText(context, "Down Vote failed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
             }
         });
 
