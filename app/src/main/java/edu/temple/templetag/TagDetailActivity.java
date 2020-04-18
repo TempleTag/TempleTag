@@ -1,5 +1,6 @@
 package edu.temple.templetag;
 
+import androidx.annotation.NonNull;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
@@ -12,22 +13,31 @@ import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.FirebaseFirestore;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.Map;
 
+import de.hdodenhof.circleimageview.CircleImageView;
 import edu.temple.templetag.adapters.TagRecyclerViewAdapter;
 import edu.temple.templetag.fragments.MapFragment;
 
 public class TagDetailActivity extends AppCompatActivity {
 
     TextView tagLocationName, tagCreatedBy, tagUpVote, tagDownVote, tagPop, tagDesc;
+    CircleImageView upvoteIcon, downvoteIcon;
+    public FirebaseFirestore firestore;
     ImageButton delBtn;
     ImageView tagImageView;
     MapFragment mapFragment;
+
+
     private final String MAP_FRAG_IN_DETAIL = "MapFragmentInDetailActivity"; //MapFragment Tag to distinguish with MapFragment in HomeActivity
     Tag mTag;
 
@@ -58,7 +68,7 @@ public class TagDetailActivity extends AppCompatActivity {
             tagPop.setText(mTag.getmTagPopularity() + " people are talking about this event");
         }
         tagDesc.setText(mTag.getmTagDescription());
-
+    
         delBtn = findViewById(R.id.btn_delete);
         if (mTag.getmTagCreatedById() != null) {
             if (!mTag.getmTagCreatedById().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){ //Show delete button if the tag belows to the current user, hide it otherwise
@@ -78,6 +88,55 @@ public class TagDetailActivity extends AppCompatActivity {
                  * */
             }
         });
+
+
+        // Code for tag upvotes and downvotes
+        upvoteIcon = findViewById(R.id.up_vote_icon);
+        downvoteIcon = findViewById(R.id.down_vote_icon);
+        firestore = FirebaseFirestore.getInstance();
+        final DocumentReference tagRef = firestore
+                .collection("Tags")
+                .document(mTag.getmTagID());
+
+        upvoteIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                tagRef.update(
+                        "upvoteCount", mTag.getmTagUpvoteCount()+1
+                ).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(), "Tag Voted Up", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Toast.makeText(getApplicationContext(), "Up Vote Failed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+        downvoteIcon.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                tagRef.update(
+                        "downvoteCount", mTag.getmTagDownvoteCount()+1
+                ).addOnCompleteListener(new OnCompleteListener<Void>() {
+                    @Override
+                    public void onComplete(@NonNull Task<Void> task) {
+                        if (task.isSuccessful()) {
+                            Toast.makeText(getApplicationContext(), "Tag Voted Down", Toast.LENGTH_SHORT).show();
+                        }
+                        else {
+                            Toast.makeText(getApplicationContext(), "Down Vote Failed", Toast.LENGTH_SHORT).show();
+                        }
+                    }
+                });
+            }
+        });
+
 
         // code for showing tag image 
         Picasso.with(this).load(mTag.getmTagImageURI()).into(tagImageView);
