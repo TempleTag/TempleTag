@@ -245,11 +245,11 @@ public class CreateTagActivity extends AppCompatActivity {
         newTagMap.put("createdById", newTag.getmTagCreatedById());
 
         // Save newTag to Firestore
-        firestore.collection("Tags")
-                .add(newTagMap)
-                .addOnSuccessListener(new OnSuccessListener<DocumentReference>() {
+        firestore.collection("Tags").document(mTagID)
+                .set(newTagMap)
+                .addOnSuccessListener(new OnSuccessListener<Void>() {
                     @Override
-                    public void onSuccess(DocumentReference documentReference) {
+                    public void onSuccess(Void aVoid) {
                         createdInDatabase[0] = true;
                         // Get a tag at the same location name
                         firestore.collection("Tags")
@@ -279,7 +279,7 @@ public class CreateTagActivity extends AppCompatActivity {
                                 });
 
                         // Update new tag's popularity count to be the same as the other tag's at that location name
-                        firestore.collection("Tags").document(documentReference.getId()).update("popularityCount", mTagPopularity);
+                        firestore.collection("Tags").document(mTagID).update("popularityCount", mTagPopularity);
                         Toast.makeText(CreateTagActivity.this, "Created your Tag!", Toast.LENGTH_SHORT).show();
                         finish();
                     }
@@ -291,7 +291,6 @@ public class CreateTagActivity extends AppCompatActivity {
                         createdInDatabase[0] = false;
                     }
                 });
-
         return createdInDatabase[0];
     }
 
