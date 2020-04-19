@@ -257,6 +257,27 @@ public class HomeActivity extends AppCompatActivity {
                     Log.d(TAG, "Tag document: " + documentChange.toString());
                     switch (documentChange.getType()) {
                         case ADDED:
+
+                            // Check if tag has downvotes greater 5 and delete the tag from FirebaseStorage if it does
+                            if (Integer.parseInt(documentChange.getDocument().getData().get("downvoteCount").toString()) > 5) {
+                                firestore.collection("Tags")
+                                        .document(documentChange.getDocument().getId())
+                                        .delete()
+                                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                            @Override
+                                            public void onSuccess(Void aVoid) {
+                                                Log.d(TAG, "onSuccess: Deleted tag for down votes: " + documentChange.getDocument().getData().get("locationName"));
+                                            }
+                                        })
+                                        .addOnFailureListener(new OnFailureListener() {
+                                            @Override
+                                            public void onFailure(@NonNull Exception e) {
+                                                Log.d(TAG, "onFailure: Error deleting tag for down votes: " + documentChange.getDocument().getData().get("locationName") + " Error: " + e);
+                                            }
+                                        });
+                            }
+
+
                             // Check if tag is older than a day, if it is, delete that tag and the image in FirebaseStorage for that tag
                             String tagDateString = (documentChange.getDocument().getData().get("duration").toString());
                             String tagImageUrl = documentChange.getDocument().getData().get("imageRef").toString();
