@@ -87,12 +87,27 @@
         app:layout_constraintStart_toEndOf="@+id/tagImage"
         app:layout_constraintTop_toBottomOf="@+id/tagDescription" />
 
+    <TextView
+        android:id="@+id/expiration_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="5dp"
+        android:fontFamily="monospace"
+        android:gravity="center_horizontal"
+        android:text="This tag will expire on March 20, 2020"
+        android:textColor="@color/TempleTagTheme"
+        android:textSize="16sp"
+        app:layout_constraintHorizontal_bias="0.918"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/takeTagPictureBtn" />
+
     <Button
         android:id="@+id/createTagBtn"
         android:layout_width="258dp"
         android:layout_height="48dp"
         android:layout_marginStart="92dp"
-        android:layout_marginTop="44dp"
+        android:layout_marginTop="55dp"
         android:layout_marginEnd="77dp"
         android:background="@drawable/rounded"
         android:fontFamily="monospace"
@@ -111,6 +126,6 @@
         android:layout_marginTop="24dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/createTagBtn" />
+        app:layout_constraintBottom_toBottomOf="parent"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
