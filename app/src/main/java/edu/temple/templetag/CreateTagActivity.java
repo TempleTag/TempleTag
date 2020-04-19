@@ -87,8 +87,12 @@ public class CreateTagActivity extends AppCompatActivity {
     private TextView expiration_text_view;
 
     //Date
-    Date c = Calendar.getInstance().getTime();
-    SimpleDateFormat df = new SimpleDateFormat("MMM-dd-yyyy");
+    Calendar c = Calendar.getInstance();
+
+
+    SimpleDateFormat sdf = new SimpleDateFormat("MMM-dd-yyyy"); //SimpleDateFormat
+    SimpleDateFormat dtf = new SimpleDateFormat("MMM-dd-yyyy hh:mm a"); //DateAndTimeFormat
+
     private ProgressBar progressBar;
 
     private Uri mImageUri;
@@ -111,6 +115,9 @@ public class CreateTagActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_tag);
+
+        //Set up Date object
+        c.setTime(new Date()); // Set to current date
 
         // Get reference to all views
         tagLocationNameInput = findViewById(R.id.tagLocationName);
@@ -234,7 +241,10 @@ public class CreateTagActivity extends AppCompatActivity {
         });
 
         //Inform expiration date to user
-        expiration_text_view.setText("This tag will expired on "+df.format(c));
+        //Add 24 hours to current date
+        Calendar c1 = (Calendar) c.clone();
+        c1.add(Calendar.HOUR, 24);
+        expiration_text_view.setText("This tag will expired on "+dtf.format(c1.getTime()));
     }
 
     private boolean createInDatabase() {
@@ -309,7 +319,7 @@ public class CreateTagActivity extends AppCompatActivity {
     private void createTag() {
         // Get date tag was created
 
-        String formattedDate = df.format(c);
+        String formattedDate = sdf.format(c.getTime());
 
         //mTagID = UUID.randomUUID().toString();  // Moved this to the image upload so we could associate files with tags
         mTagDuration = formattedDate;
