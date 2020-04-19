@@ -257,6 +257,10 @@ public class HomeActivity extends AppCompatActivity {
                     Log.d(TAG, "Tag document: " + documentChange.toString());
                     switch (documentChange.getType()) {
                         case ADDED:
+
+                            // get tag downvoteCount
+                            int parsedDownvoteCount = Integer.parseInt(documentChange.getDocument().getData().get("downvoteCount").toString());
+
                             // Check if tag is older than a day, if it is, delete that tag and the image in FirebaseStorage for that tag
                             String tagDateString = (documentChange.getDocument().getData().get("duration").toString());
                             String tagImageUrl = documentChange.getDocument().getData().get("imageRef").toString();
@@ -272,7 +276,7 @@ public class HomeActivity extends AppCompatActivity {
                             Log.d(TAG, "Tag difference in days: " + differenceInDays);
                             Log.d(TAG, "Tag image url: " + tagImageUrl);
 
-                            if (differenceInDays > 0) {
+                            if ((differenceInDays > 0) || (parsedDownvoteCount > 5)) {
                                 // Delete expired tag from Firestore and its image from FirebaseStorage
                                 // 1. Delete expired tag's image from FirebaseStorage
                                 if (tagImageUrl.contains("https://firebasestorage.googleapis.com")) {
