@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".HomeActivity"
+    android:orientation="horizontal">
+
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/my_toolbar"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/TempleTagTheme"
+        android:elevation="4dp"
+        app:title="Welcome,"
+        android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:titleTextColor="#FFFFFF">
+
+        <de.hdodenhof.circleimageview.CircleImageView
+            android:id="@+id/userProfile"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@drawable/ic_action_profile"
+            android:layout_gravity="right"
+            android:layout_marginRight="10dp"/>
+    </androidx.appcompat.widget.Toolbar>
+
+    <FrameLayout
+        android:layout_width="400dp"
+        android:layout_height="match_parent"
+        android:layout_below="@id/my_toolbar"
+        android:id="@+id/mapContainer">
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/createTagBtn"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="bottom|end"
+            android:layout_marginRight="10dp"
+            android:layout_marginBottom="10dp"
+            android:clickable="true"
+            app:fabSize="auto"
+            app:rippleColor="#FFFFFF"
+            app:backgroundTint="@color/TempleTagTheme"
+            app:fabCustomSize="70dp"
+            app:srcCompat="@drawable/ic_plus_white_48dp"
+            android:layout_alignParentBottom="true"
+            android:layout_alignParentRight="true"/>
+    </FrameLayout>
+
+    <FrameLayout
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@id/mapContainer"
+        android:layout_below="@id/my_toolbar"
+        android:layout_alignParentRight="true"
+        android:layout_alignRight="@id/mapContainer"
+        android:id="@+id/tag_recycler_fragment_container"/>
+
+</RelativeLayout>
