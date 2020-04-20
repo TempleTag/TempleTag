@@ -157,7 +157,8 @@ public class TagDetailActivity extends AppCompatActivity {
                     .commitAllowingStateLoss();
         } else {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.mapContainer, mapFragment, MAP_FRAG_IN_DETAIL)
+                    .remove(mapFragment)
+                    .add(R.id.mapContainer, MapFragment.newInstance(mTag, mTagLoc), MAP_FRAG_IN_DETAIL)
                     .commitAllowingStateLoss();
             mapFragment.updateNewTagLocation(mTag, mTagLoc);
         }

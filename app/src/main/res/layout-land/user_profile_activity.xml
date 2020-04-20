@@ -1,0 +1,126 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+<androidx.constraintlayout.widget.ConstraintLayout
+    android:layout_width="0dp"
+    android:layout_height="wrap_content"
+    app:layout_constraintTop_toTopOf="parent"
+    app:layout_constraintLeft_toLeftOf="parent"
+    app:layout_constraintBottom_toBottomOf="parent"
+    app:layout_constraintWidth_percent="0.4">
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:textColor="@color/TempleTagTheme"
+        android:id="@+id/username"
+        android:text="User1224"
+        android:textSize="35sp"
+        android:textStyle="bold"
+        android:fontFamily="monospace"
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintTop_toBottomOf="@id/username"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:gravity="center_horizontal"
+        android:id="@+id/change_username_bar">
+        <ImageButton
+            android:layout_width="27dp"
+            android:layout_height="27dp"
+            android:src="@drawable/ic_action_edit"/>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/change_username"
+            android:textSize="20sp"
+            android:fontFamily="monospace"
+            android:text="Change username"/>
+    </LinearLayout>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Your email"
+        android:textSize="15dp"
+        android:fontFamily="monospace"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/change_username_bar"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:gravity="center_horizontal"
+        android:id="@+id/my_email_textView"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/emailTextView"
+        android:text="myemail"
+        android:textSize="15dp"
+        android:fontFamily="monospace"
+        app:layout_constraintTop_toBottomOf="@id/my_email_textView"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:gravity="center_horizontal"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Your Tag Count"
+        android:textSize="15dp"
+        android:fontFamily="monospace"
+        android:layout_marginTop="20dp"
+        app:layout_constraintTop_toBottomOf="@id/emailTextView"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:gravity="center_horizontal"
+        android:id="@+id/your_tag_count_textView"/>
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/tagCount"
+        android:text="#"
+        android:textSize="15dp"
+        android:fontFamily="monospace"
+        app:layout_constraintTop_toBottomOf="@id/your_tag_count_textView"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:gravity="center_horizontal"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        app:layout_constraintTop_toBottomOf="@id/tagCount"
+        app:layout_constraintLeft_toLeftOf="parent"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="10dp">
+
+        <Button
+            android:id="@+id/btn_logout"
+            android:layout_width="wrap_content"
+            android:layout_height="45dp"
+            android:layout_gravity="center|bottom"
+            android:background="@drawable/rounded"
+            android:fontFamily="monospace"
+            android:text="Log Out"
+            android:textColor="@color/white"
+            android:textStyle="bold" />
+    </LinearLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
+
+    <FrameLayout
+        android:id="@+id/tag_recycler_fragment_container"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintWidth_percent="0.6"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>
