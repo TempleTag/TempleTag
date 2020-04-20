@@ -154,12 +154,12 @@ public class TagDetailActivity extends AppCompatActivity {
             mapFragment = MapFragment.newInstance(mTag, mTagLoc);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.mapContainer, mapFragment, MAP_FRAG_IN_DETAIL)
-                    .commitAllowingStateLoss();
+                    .commit();
         } else {
             getSupportFragmentManager().beginTransaction()
                     .remove(mapFragment)
                     .add(R.id.mapContainer, MapFragment.newInstance(mTag, mTagLoc), MAP_FRAG_IN_DETAIL)
-                    .commitAllowingStateLoss();
+                    .commit();
             mapFragment.updateNewTagLocation(mTag, mTagLoc);
         }
 
