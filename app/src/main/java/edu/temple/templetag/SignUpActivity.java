@@ -123,7 +123,6 @@ public class SignUpActivity extends AppCompatActivity {
 
     private void startHomeActivity() {
         homeIntent = new Intent(SignUpActivity.this, HomeActivity.class);
-        homeIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(homeIntent);
         finish();
     }

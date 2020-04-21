@@ -84,6 +84,7 @@ public class LoginActivity extends AppCompatActivity {
 
     private void startSignUpActivity() {
         signUpIntent = new Intent(LoginActivity.this, SignUpActivity.class);
+        signUpIntent.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK | Intent.FLAG_ACTIVITY_NEW_TASK);
         startActivity(signUpIntent);
     }
 }

@@ -42,11 +42,6 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
         notifyDataSetChanged();
     }
 
-    public void clearDataSet() {
-        this.Tags = null;
-        notifyDataSetChanged();
-    }
-
     @NonNull
     @Override
     public RecyclerView.ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {

@@ -6,7 +6,7 @@
     android:layout_height="match_parent"
     tools:context=".SignUpActivity"
     android:gravity="center_vertical"
-    android:background="@mipmap/wp4813142">
+    android:background="#000000">
 
     <ImageButton
         android:layout_width="80dp"

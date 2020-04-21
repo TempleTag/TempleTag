@@ -59,7 +59,6 @@ public class TagRecyclerViewFragment extends Fragment {
 
     public void updateDataSet(ArrayList<Tag> Tags){
         this.Tags = Tags;
-        //tagRecyclerViewAdapter.clearDataSet(); // clear old data set of tags from past user location
         tagRecyclerViewAdapter.updateDataSet(Tags); // update data set with tags from new location
     }
 }
