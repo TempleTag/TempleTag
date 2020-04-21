@@ -93,7 +93,6 @@
         android:layout_marginTop="5dp"
         android:fontFamily="monospace"
         android:gravity="center_horizontal"
-        android:text="This tag will expire on March 20, 2020"
         android:textColor="@color/TempleTagTheme"
         android:textSize="16sp"
         app:layout_constraintHorizontal_bias="0.918"

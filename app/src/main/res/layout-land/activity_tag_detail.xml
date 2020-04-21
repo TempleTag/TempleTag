@@ -31,7 +31,6 @@
     <TextView
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:text="Tag Location Name"
         android:textSize="30sp"
         android:gravity="center_horizontal"
         android:fontFamily="monospace"
@@ -46,7 +45,6 @@
         android:layout_width="0dp"
         app:layout_constraintWidth_percent="0.6"
         android:layout_height="wrap_content"
-        android:text="created by Dillion"
         android:gravity="center_horizontal"
         android:textSize="20dp"
         android:id="@+id/tag_created_by"
@@ -74,7 +72,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="30 upvotes"
             android:textSize="20dp"
             android:gravity="center_vertical"
             android:id="@+id/tag_up_vote"
@@ -91,7 +88,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="20 downvotes"
             android:textSize="20dp"
             android:gravity="center_vertical"
             android:id="@+id/tag_down_vote"
@@ -117,7 +113,6 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:text="20 People are talking about this event"
             android:gravity="center_vertical"
             android:id="@+id/tag_popularity"
             android:fontFamily="monospace"
@@ -163,7 +158,6 @@
         android:layout_width="0dp"
         android:layout_height="0dp"
         android:fontFamily="monospace"
-        android:text="Washington (CNN)The commander of a US aircraft carrier that has been hit by a major outbreak of coronavirus has been relieved of command for showing poor judgment days after writing a memo warning Navy leadership that decisive action was needed to save the lives of the ship's crew, acting Secretary of the Navy Thomas Modly announced on Thursday."
         android:textSize="20sp"
         android:textColor="#000000"
         android:scrollbars = "vertical"
