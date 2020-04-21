@@ -85,7 +85,7 @@
             android:text="@string/no_account"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@color/TempleTagTheme"/>
+            android:textColor="#FFFFFF"/>
 
         <Button
             android:id="@+id/signUpBtn"

@@ -66,6 +66,7 @@
         android:layout_width="277dp"
         android:layout_height="160dp"
         android:layout_marginStart="28dp"
+        android:background="@drawable/rounded"
         android:layout_marginTop="8dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tagDescription"
