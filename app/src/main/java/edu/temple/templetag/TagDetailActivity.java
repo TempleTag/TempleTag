@@ -6,6 +6,8 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.location.Location;
 import android.os.Bundle;
+import android.text.method.ScrollingMovementMethod;
+import android.view.MenuItem;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -68,7 +70,8 @@ public class TagDetailActivity extends AppCompatActivity {
             tagPop.setText(mTag.getmTagPopularity() + " people are talking about this event");
         }
         tagDesc.setText(mTag.getmTagDescription());
-    
+        tagDesc.setMovementMethod(new ScrollingMovementMethod());
+
         delBtn = findViewById(R.id.btn_delete);
         if (mTag.getmTagCreatedById() != null) {
             if (!mTag.getmTagCreatedById().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())){ //Show delete button if the tag belows to the current user, hide it otherwise
@@ -138,7 +141,7 @@ public class TagDetailActivity extends AppCompatActivity {
         });
 
 
-        // code for showing tag image 
+        // code for showing tag image
         Picasso.with(this).load(mTag.getmTagImageURI()).into(tagImageView);
 
         mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag(MAP_FRAG_IN_DETAIL);
@@ -151,11 +154,12 @@ public class TagDetailActivity extends AppCompatActivity {
             mapFragment = MapFragment.newInstance(mTag, mTagLoc);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.mapContainer, mapFragment, MAP_FRAG_IN_DETAIL)
-                    .commitAllowingStateLoss();
+                    .commit();
         } else {
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.mapContainer, mapFragment, MAP_FRAG_IN_DETAIL)
-                    .commitAllowingStateLoss();
+                    .remove(mapFragment)
+                    .add(R.id.mapContainer, MapFragment.newInstance(mTag, mTagLoc), MAP_FRAG_IN_DETAIL)
+                    .commit();
             mapFragment.updateNewTagLocation(mTag, mTagLoc);
         }
 

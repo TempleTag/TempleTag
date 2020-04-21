@@ -1,11 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".TagDetailActivity"
-    android:orientation="vertical">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="horizontal">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/my_toolbar"
@@ -14,42 +12,56 @@
         android:background="@color/TempleTagTheme"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintTop_toTopOf="parent"
         app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
-        app:titleTextColor="#FFFFFF"
-        android:gravity="right">
+        app:titleTextColor="#FFFFFF"></androidx.appcompat.widget.Toolbar>
 
-        <ImageButton
-            android:layout_width="35dp"
-            android:layout_height="35dp"
-            android:background="@drawable/ic_action_delete"
-            android:layout_marginLeft="360dp"
-            android:id="@+id/btn_delete"/>
-    </androidx.appcompat.widget.Toolbar>
+    <ImageButton
+        android:id="@+id/btn_delete"
+        android:layout_width="35dp"
+        android:layout_height="35dp"
+        android:background="@drawable/ic_action_delete"
+        android:elevation="5dp"
+        android:layout_marginTop="5dp"
+        android:layout_marginRight="10dp"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toTopOf="parent"/>
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:textSize="30sp"
         android:gravity="center_horizontal"
         android:fontFamily="monospace"
         android:textStyle="bold"
         android:id="@+id/tag_location_name"
-        android:textColor="@color/TempleTagTheme"/>
+        android:textColor="@color/TempleTagTheme"
+        app:layout_constraintTop_toBottomOf="@id/my_toolbar"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintWidth_percent="0.6"/>
 
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
+        app:layout_constraintWidth_percent="0.6"
         android:layout_height="wrap_content"
         android:gravity="center_horizontal"
         android:textSize="20dp"
         android:id="@+id/tag_created_by"
         android:fontFamily="monospace"
-        android:textColor="#000000"/>
+        android:textColor="#000000"
+        app:layout_constraintTop_toBottomOf="@id/tag_location_name"
+        app:layout_constraintRight_toRightOf="parent"/>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        app:layout_constraintTop_toBottomOf="@id/tag_created_by"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintWidth_percent="0.6"
+        android:id="@+id/vote_bar">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="45dp"
@@ -85,10 +97,14 @@
     </LinearLayout>
 
     <LinearLayout
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:orientation="horizontal"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:id="@+id/popularity_bar"
+        app:layout_constraintTop_toBottomOf="@id/vote_bar"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintWidth_percent="0.6">
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="30dp"
@@ -104,37 +120,51 @@
 
     </LinearLayout>
 
-
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:id="@+id/mapContainer"/>
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_percent="0.5"
+        android:id="@+id/mapContainer"
+        app:layout_constraintTop_toBottomOf="@id/my_toolbar"
+        app:layout_constraintLeft_toLeftOf="parent"
+        app:layout_constraintWidth_percent="0.4"
+        />
 
     <ImageView
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        app:layout_constraintHeight_percent="0.38"
+        app:layout_constraintWidth_percent="0.4"
         app:srcCompat="@android:drawable/ic_menu_report_image"
         android:id="@+id/tag_image_view"
-        android:background="@drawable/rounded"/>
+        android:background="@drawable/rounded"
+        app:layout_constraintTop_toBottomOf="@id/mapContainer"
+        app:layout_constraintLeft_toLeftOf="parent"/>
+
     <TextView
-        android:layout_width="match_parent"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:text="Description"
         android:textSize="25dp"
         android:textStyle="bold"
-        android:layout_marginTop="10dp"
-        android:layout_marginLeft="10dp"
         android:textColor="@color/colorPrimaryDark"
-        android:fontFamily="monospace"/>
+        android:fontFamily="monospace"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/popularity_bar"
+        app:layout_constraintWidth_percent="0.6"
+        android:id="@+id/description_TextView"/>
 
     <TextView
         android:id="@+id/tag_description"
-        android:layout_width="match_parent"
-        android:layout_height="150dp"
-        android:layout_marginLeft="10dp"
-        android:layout_marginRight="10dp"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
         android:fontFamily="monospace"
         android:textSize="20sp"
         android:textColor="#000000"
-        android:scrollbars = "vertical"/>
-</LinearLayout>
+        android:scrollbars = "vertical"
+        app:layout_constraintTop_toBottomOf="@id/description_TextView"
+        app:layout_constraintRight_toRightOf="parent"
+        app:layout_constraintWidth_percent="0.6"
+        app:layout_constraintHeight_percent="0.46"/>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

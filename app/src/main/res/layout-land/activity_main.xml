@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".HomeActivity">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    tools:context=".HomeActivity"
+    android:orientation="horizontal">
 
     <androidx.appcompat.widget.Toolbar
         android:id="@+id/my_toolbar"
@@ -27,8 +28,8 @@
     </androidx.appcompat.widget.Toolbar>
 
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="300dp"
+        android:layout_width="400dp"
+        android:layout_height="match_parent"
         android:layout_below="@id/my_toolbar"
         android:id="@+id/mapContainer">
 
@@ -50,10 +51,12 @@
     </FrameLayout>
 
     <FrameLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:layout_below="@id/mapContainer"
-        android:layout_alignParentBottom="true"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_toRightOf="@id/mapContainer"
+        android:layout_below="@id/my_toolbar"
+        android:layout_alignParentRight="true"
+        android:layout_alignRight="@id/mapContainer"
         android:id="@+id/tag_recycler_fragment_container"/>
 
 </RelativeLayout>

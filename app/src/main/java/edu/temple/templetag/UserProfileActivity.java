@@ -65,6 +65,7 @@ public class UserProfileActivity extends AppCompatActivity {
         ActionBar actionBar = getSupportActionBar();
         if (actionBar != null) {
             actionBar.setDisplayHomeAsUpEnabled(true);
+            actionBar.setTitle("Account Setting");
         }
         //Change Username
         change_username_textview = findViewById(R.id.change_username);

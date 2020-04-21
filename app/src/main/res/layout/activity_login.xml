@@ -7,13 +7,23 @@
     tools:context=".HomeActivity"
     android:orientation="vertical"
     android:gravity="center_vertical"
-    android:background="@mipmap/wp4813142">
+    android:background="#000000">
+
+    <ImageButton
+        android:layout_width="80dp"
+        android:layout_height="80dp"
+        android:background="@drawable/img_templetag"
+        android:layout_above="@+id/loginLayout"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="90dp" />
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
         android:padding="16dp"
-        android:gravity="center_horizontal">
+        android:gravity="center_horizontal"
+        android:id="@+id/loginLayout">
 
         <TextView
             android:layout_marginBottom="20dp"
@@ -75,7 +85,7 @@
             android:text="@string/no_account"
             android:textSize="16sp"
             android:textStyle="bold"
-            android:textColor="@color/TempleTagTheme"/>
+            android:textColor="#FFFFFF"/>
 
         <Button
             android:id="@+id/signUpBtn"

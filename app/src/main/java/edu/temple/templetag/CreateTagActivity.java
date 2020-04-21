@@ -19,8 +19,10 @@ import android.provider.MediaStore;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
+import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -29,6 +31,7 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
@@ -79,8 +82,17 @@ public class CreateTagActivity extends AppCompatActivity {
     private MaterialEditText tagLocationNameInput;
     private MaterialEditText tagDescriptionInput;
     private ImageView mTagImageView = null;
-    private Button takeTagPictureBtn;
+    private ImageButton takeTagPictureBtn;
     private Button createTagBtn;
+    private TextView expiration_text_view;
+
+    //Date
+    Calendar c = Calendar.getInstance();
+
+
+    SimpleDateFormat sdf = new SimpleDateFormat("MMM-dd-yyyy"); //SimpleDateFormat
+    SimpleDateFormat dtf = new SimpleDateFormat("MMM-dd-yyyy hh:mm a"); //DateAndTimeFormat
+
     private ProgressBar progressBar;
 
     private Uri mImageUri;
@@ -104,12 +116,16 @@ public class CreateTagActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_create_tag);
 
+        //Set up Date object
+        c.setTime(new Date()); // Set to current date
+
         // Get reference to all views
         tagLocationNameInput = findViewById(R.id.tagLocationName);
         tagDescriptionInput = findViewById(R.id.tagDescription);
         mTagImageView = findViewById(R.id.tagImage);
         takeTagPictureBtn = findViewById(R.id.takeTagPictureBtn);
         createTagBtn = findViewById(R.id.createTagBtn);
+        expiration_text_view = findViewById(R.id.expiration_text_view);
         progressBar = findViewById(R.id.progress_bar);
 
         // Get currentUser's location using device permission
@@ -223,6 +239,12 @@ public class CreateTagActivity extends AppCompatActivity {
                 }
             }
         });
+
+        //Inform expiration date to user
+        //Add 24 hours to current date
+        Calendar c1 = (Calendar) c.clone();
+        c1.add(Calendar.HOUR, 24);
+        expiration_text_view.setText("This tag will expired on "+dtf.format(c1.getTime()));
     }
 
     private boolean createInDatabase() {
@@ -296,10 +318,8 @@ public class CreateTagActivity extends AppCompatActivity {
 
     private void createTag() {
         // Get date tag was created
-        Date c = Calendar.getInstance().getTime();
-        System.out.println("Current time => " + c);
-        SimpleDateFormat df = new SimpleDateFormat("MMM-dd-yyyy");
-        String formattedDate = df.format(c);
+
+        String formattedDate = sdf.format(c.getTime());
 
         //mTagID = UUID.randomUUID().toString();  // Moved this to the image upload so we could associate files with tags
         mTagDuration = formattedDate;
