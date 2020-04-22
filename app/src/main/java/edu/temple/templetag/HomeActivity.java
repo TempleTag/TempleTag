@@ -79,6 +79,7 @@ public class HomeActivity extends AppCompatActivity {
     private String txt_username, txt_email;
     public static final String TAG = "HomeActivity";
     public static final String TAG_LIST_FRAGMENT = "TagRecyclerFragment_HOME"; //This is the tag for TagRecyclerViewFragment for HomeActivity. This is not to be confused with the one in UserProfileActivity
+    private final String MAP_FRAG_IN_HOME = "MapFragmentInHomeActivity"; //MapFragment Tag to distinguish with MapFragment in TagDetailActivity
     public static final int MAX_RADIUS = 2; //This is the radius of tags that will be displayed to the user
 
     @Override
@@ -170,16 +171,16 @@ public class HomeActivity extends AppCompatActivity {
         }
 
         // Attach mapFragment
-        mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag("mapfragment");
+        mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag(MAP_FRAG_IN_HOME);
         if (mapFragment != null) {
             getSupportFragmentManager().beginTransaction()
                     .remove(mapFragment)
-                    .add(R.id.mapContainer, MapFragment.newInstance(Tags, currentLocation), "mapfragment")
+                    .add(R.id.mapContainer, MapFragment.newInstance(Tags, currentLocation), MAP_FRAG_IN_HOME)
                     .commit();
         } else {
             mapFragment = MapFragment.newInstance(Tags, currentLocation);
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.mapContainer, mapFragment, "mapfragment")
+                    .add(R.id.mapContainer, mapFragment, MAP_FRAG_IN_HOME)
                     .commit();
         }
     }
@@ -349,7 +350,11 @@ public class HomeActivity extends AppCompatActivity {
                             .commitAllowingStateLoss();
                 }
 
-                mapFragment.updateNewTagsLocations(Tags, currentLocation);
+                try {
+                    mapFragment.updateNewTagsLocations(Tags, currentLocation);
+                } catch (IllegalStateException er){
+                    er.printStackTrace();
+                }
             }
         });
     }
