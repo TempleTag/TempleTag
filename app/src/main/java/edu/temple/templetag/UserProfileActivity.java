@@ -163,6 +163,8 @@ public class UserProfileActivity extends AppCompatActivity {
 
                             //Create tag recycler list fragment after fetching tags
                             tagRecyclerViewFragment = (TagRecyclerViewFragment) getSupportFragmentManager().findFragmentByTag(TAG_LIST_FRAGMENT);
+                            BlankFragment blankFragment = (BlankFragment)getSupportFragmentManager().findFragmentByTag("blankfragment");
+
                             if (null != tagRecyclerViewFragment) {
                                 tagRecyclerViewFragment.updateDataSet(Tags);
                             } else {
@@ -170,6 +172,18 @@ public class UserProfileActivity extends AppCompatActivity {
                                 getSupportFragmentManager().beginTransaction()
                                         .add(R.id.tag_recycler_fragment_container, tagRecyclerViewFragment, TAG_LIST_FRAGMENT)
                                         .commit();
+                            }
+
+                            if (Tags.size() > 0) {
+                                if (blankFragment != null){
+                                    getSupportFragmentManager().beginTransaction()
+                                            .remove(blankFragment)
+                                            .commitAllowingStateLoss();
+                                }
+                            } else {
+                                getSupportFragmentManager().beginTransaction()
+                                        .replace(R.id.tag_recycler_fragment_container, BlankFragment.newInstance("You don't have any active tags"), "blankfragment")
+                                        .commitAllowingStateLoss();
                             }
                         } else {
                             Toast.makeText(UserProfileActivity.this, "Error getting Tags", Toast.LENGTH_LONG).show();

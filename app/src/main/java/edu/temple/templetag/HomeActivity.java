@@ -4,6 +4,7 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -33,6 +34,7 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
 import java.text.ParseException;
@@ -108,6 +110,11 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
+
+        //Change StatusBar Color
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        getWindow().setStatusBarColor(getResources().getColor(R.color.TempleTagTheme));
 
         createTagBtn = findViewById(R.id.createTagBtn);
 
@@ -342,11 +349,25 @@ public class HomeActivity extends AppCompatActivity {
 
                 // Create a TagRecyclerViewFragment after fetching new tags near user's current location
                 tagRecyclerViewFragment = (TagRecyclerViewFragment) getSupportFragmentManager().findFragmentByTag(TAG_LIST_FRAGMENT);
+                BlankFragment blankFragment = (BlankFragment)getSupportFragmentManager().findFragmentByTag("blankfragment");
+
                 if (tagRecyclerViewFragment != null) {
                     tagRecyclerViewFragment.updateDataSet(Tags);
                 } else {
                     getSupportFragmentManager().beginTransaction()
                             .add(R.id.tag_recycler_fragment_container, TagRecyclerViewFragment.newInstance(Tags), TAG_LIST_FRAGMENT)
+                            .commitAllowingStateLoss();
+                }
+
+                if (Tags.size() > 0) {
+                    if (blankFragment != null){
+                        getSupportFragmentManager().beginTransaction()
+                                .remove(blankFragment)
+                                .commitAllowingStateLoss();
+                    }
+                } else {
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.tag_recycler_fragment_container, BlankFragment.newInstance("Opps! There are no nearby events"), "blankfragment")
                             .commitAllowingStateLoss();
                 }
 
