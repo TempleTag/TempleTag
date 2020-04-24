@@ -85,37 +85,42 @@ public class TagDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final String LOG_OUT = "TagDetailActivity";
-                if (mTag.getmTagImageURI().contains("https://firebasestorage.googleapis.com")) {
-                    StorageReference expiredTagImageRef = firebaseStorage.getReferenceFromUrl(mTag.getmTagImageURI());
-                    expiredTagImageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d(LOG_OUT, "onSuccess: Tag's image deleted from FirebaseStorage");
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d(LOG_OUT, "onFailure: There was an error deleting the tag's image from FirebaseStorage: " + e);
-                        }
-                    });
-                }
 
-                firestore.collection("Tags")
-                        .document(mTag.getmTagID())
-                        .delete()
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                // button should not be clickable by a different user but just to be safe
+                if (mTag.getmTagCreatedById().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+
+                    if (mTag.getmTagImageURI().contains("https://firebasestorage.googleapis.com")) {
+                        StorageReference expiredTagImageRef = firebaseStorage.getReferenceFromUrl(mTag.getmTagImageURI());
+                        expiredTagImageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Log.d(LOG_OUT, "onSuccess: Deleted tag: " + mTag.getmTagLocationName());
-                                finish();
+                                Log.d(LOG_OUT, "onSuccess: Tag's image deleted from FirebaseStorage");
                             }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
+                        }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Log.d(LOG_OUT, "onFailure: Error deleting tag: " + mTag.getmTagLocationName() + " Error: " + e);
+                                Log.d(LOG_OUT, "onFailure: There was an error deleting the tag's image from FirebaseStorage: " + e);
                             }
                         });
+                    }
+
+                    firestore.collection("Tags")
+                            .document(mTag.getmTagID())
+                            .delete()
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d(LOG_OUT, "onSuccess: Deleted tag: " + mTag.getmTagLocationName());
+                                    finish();
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d(LOG_OUT, "onFailure: Error deleting tag: " + mTag.getmTagLocationName() + " Error: " + e);
+                                }
+                            });
+                }
             }
         });
 
