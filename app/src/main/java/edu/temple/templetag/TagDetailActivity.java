@@ -158,7 +158,7 @@ public class TagDetailActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "Tag Voted Up Transaction success!");
-                        Toast.makeText(getApplicationContext(), "Tag Voted Up", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Upvoted tag!", Toast.LENGTH_SHORT).show();
 
                         //Updates local upvote number with a +1
                         tagUpVote.setText(mTag.getmTagUpvoteCount()+1 + " Upvotes");
@@ -195,7 +195,7 @@ public class TagDetailActivity extends AppCompatActivity {
                     @Override
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "Tag Voted Down Transaction success!");
-                        Toast.makeText(getApplicationContext(), "Tag Voted Down", Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getApplicationContext(), "Downvoted tag!", Toast.LENGTH_SHORT).show();
                         //Updates local downvote number with a +1
                         tagDownVote.setText(mTag.getmTagDownvoteCount()+1 + " Downvotes");
                     }

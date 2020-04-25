@@ -8,7 +8,6 @@ import android.Manifest;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.content.pm.PackageManager;
-import android.graphics.Bitmap;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -32,8 +31,6 @@ import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
-import com.google.firebase.database.DatabaseReference;
-import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.FirebaseFirestore;
 import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
@@ -250,7 +247,7 @@ public class CreateTagActivity extends AppCompatActivity {
         //Add 24 hours to current date
         Calendar c1 = (Calendar) c.clone();
         c1.add(Calendar.HOUR, 24);
-        expiration_text_view.setText("This tag will expired on "+dtf.format(c1.getTime()));
+        expiration_text_view.setText("This tag will expire on "+dtf.format(c1.getTime()));
     }
 
     private boolean createInDatabase() {
