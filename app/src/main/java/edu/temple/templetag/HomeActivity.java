@@ -2,7 +2,9 @@ package edu.temple.templetag;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Color;
 import android.location.Location;
@@ -37,6 +39,7 @@ import android.view.View;
 import android.view.WindowManager;
 import android.widget.Toast;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -110,6 +113,18 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
+
+        //WorkAround For GoogleMap Crash Issue
+        try {
+            SharedPreferences googleBug = getSharedPreferences("google_bug_154855417", Context.MODE_PRIVATE);
+            if (!googleBug.contains("fixed")) {
+                File corruptedZoomTables = new File(getFilesDir(), "ZoomTables.data");
+                corruptedZoomTables.delete();
+                googleBug.edit().putBoolean("fixed", true).apply();
+            }
+        } catch (Exception e) {
+            // log or ignore so nothing breaks.
+        }
 
         //Change StatusBar Color
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);

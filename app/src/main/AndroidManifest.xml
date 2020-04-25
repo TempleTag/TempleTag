@@ -16,7 +16,7 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.AppCompat.Light">
         <activity android:name=".TagDetailActivity"
-            android:theme="@style/AppTheme.NoActionBar"></activity>
+            android:theme="@style/Theme.AppCompat.NoActionBar"></activity>
         <activity
             android:name=".CreateTagActivity"
             android:theme="@style/Theme.AppCompat.NoActionBar" />
