@@ -36,10 +36,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/my_toolbar"
         app:met_floatingLabel="normal"
-        app:met_floatingLabelTextColor="@color/TempleTagTheme"
-        app:met_textColorHint="@color/TempleTagTheme"
-        app:met_primaryColor="@color/TempleTagTheme"
-        app:met_underlineColor="@color/TempleTagTheme" />
+        app:met_floatingLabelTextColor="@color/white"
+        app:met_textColorHint="@color/white"
+        app:met_primaryColor="@color/white"
+        app:met_underlineColor="@color/white" />
 
     <com.rengwuxian.materialedittext.MaterialEditText
         android:id="@+id/tagDescription"
@@ -56,10 +56,10 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tagLocationName"
         app:met_floatingLabel="normal"
-        app:met_floatingLabelTextColor="@color/TempleTagTheme"
-        app:met_primaryColor="@color/TempleTagTheme"
-        app:met_textColorHint="@color/TempleTagTheme"
-        app:met_underlineColor="@color/TempleTagTheme" />
+        app:met_floatingLabelTextColor="@color/white"
+        app:met_textColorHint="@color/white"
+        app:met_primaryColor="@color/white"
+        app:met_underlineColor="@color/white" />
 
     <ImageView
         android:id="@+id/tagImage"
@@ -94,7 +94,7 @@
         android:layout_marginTop="5dp"
         android:fontFamily="monospace"
         android:gravity="center_horizontal"
-        android:textColor="@color/TempleTagTheme"
+        android:textColor="@color/white"
         android:textSize="16sp"
         app:layout_constraintHorizontal_bias="0.918"
         app:layout_constraintLeft_toLeftOf="parent"

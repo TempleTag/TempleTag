@@ -112,12 +112,20 @@
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <View
+        android:layout_width="1dp"
+        android:layout_height="match_parent"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintRight_toLeftOf="@id/tag_recycler_fragment_container"
+        app:layout_constraintWidth_percent="0.01"
+        android:background="@android:color/darker_gray"/>
+
     <FrameLayout
         android:id="@+id/tag_recycler_fragment_container"
         android:layout_width="0dp"
         android:layout_height="match_parent"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintRight_toRightOf="parent"
-        app:layout_constraintWidth_percent="0.6"/>
+        app:layout_constraintWidth_percent="0.59"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>
