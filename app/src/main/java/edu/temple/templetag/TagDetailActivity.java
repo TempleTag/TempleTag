@@ -8,7 +8,6 @@ import androidx.appcompat.widget.Toolbar;
 import android.location.Location;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
-import android.view.MenuItem;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -20,6 +19,7 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
+
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -29,12 +29,13 @@ import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.storage.FirebaseStorage;
+import com.google.firebase.storage.StorageReference;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Transaction;
+
 import com.squareup.picasso.Picasso;
 
-import java.util.ArrayList;
-import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import edu.temple.templetag.adapters.TagRecyclerViewAdapter;
@@ -45,6 +46,7 @@ public class TagDetailActivity extends AppCompatActivity {
     TextView tagLocationName, tagCreatedBy, tagUpVote, tagDownVote, tagPop, tagDesc;
     CircleImageView upvoteIcon, downvoteIcon;
     public FirebaseFirestore firestore;
+    private FirebaseStorage firebaseStorage = FirebaseStorage.getInstance();
     ImageButton delBtn;
     ImageView tagImageView;
     MapFragment mapFragment;
@@ -95,12 +97,43 @@ public class TagDetailActivity extends AppCompatActivity {
         delBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Toast.makeText(TagDetailActivity.this, "Implement delete function with Firebase", Toast.LENGTH_SHORT).show();
-                /*** TODO Add codes for delete button
-                 *
-                 *
-                 *
-                 * */
+                final String LOG_OUT = "TagDetailActivity";
+
+                // button should not be clickable by a different user but just to be safe
+                if (mTag.getmTagCreatedById().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+
+                    if (mTag.getmTagImageURI().contains("https://firebasestorage.googleapis.com")) {
+                        StorageReference expiredTagImageRef = firebaseStorage.getReferenceFromUrl(mTag.getmTagImageURI());
+                        expiredTagImageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
+                            @Override
+                            public void onSuccess(Void aVoid) {
+                                Log.d(LOG_OUT, "onSuccess: Tag's image deleted from FirebaseStorage");
+                            }
+                        }).addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.d(LOG_OUT, "onFailure: There was an error deleting the tag's image from FirebaseStorage: " + e);
+                            }
+                        });
+                    }
+
+                    firestore.collection("Tags")
+                            .document(mTag.getmTagID())
+                            .delete()
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d(LOG_OUT, "onSuccess: Deleted tag: " + mTag.getmTagLocationName());
+                                    finish();
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d(LOG_OUT, "onFailure: Error deleting tag: " + mTag.getmTagLocationName() + " Error: " + e);
+                                }
+                            });
+                }
             }
         });
 
