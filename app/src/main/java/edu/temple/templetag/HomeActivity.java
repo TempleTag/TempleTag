@@ -257,7 +257,6 @@ public class HomeActivity extends AppCompatActivity {
                     Log.d(TAG, "Tag document: " + documentChange.toString());
                     switch (documentChange.getType()) {
                         case ADDED:
-
                             // get tag downvoteCount
                             int parsedDownvoteCount = Integer.parseInt(documentChange.getDocument().getData().get("downvoteCount").toString());
 
