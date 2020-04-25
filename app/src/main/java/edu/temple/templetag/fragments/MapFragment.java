@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.os.Bundle;
@@ -25,9 +26,15 @@ import com.google.android.gms.maps.MapView;
 import com.google.android.gms.maps.OnMapReadyCallback;
 import com.google.android.gms.maps.model.BitmapDescriptor;
 import com.google.android.gms.maps.model.BitmapDescriptorFactory;
+import com.google.android.gms.maps.model.Circle;
+import com.google.android.gms.maps.model.CircleOptions;
+import com.google.android.gms.maps.model.Dash;
+import com.google.android.gms.maps.model.Dot;
+import com.google.android.gms.maps.model.Gap;
 import com.google.android.gms.maps.model.LatLng;
 import com.google.android.gms.maps.model.Marker;
 import com.google.android.gms.maps.model.MarkerOptions;
+import com.google.android.gms.maps.model.PatternItem;
 import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
@@ -37,6 +44,7 @@ import com.google.firebase.firestore.QueryDocumentSnapshot;
 import com.google.firebase.firestore.QuerySnapshot;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 import edu.temple.templetag.HomeActivity;
 import edu.temple.templetag.R;
@@ -236,6 +244,13 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             LatLng latLng = new LatLng(location.getLatitude(), location.getLongitude());
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
             googleMap.animateCamera(cameraUpdate);
+
+            //This value is in miles so keep the radius somewhere near 1.6*the max radius in home activity
+            java.util.List<PatternItem> pattern = Arrays.<PatternItem>asList(new Dash(1));
+            Circle circle = this.googleMap.addCircle(new CircleOptions()
+                    .center(latLng)
+                    .radius(400)
+                    .strokeColor(Color.rgb(157,34,53)).strokePattern(pattern).fillColor(Color.parseColor("#22c499a0")));
         }
     }
 
@@ -299,6 +314,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             displayAMarker(this.tag);
         }
         this.googleMap.setOnInfoWindowClickListener(this);
+//        this.googleMap.setMinZoomPreference(7);
     }
 
     @Override
