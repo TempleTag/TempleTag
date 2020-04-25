@@ -263,6 +263,7 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
             LatLng currentPos = new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude());
             // Add marker with custom marker icon
+
             Marker currentPositionMarker = (googleMap.addMarker(new MarkerOptions()
                     .position(currentPos)
                     .icon(selfMarkerIcon).flat(true).title("Your Location")));
