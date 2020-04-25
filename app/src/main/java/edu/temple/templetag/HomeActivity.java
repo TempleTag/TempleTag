@@ -79,7 +79,7 @@ public class HomeActivity extends AppCompatActivity {
     private String txt_username, txt_email;
     public static final String TAG = "HomeActivity";
     public static final String TAG_LIST_FRAGMENT = "TagRecyclerFragment_HOME"; //This is the tag for TagRecyclerViewFragment for HomeActivity. This is not to be confused with the one in UserProfileActivity
-    public static final int MAX_RADIUS = 2; //This is the radius of tags that will be displayed to the user
+    public static final double MAX_RADIUS = 0.25; //This is the radius of tags that will be displayed to the user
 
     @Override
     protected void onStart() {
