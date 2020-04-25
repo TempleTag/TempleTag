@@ -56,10 +56,9 @@ public class HomeActivity extends AppCompatActivity {
     //Views
     private FloatingActionButton createTagBtn;
 
-    //Location
+    // Location
     private LocationManager locationManager;
     private LocationListener locationListener;
-    private FusedLocationProviderClient fusedLocationClient;
     public static Location currentLocation;
 
     // Fragments
@@ -72,9 +71,7 @@ public class HomeActivity extends AppCompatActivity {
     // Distance Calculator
     DistanceCalculator distanceCalculator = new DistanceCalculator();
 
-    private boolean firstStart = true;
-
-    //Other variables
+    // Other variables
     private Intent createTagIntent;
     private String txt_username, txt_email;
     public static final String TAG = "HomeActivity";
@@ -90,14 +87,6 @@ public class HomeActivity extends AppCompatActivity {
             Intent loginIntent = new Intent(HomeActivity.this, LoginActivity.class);
             startActivity(loginIntent);
             finish();
-        }
-
-        if (!firstStart) {
-            try {
-                fetchTags();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -140,7 +129,6 @@ public class HomeActivity extends AppCompatActivity {
                 currentLocation = location;
                 try {
                     fetchTags();
-                    firstStart = false;
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -169,22 +157,14 @@ public class HomeActivity extends AppCompatActivity {
             showLocationUpdates();
         }
 
-        // Attach mapFragment
-        mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag("mapfragment");
-        if (mapFragment != null) {
-            getSupportFragmentManager().beginTransaction()
-                    .remove(mapFragment)
-                    .add(R.id.mapContainer, MapFragment.newInstance(Tags, currentLocation), "mapfragment")
-                    .commit();
-        } else {
-            mapFragment = MapFragment.newInstance(Tags, currentLocation);
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.mapContainer, mapFragment, "mapfragment")
-                    .commit();
-        }
+            try {
+                fetchTags();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
     }
 
-    private void displayUserInfo() { //Display current username to the app bar -- Welcome, user123
+    private void displayUserInfo() { // Display current username to the app bar -- Welcome, user123
         firestore = FirebaseFirestore.getInstance();
         firestore.collection("Users")
                 .get()
@@ -344,7 +324,21 @@ public class HomeActivity extends AppCompatActivity {
                     tagRecyclerViewFragment.updateDataSet(Tags);
                 } else {
                     getSupportFragmentManager().beginTransaction()
-                            .add(R.id.tag_recycler_fragment_container, TagRecyclerViewFragment.newInstance(Tags), TAG_LIST_FRAGMENT)
+                            .replace(R.id.tag_recycler_fragment_container, TagRecyclerViewFragment.newInstance(Tags), TAG_LIST_FRAGMENT)
+                            .commitAllowingStateLoss();
+                }
+
+                mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag("mapfragment");
+                if (mapFragment != null) {
+                    // Attach mapFragment
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.mapContainer, MapFragment.newInstance(Tags, currentLocation), "mapfragment")
+                            .commitAllowingStateLoss();
+                } else {
+                    // Attach mapFragment
+                    mapFragment = MapFragment.newInstance(Tags, currentLocation);
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.mapContainer, mapFragment, "mapfragment")
                             .commitAllowingStateLoss();
                 }
 
