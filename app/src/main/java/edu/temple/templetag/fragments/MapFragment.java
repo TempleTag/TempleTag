@@ -255,9 +255,9 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
 
             // Create red marker for person using app's location
             // Default map marker size
-            int height = 80;
-            int width = 80;
-            Bitmap s = BitmapFactory.decodeResource(getResources(), R.drawable.redmarker);
+            int height = 35;
+            int width = 35;
+            Bitmap s = BitmapFactory.decodeResource(getResources(), R.drawable.reddotmarker);
             Bitmap selfMarker = Bitmap.createScaledBitmap(s, width, height, false);
             BitmapDescriptor selfMarkerIcon = BitmapDescriptorFactory.fromBitmap(selfMarker);
 
