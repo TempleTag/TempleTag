@@ -48,7 +48,9 @@
         android:layout_marginLeft="12dp"
         android:layout_marginTop="10dp"
         android:layout_toRightOf="@+id/tag_location_name"
-        android:background="@drawable/ic_action_thumb_up" />
+        android:background="@drawable/ic_action_thumb_up"
+        android:foreground="@drawable/my_selector"
+        android:clickable="true"/>
 
     <ImageButton
         android:layout_width="40dp"
@@ -57,7 +59,9 @@
         android:background="@drawable/ic_action_thumb_down"
         android:layout_marginLeft="12dp"
         android:layout_marginTop="50dp"
-        android:id="@+id/tag_down_vote"/>
+        android:id="@+id/tag_down_vote"
+        android:foreground="@drawable/my_selector"
+        android:clickable="true"/>
 
     <ImageView
         android:layout_width="30dp"

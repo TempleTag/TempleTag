@@ -24,7 +24,9 @@
             android:background="@drawable/ic_action_delete"
             android:layout_marginLeft="360dp"
             android:elevation="5dp"
-            android:id="@+id/btn_delete"/>
+            android:id="@+id/btn_delete"
+            android:foreground="@drawable/my_selector"
+            android:clickable="true"/>
     </androidx.appcompat.widget.Toolbar>
 
     <TextView
@@ -56,7 +58,9 @@
             android:layout_width="45dp"
             android:layout_height="40dp"
             android:background="@drawable/ic_action_thumb_up"
-            android:id="@+id/up_vote_icon"/>
+            android:id="@+id/up_vote_icon"
+            android:foreground="@drawable/my_selector"
+            android:clickable="true"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -71,7 +75,9 @@
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/ic_action_thumb_down"
-            android:id="@+id/down_vote_icon"/>
+            android:id="@+id/down_vote_icon"
+            android:foreground="@drawable/my_selector"
+            android:clickable="true"/>
 
 
         <TextView
