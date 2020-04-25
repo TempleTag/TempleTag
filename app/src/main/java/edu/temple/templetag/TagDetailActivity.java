@@ -1,12 +1,14 @@
 package edu.temple.templetag;
 
 import androidx.annotation.NonNull;
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.appcompat.widget.Toolbar;
 
 import android.location.Location;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
+import android.view.MenuItem;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -19,12 +21,22 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseUser;
+import com.google.firebase.database.DataSnapshot;
+import com.google.firebase.database.DatabaseError;
+import com.google.firebase.database.MutableData;
 import com.google.firebase.firestore.DocumentReference;
+import com.google.firebase.firestore.DocumentSnapshot;
+import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Transaction;
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import edu.temple.templetag.adapters.TagRecyclerViewAdapter;
@@ -39,6 +51,8 @@ public class TagDetailActivity extends AppCompatActivity {
     ImageButton delBtn;
     ImageView tagImageView;
     MapFragment mapFragment;
+    public static final String TAG = "TagDetailActivity";
+
 
 
     private final String MAP_FRAG_IN_DETAIL = "MapFragmentInDetailActivity"; //MapFragment Tag to distinguish with MapFragment in HomeActivity
@@ -124,6 +138,7 @@ public class TagDetailActivity extends AppCompatActivity {
         upvoteIcon = findViewById(R.id.up_vote_icon);
         downvoteIcon = findViewById(R.id.down_vote_icon);
         firestore = FirebaseFirestore.getInstance();
+
         final DocumentReference tagRef = firestore
                 .collection("Tags")
                 .document(mTag.getmTagID());
@@ -132,38 +147,72 @@ public class TagDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
 
-                tagRef.update(
-                        "upvoteCount", mTag.getmTagUpvoteCount()+1
-                ).addOnCompleteListener(new OnCompleteListener<Void>() {
+                //Does an upvote through a Firestore Transaction which prevents race conditions
+                firestore.runTransaction(new Transaction.Function<Void>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(getApplicationContext(), "Tag Voted Up", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            Toast.makeText(getApplicationContext(), "Up Vote Failed", Toast.LENGTH_SHORT).show();
-                        }
+                    public Void apply(Transaction transaction) throws FirebaseFirestoreException {
+                        DocumentSnapshot snapshot = transaction.get(tagRef);
+
+                        int newVotes = (int)(snapshot.getDouble("upvoteCount") + 1);
+                        transaction.update(tagRef, "upvoteCount", newVotes);
+
+                        // Success
+                        return null;
                     }
-                });
+                })                    //Testing for success or failure
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "Tag Voted Up Transaction success!");
+                        Toast.makeText(getApplicationContext(), "Tag Voted Up", Toast.LENGTH_SHORT).show();
+
+                        //Updates local upvote number with a +1
+                        tagUpVote.setText(mTag.getmTagUpvoteCount()+1 + " Upvotes");
+                    }
+                })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Tag Voted Up Transaction failure.", e);
+                                Toast.makeText(getApplicationContext(), "Up Vote Failed", Toast.LENGTH_SHORT).show();
+                            }
+                        });
+
             }
         });
         downvoteIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
-                tagRef.update(
-                        "downvoteCount", mTag.getmTagDownvoteCount()+1
-                ).addOnCompleteListener(new OnCompleteListener<Void>() {
+                firestore.runTransaction(new Transaction.Function<Void>() {
                     @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        if (task.isSuccessful()) {
-                            Toast.makeText(getApplicationContext(), "Tag Voted Down", Toast.LENGTH_SHORT).show();
-                        }
-                        else {
-                            Toast.makeText(getApplicationContext(), "Down Vote Failed", Toast.LENGTH_SHORT).show();
-                        }
+                    public Void apply(Transaction transaction) throws FirebaseFirestoreException {
+                        DocumentSnapshot snapshot = transaction.get(tagRef);
+                        // Note: this could be done without a transaction
+                        //       by updating the population using FieldValue.increment()
+                        int newVotes = (int)(snapshot.getDouble("downvoteCount") + 1);
+                        transaction.update(tagRef, "downvoteCount", newVotes);
+
+                        // Success
+                        return null;
                     }
-                });
+                })                    //Testing for success or failure
+                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                    @Override
+                    public void onSuccess(Void aVoid) {
+                        Log.d(TAG, "Tag Voted Down Transaction success!");
+                        Toast.makeText(getApplicationContext(), "Tag Voted Down", Toast.LENGTH_SHORT).show();
+                        //Updates local downvote number with a +1
+                        tagUpVote.setText(mTag.getmTagDownvoteCount()-1 + " Upvotes");
+                    }
+                })
+                        .addOnFailureListener(new OnFailureListener() {
+                            @Override
+                            public void onFailure(@NonNull Exception e) {
+                                Log.w(TAG, "Tag Voted Down Transaction failure.", e);
+                                Toast.makeText(getApplicationContext(), "Tag Voted Down Failed", Toast.LENGTH_SHORT).show();
+                            }
+                        });
             }
         });
 
