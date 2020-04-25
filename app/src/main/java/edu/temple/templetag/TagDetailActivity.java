@@ -136,6 +136,9 @@ public class TagDetailActivity extends AppCompatActivity {
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "Tag Voted Up Transaction success!");
                         Toast.makeText(getApplicationContext(), "Tag Voted Up", Toast.LENGTH_SHORT).show();
+
+                        //Updates local upvote number with a +1
+                        tagUpVote.setText(mTag.getmTagUpvoteCount()+1 + " Upvotes");
                     }
                 })
                         .addOnFailureListener(new OnFailureListener() {
@@ -172,6 +175,8 @@ public class TagDetailActivity extends AppCompatActivity {
                     public void onSuccess(Void aVoid) {
                         Log.d(TAG, "Tag Voted Down Transaction success!");
                         Toast.makeText(getApplicationContext(), "Tag Voted Down", Toast.LENGTH_SHORT).show();
+                        //Updates local downvote number with a +1
+                        tagUpVote.setText(mTag.getmTagDownvoteCount()-1 + " Upvotes");
                     }
                 })
                         .addOnFailureListener(new OnFailureListener() {
