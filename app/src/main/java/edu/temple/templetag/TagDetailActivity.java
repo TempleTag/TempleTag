@@ -8,7 +8,6 @@ import androidx.appcompat.widget.Toolbar;
 import android.location.Location;
 import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
-import android.view.MenuItem;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageButton;
@@ -21,18 +20,24 @@ import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
 import com.google.firebase.auth.FirebaseAuth;
+<<<<<<<<< Temporary merge branch 1
+=========
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.MutableData;
+>>>>>>>>> Temporary merge branch 2
 import com.google.firebase.firestore.DocumentReference;
 import com.google.firebase.firestore.DocumentSnapshot;
 import com.google.firebase.firestore.FieldPath;
 import com.google.firebase.firestore.FirebaseFirestore;
-import com.google.firebase.firestore.FirebaseFirestoreException;
-import com.google.firebase.firestore.Transaction;
+<<<<<<<<< Temporary merge branch 1
 import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
+=========
+import com.google.firebase.firestore.FirebaseFirestoreException;
+import com.google.firebase.firestore.Transaction;
+>>>>>>>>> Temporary merge branch 2
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -99,37 +104,42 @@ public class TagDetailActivity extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 final String LOG_OUT = "TagDetailActivity";
-                if (mTag.getmTagImageURI().contains("https://firebasestorage.googleapis.com")) {
-                    StorageReference expiredTagImageRef = firebaseStorage.getReferenceFromUrl(mTag.getmTagImageURI());
-                    expiredTagImageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
-                        @Override
-                        public void onSuccess(Void aVoid) {
-                            Log.d(LOG_OUT, "onSuccess: Tag's image deleted from FirebaseStorage");
-                        }
-                    }).addOnFailureListener(new OnFailureListener() {
-                        @Override
-                        public void onFailure(@NonNull Exception e) {
-                            Log.d(LOG_OUT, "onFailure: There was an error deleting the tag's image from FirebaseStorage: " + e);
-                        }
-                    });
-                }
 
-                firestore.collection("Tags")
-                        .document(mTag.getmTagID())
-                        .delete()
-                        .addOnSuccessListener(new OnSuccessListener<Void>() {
+                // button should not be clickable by a different user but just to be safe
+                if (mTag.getmTagCreatedById().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
+
+                    if (mTag.getmTagImageURI().contains("https://firebasestorage.googleapis.com")) {
+                        StorageReference expiredTagImageRef = firebaseStorage.getReferenceFromUrl(mTag.getmTagImageURI());
+                        expiredTagImageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Log.d(LOG_OUT, "onSuccess: Deleted tag: " + mTag.getmTagLocationName());
-                                finish();
+                                Log.d(LOG_OUT, "onSuccess: Tag's image deleted from FirebaseStorage");
                             }
-                        })
-                        .addOnFailureListener(new OnFailureListener() {
+                        }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Log.d(LOG_OUT, "onFailure: Error deleting tag: " + mTag.getmTagLocationName() + " Error: " + e);
+                                Log.d(LOG_OUT, "onFailure: There was an error deleting the tag's image from FirebaseStorage: " + e);
                             }
                         });
+                    }
+
+                    firestore.collection("Tags")
+                            .document(mTag.getmTagID())
+                            .delete()
+                            .addOnSuccessListener(new OnSuccessListener<Void>() {
+                                @Override
+                                public void onSuccess(Void aVoid) {
+                                    Log.d(LOG_OUT, "onSuccess: Deleted tag: " + mTag.getmTagLocationName());
+                                    finish();
+                                }
+                            })
+                            .addOnFailureListener(new OnFailureListener() {
+                                @Override
+                                public void onFailure(@NonNull Exception e) {
+                                    Log.d(LOG_OUT, "onFailure: Error deleting tag: " + mTag.getmTagLocationName() + " Error: " + e);
+                                }
+                            });
+                }
             }
         });
 
@@ -180,6 +190,8 @@ public class TagDetailActivity extends AppCompatActivity {
 
             }
         });
+
+        //Does an downvote through a Firestore Transaction which prevents race conditions
         downvoteIcon.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -203,7 +215,7 @@ public class TagDetailActivity extends AppCompatActivity {
                         Log.d(TAG, "Tag Voted Down Transaction success!");
                         Toast.makeText(getApplicationContext(), "Tag Voted Down", Toast.LENGTH_SHORT).show();
                         //Updates local downvote number with a +1
-                        tagUpVote.setText(mTag.getmTagDownvoteCount()-1 + " Upvotes");
+                        tagDownVote.setText(mTag.getmTagDownvoteCount()+1 + " Downvotes");
                     }
                 })
                         .addOnFailureListener(new OnFailureListener() {
@@ -215,7 +227,6 @@ public class TagDetailActivity extends AppCompatActivity {
                         });
             }
         });
-
 
         // code for showing tag image
         Picasso.with(this).load(mTag.getmTagImageURI()).into(tagImageView);
