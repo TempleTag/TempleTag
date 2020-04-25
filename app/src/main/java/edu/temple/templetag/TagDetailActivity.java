@@ -176,7 +176,7 @@ public class TagDetailActivity extends AppCompatActivity {
                         Log.d(TAG, "Tag Voted Down Transaction success!");
                         Toast.makeText(getApplicationContext(), "Tag Voted Down", Toast.LENGTH_SHORT).show();
                         //Updates local downvote number with a +1
-                        tagUpVote.setText(mTag.getmTagDownvoteCount()-1 + " Upvotes");
+                        tagDownVote.setText(mTag.getmTagDownvoteCount()+1 + " Downvotes");
                     }
                 })
                         .addOnFailureListener(new OnFailureListener() {
