@@ -64,7 +64,6 @@ public class HomeActivity extends AppCompatActivity {
     //Location
     private LocationManager locationManager;
     private LocationListener locationListener;
-    private FusedLocationProviderClient fusedLocationClient;
     public static Location currentLocation;
 
     // Fragments
@@ -77,15 +76,13 @@ public class HomeActivity extends AppCompatActivity {
     // Distance Calculator
     DistanceCalculator distanceCalculator = new DistanceCalculator();
 
-    private boolean firstStart = true;
-
-    //Other variables
+    // Other variables
     private Intent createTagIntent;
     private String txt_username, txt_email;
     public static final String TAG = "HomeActivity";
     public static final String TAG_LIST_FRAGMENT = "TagRecyclerFragment_HOME"; //This is the tag for TagRecyclerViewFragment for HomeActivity. This is not to be confused with the one in UserProfileActivity
+    public static final double MAX_RADIUS = 0.25; //This is the radius of tags that will be displayed to the user
     private final String MAP_FRAG_IN_HOME = "MapFragmentInHomeActivity"; //MapFragment Tag to distinguish with MapFragment in TagDetailActivity
-    public static final int MAX_RADIUS = 2; //This is the radius of tags that will be displayed to the user
 
     @Override
     protected void onStart() {
@@ -96,14 +93,6 @@ public class HomeActivity extends AppCompatActivity {
             Intent loginIntent = new Intent(HomeActivity.this, LoginActivity.class);
             startActivity(loginIntent);
             finish();
-        }
-
-        if (!firstStart) {
-            try {
-                fetchTags();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
         }
     }
 
@@ -163,7 +152,6 @@ public class HomeActivity extends AppCompatActivity {
                 currentLocation = location;
                 try {
                     fetchTags();
-                    firstStart = false;
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -192,19 +180,11 @@ public class HomeActivity extends AppCompatActivity {
             showLocationUpdates();
         }
 
-        // Attach mapFragment
-        mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag(MAP_FRAG_IN_HOME);
-        if (mapFragment != null) {
-            getSupportFragmentManager().beginTransaction()
-                    .remove(mapFragment)
-                    .add(R.id.mapContainer, MapFragment.newInstance(Tags, currentLocation), MAP_FRAG_IN_HOME)
-                    .commit();
-        } else {
-            mapFragment = MapFragment.newInstance(Tags, currentLocation);
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.mapContainer, mapFragment, MAP_FRAG_IN_HOME)
-                    .commit();
-        }
+            try {
+                fetchTags();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
     }
 
     private void displayUserInfo() { //Display current username to the app bar -- Welcome, user123
@@ -369,7 +349,21 @@ public class HomeActivity extends AppCompatActivity {
                     tagRecyclerViewFragment.updateDataSet(Tags);
                 } else {
                     getSupportFragmentManager().beginTransaction()
-                            .add(R.id.tag_recycler_fragment_container, TagRecyclerViewFragment.newInstance(Tags), TAG_LIST_FRAGMENT)
+                            .replace(R.id.tag_recycler_fragment_container, TagRecyclerViewFragment.newInstance(Tags), TAG_LIST_FRAGMENT)
+                            .commitAllowingStateLoss();
+                }
+
+                mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag("mapfragment");
+                if (mapFragment != null) {
+                    // Attach mapFragment
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.mapContainer, MapFragment.newInstance(Tags, currentLocation), "mapfragment")
+                            .commitAllowingStateLoss();
+                } else {
+                    // Attach mapFragment
+                    mapFragment = MapFragment.newInstance(Tags, currentLocation);
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.mapContainer, mapFragment, "mapfragment")
                             .commitAllowingStateLoss();
                 }
 
