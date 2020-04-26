@@ -104,7 +104,7 @@ public class TagDetailActivity extends AppCompatActivity {
         delBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String LOG_OUT = "TagDetailActivity";
+                final String TAG = "TagDetailActivity";
 
                 // button should not be clickable by a different user but just to be safe
                 if (mTag.getmTagCreatedById().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
@@ -114,12 +114,12 @@ public class TagDetailActivity extends AppCompatActivity {
                         expiredTagImageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Log.d(LOG_OUT, "onSuccess: Tag's image deleted from FirebaseStorage");
+                                Log.d(TAG, "onSuccess: Tag's image deleted from FirebaseStorage");
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Log.d(LOG_OUT, "onFailure: There was an error deleting the tag's image from FirebaseStorage: " + e);
+                                Log.d(TAG, "onFailure: There was an error deleting the tag's image from FirebaseStorage: " + e);
                             }
                         });
                     }
@@ -130,14 +130,14 @@ public class TagDetailActivity extends AppCompatActivity {
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    Log.d(LOG_OUT, "onSuccess: Deleted tag: " + mTag.getmTagLocationName());
+                                    Log.d(TAG, "onSuccess: Deleted tag: " + mTag.getmTagLocationName());
                                     finish();
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Log.d(LOG_OUT, "onFailure: Error deleting tag: " + mTag.getmTagLocationName() + " Error: " + e);
+                                    Log.d(TAG, "onFailure: Error deleting tag: " + mTag.getmTagLocationName() + " Error: " + e);
                                 }
                             });
                 }

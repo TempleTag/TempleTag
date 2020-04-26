@@ -83,6 +83,7 @@ public class HomeActivity extends AppCompatActivity {
     public static final String TAG_LIST_FRAGMENT = "TagRecyclerFragment_HOME"; //This is the tag for TagRecyclerViewFragment for HomeActivity. This is not to be confused with the one in UserProfileActivity
     public static final double MAX_RADIUS = 0.25; //This is the radius of tags that will be displayed to the user
     private final String MAP_FRAG_IN_HOME = "MapFragmentInHomeActivity"; //MapFragment Tag to distinguish with MapFragment in TagDetailActivity
+    private boolean firstStart = true;
 
     @Override
     protected void onStart() {
@@ -93,6 +94,14 @@ public class HomeActivity extends AppCompatActivity {
             Intent loginIntent = new Intent(HomeActivity.this, LoginActivity.class);
             startActivity(loginIntent);
             finish();
+        }
+
+        if (!firstStart) {
+            try {
+                fetchTags();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -140,6 +149,7 @@ public class HomeActivity extends AppCompatActivity {
                 currentLocation = location;
                 try {
                     fetchTags();
+                    firstStart = false;
                 } catch (ParseException e) {
                     e.printStackTrace();
                 }
@@ -166,6 +176,14 @@ public class HomeActivity extends AppCompatActivity {
             requestPermissions(new String[]{Manifest.permission.ACCESS_FINE_LOCATION}, 123);
         } else {
             showLocationUpdates();
+        }
+
+        if (!firstStart) {
+            try {
+                fetchTags();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
     }
 
