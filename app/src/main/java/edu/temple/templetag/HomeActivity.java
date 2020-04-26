@@ -330,6 +330,7 @@ public class HomeActivity extends AppCompatActivity {
                             }
                         case REMOVED:
                             // Do something
+                            System.out.println("Deleted");
                         case MODIFIED:
                             // Do something
                     }

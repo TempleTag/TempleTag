@@ -14,7 +14,7 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:popupTheme="@style/ThemeOverlay.AppCompat"
         app:titleTextColor="#FFFFFF"></androidx.appcompat.widget.Toolbar>
 
     <ImageButton

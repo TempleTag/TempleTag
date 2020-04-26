@@ -45,7 +45,7 @@
         android:textSize="20dp"
         android:id="@+id/tag_created_by"
         android:fontFamily="monospace"
-        android:textColor="#000000"/>
+        android:textColor="#FFFFFF"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -66,7 +66,7 @@
             android:gravity="center_vertical"
             android:id="@+id/tag_up_vote"
             android:fontFamily="monospace"
-            android:textColor="#000000"/>
+            android:textColor="#FFFFFF"/>
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="40dp"
@@ -82,7 +82,7 @@
             android:gravity="center_vertical"
             android:id="@+id/tag_down_vote"
             android:fontFamily="monospace"
-            android:textColor="#000000"/>
+            android:textColor="#FFFFFF"/>
 
     </LinearLayout>
 
@@ -102,7 +102,7 @@
             android:gravity="center_vertical"
             android:id="@+id/tag_popularity"
             android:fontFamily="monospace"
-            android:textColor="#000000"/>
+            android:textColor="#FFFFFF"/>
 
     </LinearLayout>
 
@@ -126,7 +126,7 @@
         android:textStyle="bold"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/white"
         android:fontFamily="monospace"/>
 
     <TextView
@@ -137,6 +137,6 @@
         android:layout_marginRight="10dp"
         android:fontFamily="monospace"
         android:textSize="20sp"
-        android:textColor="#000000"
+        android:textColor="#FFFFFF"
         android:scrollbars = "vertical"/>
 </LinearLayout>
