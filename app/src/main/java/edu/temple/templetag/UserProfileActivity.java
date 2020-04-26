@@ -158,10 +158,14 @@ public class UserProfileActivity extends AppCompatActivity {
                                     Tags.add(tag);
                                 }
                             }
-                            //Update active tags
-                            tagcount_textview.setText(Tags.size() + " active tags");
+                            // Update active tags
+                            if (Tags.size() == 1) {
+                                tagcount_textview.setText(Tags.size() + " active tag");
+                            } else {
+                                tagcount_textview.setText(Tags.size() + " active tags");
+                            }
 
-                            //Create tag recycler list fragment after fetching tags
+                            // Create tag recycler list fragment after fetching tags
                             tagRecyclerViewFragment = (TagRecyclerViewFragment) getSupportFragmentManager().findFragmentByTag(TAG_LIST_FRAGMENT);
                             BlankFragment blankFragment = (BlankFragment)getSupportFragmentManager().findFragmentByTag("blankfragment");
 
