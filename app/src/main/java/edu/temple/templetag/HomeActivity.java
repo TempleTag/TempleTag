@@ -357,9 +357,10 @@ public class HomeActivity extends AppCompatActivity {
                 mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag("mapfragment");
                 if (mapFragment != null) {
                     // Attach mapFragment
-                    getSupportFragmentManager().beginTransaction()
-                            .replace(R.id.mapContainer, MapFragment.newInstance(Tags, currentLocation), "mapfragment")
-                            .commitAllowingStateLoss();
+//                    getSupportFragmentManager().beginTransaction()
+//                            .replace(R.id.mapContainer, MapFragment.newInstance(Tags, currentLocation), "mapfragment")
+//                            .commitAllowingStateLoss();
+                    mapFragment.updateNewTagsLocations(Tags, currentLocation);
                 } else {
                     // Attach mapFragment
                     mapFragment = MapFragment.newInstance(Tags, currentLocation);
@@ -379,8 +380,6 @@ public class HomeActivity extends AppCompatActivity {
                             .replace(R.id.tag_recycler_fragment_container, BlankFragment.newInstance("Opps! There are no nearby events"), "blankfragment")
                             .commitAllowingStateLoss();
                 }
-
-                mapFragment.updateNewTagsLocations(Tags, currentLocation);
             }
         });
     }
