@@ -76,6 +76,8 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(context, "Tag Voted Up", Toast.LENGTH_SHORT).show();
+                            (Tags.get(position)).setmTagUpvoteCount(Tags.get(position).getmTagUpvoteCount()+1);
+                            notifyDataSetChanged();
                         }
                         else {
                             Toast.makeText(context, "Up Vote Failed", Toast.LENGTH_SHORT).show();
@@ -95,6 +97,8 @@ public class TagRecyclerViewAdapter extends RecyclerView.Adapter<RecyclerView.Vi
                     public void onComplete(@NonNull Task<Void> task) {
                         if (task.isSuccessful()) {
                             Toast.makeText(context, "Tag Voted Down", Toast.LENGTH_SHORT).show();
+                            (Tags.get(position)).setmTagDownvoteCount(Tags.get(position).getmTagDownvoteCount()+1);
+                            notifyDataSetChanged();
                         }
                         else {
                             Toast.makeText(context, "Down Vote failed", Toast.LENGTH_SHORT).show();
