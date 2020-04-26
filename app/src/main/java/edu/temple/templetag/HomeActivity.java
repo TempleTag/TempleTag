@@ -175,12 +175,12 @@ public class HomeActivity extends AppCompatActivity {
             getSupportFragmentManager().beginTransaction()
                     .remove(mapFragment)
                     .add(R.id.mapContainer, MapFragment.newInstance(Tags, currentLocation), "mapfragment")
-                    .commit();
+                    .commitAllowingStateLoss();
         } else {
             mapFragment = MapFragment.newInstance(Tags, currentLocation);
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.mapContainer, mapFragment, "mapfragment")
-                    .commit();
+                    .commitAllowingStateLoss();
         }
     }
 
