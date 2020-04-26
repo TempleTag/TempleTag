@@ -378,12 +378,6 @@ public class HomeActivity extends AppCompatActivity {
                             .replace(R.id.tag_recycler_fragment_container, BlankFragment.newInstance("Opps! There are no nearby events"), "blankfragment")
                             .commitAllowingStateLoss();
                 }
-
-                try {
-                    mapFragment.updateNewTagsLocations(Tags, currentLocation);
-                } catch (IllegalStateException er){
-                    er.printStackTrace();
-                }
             }
         });
     }

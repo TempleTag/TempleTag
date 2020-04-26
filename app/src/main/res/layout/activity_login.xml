@@ -48,7 +48,7 @@
             android:fontFamily="monospace"
             android:hint="@string/login_email"
             android:inputType="textEmailAddress"
-            app:met_floatingLabel="normal" />
+            app:met_floatingLabel="highlight" />
 
         <com.rengwuxian.materialedittext.MaterialEditText
             android:id="@+id/password"
@@ -62,7 +62,7 @@
             app:met_floatingLabelTextColor="@color/white"
             app:met_baseColor="@color/white"
             app:met_underlineColor="@color/TempleTagTheme"
-            app:met_floatingLabel="normal" />
+            app:met_floatingLabel="highlight" />
 
         <Button
             android:id="@+id/loginBtn"
