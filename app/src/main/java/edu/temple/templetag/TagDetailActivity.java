@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.method.ScrollingMovementMethod;
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -19,7 +20,6 @@ import com.google.android.gms.tasks.OnCompleteListener;
 import com.google.android.gms.tasks.OnFailureListener;
 import com.google.android.gms.tasks.OnSuccessListener;
 import com.google.android.gms.tasks.Task;
-
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.database.DataSnapshot;
@@ -33,9 +33,10 @@ import com.google.firebase.storage.FirebaseStorage;
 import com.google.firebase.storage.StorageReference;
 import com.google.firebase.firestore.FirebaseFirestoreException;
 import com.google.firebase.firestore.Transaction;
-
 import com.squareup.picasso.Picasso;
 
+import java.util.ArrayList;
+import java.util.Map;
 
 import de.hdodenhof.circleimageview.CircleImageView;
 import edu.temple.templetag.adapters.TagRecyclerViewAdapter;
@@ -64,6 +65,12 @@ public class TagDetailActivity extends AppCompatActivity {
 
         Toolbar toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
+        getSupportActionBar().setDisplayShowTitleEnabled(false);
+
+        //Change StatusBar Color
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        getWindow().setStatusBarColor(getResources().getColor(R.color.TempleTagTheme));
 
         mTag = getIntent().getExtras().getParcelable(TagRecyclerViewAdapter.SELECTED_TAG);
         tagLocationName = findViewById(R.id.tag_location_name);
@@ -97,7 +104,7 @@ public class TagDetailActivity extends AppCompatActivity {
         delBtn.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                final String LOG_OUT = "TagDetailActivity";
+                final String TAG = "TagDetailActivity";
 
                 // button should not be clickable by a different user but just to be safe
                 if (mTag.getmTagCreatedById().equals(FirebaseAuth.getInstance().getCurrentUser().getUid())) {
@@ -107,12 +114,12 @@ public class TagDetailActivity extends AppCompatActivity {
                         expiredTagImageRef.delete().addOnSuccessListener(new OnSuccessListener<Void>() {
                             @Override
                             public void onSuccess(Void aVoid) {
-                                Log.d(LOG_OUT, "onSuccess: Tag's image deleted from FirebaseStorage");
+                                Log.d(TAG, "onSuccess: Tag's image deleted from FirebaseStorage");
                             }
                         }).addOnFailureListener(new OnFailureListener() {
                             @Override
                             public void onFailure(@NonNull Exception e) {
-                                Log.d(LOG_OUT, "onFailure: There was an error deleting the tag's image from FirebaseStorage: " + e);
+                                Log.d(TAG, "onFailure: There was an error deleting the tag's image from FirebaseStorage: " + e);
                             }
                         });
                     }
@@ -123,14 +130,14 @@ public class TagDetailActivity extends AppCompatActivity {
                             .addOnSuccessListener(new OnSuccessListener<Void>() {
                                 @Override
                                 public void onSuccess(Void aVoid) {
-                                    Log.d(LOG_OUT, "onSuccess: Deleted tag: " + mTag.getmTagLocationName());
+                                    Log.d(TAG, "onSuccess: Deleted tag: " + mTag.getmTagLocationName());
                                     finish();
                                 }
                             })
                             .addOnFailureListener(new OnFailureListener() {
                                 @Override
                                 public void onFailure(@NonNull Exception e) {
-                                    Log.d(LOG_OUT, "onFailure: Error deleting tag: " + mTag.getmTagLocationName() + " Error: " + e);
+                                    Log.d(TAG, "onFailure: Error deleting tag: " + mTag.getmTagLocationName() + " Error: " + e);
                                 }
                             });
                 }

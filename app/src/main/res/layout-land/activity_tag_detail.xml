@@ -14,7 +14,7 @@
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
+        app:popupTheme="@style/ThemeOverlay.AppCompat"
         app:titleTextColor="#FFFFFF"></androidx.appcompat.widget.Toolbar>
 
     <ImageButton
@@ -51,7 +51,7 @@
         android:textSize="20dp"
         android:id="@+id/tag_created_by"
         android:fontFamily="monospace"
-        android:textColor="#000000"
+        android:textColor="#FFFFFF"
         app:layout_constraintTop_toBottomOf="@id/tag_location_name"
         app:layout_constraintRight_toRightOf="parent"/>
 
@@ -80,7 +80,7 @@
             android:gravity="center_vertical"
             android:id="@+id/tag_up_vote"
             android:fontFamily="monospace"
-            android:textColor="#000000"/>
+            android:textColor="#FFFFFF"/>
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="40dp"
@@ -98,7 +98,7 @@
             android:gravity="center_vertical"
             android:id="@+id/tag_down_vote"
             android:fontFamily="monospace"
-            android:textColor="#000000"/>
+            android:textColor="#FFFFFF"/>
 
     </LinearLayout>
 
@@ -122,7 +122,7 @@
             android:gravity="center_vertical"
             android:id="@+id/tag_popularity"
             android:fontFamily="monospace"
-            android:textColor="#000000"/>
+            android:textColor="#FFFFFF"/>
 
     </LinearLayout>
 
@@ -143,7 +143,7 @@
         app:layout_constraintWidth_percent="0.4"
         app:srcCompat="@android:drawable/ic_menu_report_image"
         android:id="@+id/tag_image_view"
-        android:background="@drawable/rounded"
+        android:background="@android:drawable/dialog_holo_dark_frame"
         app:layout_constraintTop_toBottomOf="@id/mapContainer"
         app:layout_constraintLeft_toLeftOf="parent"/>
 
@@ -153,7 +153,7 @@
         android:text="Description"
         android:textSize="25dp"
         android:textStyle="bold"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/white"
         android:fontFamily="monospace"
         app:layout_constraintRight_toRightOf="parent"
         app:layout_constraintTop_toBottomOf="@id/popularity_bar"
@@ -166,7 +166,7 @@
         android:layout_height="0dp"
         android:fontFamily="monospace"
         android:textSize="20sp"
-        android:textColor="#000000"
+        android:textColor="#FFFFFF"
         android:scrollbars = "vertical"
         app:layout_constraintTop_toBottomOf="@id/description_TextView"
         app:layout_constraintRight_toRightOf="parent"
