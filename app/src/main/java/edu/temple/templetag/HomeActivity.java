@@ -179,12 +179,6 @@ public class HomeActivity extends AppCompatActivity {
         } else {
             showLocationUpdates();
         }
-
-            try {
-                fetchTags();
-            } catch (ParseException e) {
-                e.printStackTrace();
-            }
     }
 
     private void displayUserInfo() { //Display current username to the app bar -- Welcome, user123
