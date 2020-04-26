@@ -14,7 +14,6 @@
         android:background="@color/TempleTagTheme"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:titleTextColor="#FFFFFF"
         android:gravity="right">
 
@@ -117,7 +116,8 @@
         android:layout_height="150dp"
         app:srcCompat="@android:drawable/ic_menu_report_image"
         android:id="@+id/tag_image_view"
-        android:background="@drawable/rounded"/>
+        android:layout_marginTop="10dp"
+        android:background="@android:drawable/dialog_holo_dark_frame"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"

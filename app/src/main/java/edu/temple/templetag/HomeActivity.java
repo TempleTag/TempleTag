@@ -103,18 +103,6 @@ public class HomeActivity extends AppCompatActivity {
         Toolbar toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
 
-        //WorkAround For GoogleMap Crash Issue
-        try {
-            SharedPreferences googleBug = getSharedPreferences("google_bug_154855417", Context.MODE_PRIVATE);
-            if (!googleBug.contains("fixed")) {
-                File corruptedZoomTables = new File(getFilesDir(), "ZoomTables.data");
-                corruptedZoomTables.delete();
-                googleBug.edit().putBoolean("fixed", true).apply();
-            }
-        } catch (Exception e) {
-            // log or ignore so nothing breaks.
-        }
-
         //Change StatusBar Color
         getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
         getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
@@ -373,6 +361,8 @@ public class HomeActivity extends AppCompatActivity {
                             .replace(R.id.tag_recycler_fragment_container, BlankFragment.newInstance("Opps! There are no nearby events"), "blankfragment")
                             .commitAllowingStateLoss();
                 }
+
+                mapFragment.updateNewTagsLocations(Tags, currentLocation);
             }
         });
     }

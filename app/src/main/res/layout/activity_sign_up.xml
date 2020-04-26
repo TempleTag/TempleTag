@@ -73,10 +73,10 @@
 
         <Button
             android:id="@+id/registerBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
             android:layout_marginTop="10dp"
-            android:background="@drawable/rounded"
+            android:theme="@style/AppTheme.Button"
             android:fontFamily="monospace"
             android:padding="10dp"
             android:text="register"

@@ -11,7 +11,7 @@
         android:id="@+id/topLayout"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintLeft_toLeftOf="parent"
-        app:layout_constraintHeight_percent="0.4">
+        app:layout_constraintHeight_percent="0.38">
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -111,7 +111,7 @@
 
     <View
         android:layout_width="match_parent"
-        android:layout_marginTop="10dp"
+        android:layout_marginTop="5dp"
         android:layout_height="1dp"
         android:background="@android:color/darker_gray"
         app:layout_constraintTop_toBottomOf="@id/myTagTextView"
@@ -129,9 +129,9 @@
 
     <Button
         android:id="@+id/btn_logout"
-        android:layout_width="wrap_content"
-        android:layout_height="45dp"
-        android:background="@drawable/rounded"
+        android:layout_width="100dp"
+        android:layout_height="60dp"
+        android:theme="@style/AppTheme.Button"
         android:fontFamily="monospace"
         android:text="Log Out"
         android:textColor="@color/white"

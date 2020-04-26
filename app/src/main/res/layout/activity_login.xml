@@ -66,10 +66,10 @@
 
         <Button
             android:id="@+id/loginBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
             android:layout_marginTop="20dp"
-            android:background="@drawable/rounded"
+            android:theme="@style/AppTheme.Button"
             android:fontFamily="monospace"
             android:padding="10dp"
             android:text="@string/login"
@@ -89,9 +89,9 @@
 
         <Button
             android:id="@+id/signUpBtn"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:background="@drawable/rounded"
+            android:layout_width="100dp"
+            android:layout_height="60dp"
+            android:theme="@style/AppTheme.Button"
             android:fontFamily="monospace"
             android:padding="10dp"
             android:text="@string/sign_up_btn"
