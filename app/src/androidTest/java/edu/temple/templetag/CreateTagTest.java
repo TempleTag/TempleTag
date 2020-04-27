@@ -20,25 +20,18 @@ import org.junit.runner.RunWith;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static androidx.test.espresso.action.ViewActions.replaceText;
 import static androidx.test.espresso.action.ViewActions.typeText;
 import static androidx.test.espresso.intent.Intents.intending;
 import static androidx.test.espresso.intent.matcher.IntentMatchers.hasAction;
-import static androidx.test.espresso.intent.matcher.IntentMatchers.toPackage;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
-import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
-import static androidx.test.espresso.matcher.ViewMatchers.withText;
-import static org.hamcrest.Matchers.allOf;
-import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
 public class CreateTagTest {
 
     @Rule
-    public IntentsTestRule<CreateTagActivity> intentsTestRule =
-            new IntentsTestRule<>(CreateTagActivity.class);
+    public IntentsTestRule<HomeActivity> intentsTestRule =
+            new IntentsTestRule<>(HomeActivity.class);
 
     @Rule
     public GrantPermissionRule mGrantPermissionRule =
@@ -54,8 +47,9 @@ public class CreateTagTest {
     }
 
     @Test
-    public void createTagTest() {
-
+    public void createTagTest() throws InterruptedException {
+        onView(withId(R.id.createTagBtn)).
+                perform(click());
         onView(withId(R.id.tagLocationName))
                 .perform(typeText("Esp"), closeSoftKeyboard());
         onView(withId(R.id.tagDescription))
@@ -64,15 +58,15 @@ public class CreateTagTest {
                 .perform(click());
         onView(withId(R.id.createTagBtn))
                 .perform(click());
-
     }
 
     private Instrumentation.ActivityResult createImageCaptureActivityResultStub() {
         // Put the drawable in a bundle.
         Bundle bundle = new Bundle();
+        // This doesn't work.  I cannot get bitmap factory to return a bitmap.  This code is
+        // straight from Google
         bundle.putParcelable("data", BitmapFactory.decodeResource(
-                intentsTestRule.getActivity().getResources(), R.drawable.ic_popularity_foreground));
-
+                intentsTestRule.getActivity().getResources(), R.mipmap.ic_templetag));
         // Create the Intent that will include the bundle.
         Intent resultData = new Intent();
         resultData.putExtras(bundle);

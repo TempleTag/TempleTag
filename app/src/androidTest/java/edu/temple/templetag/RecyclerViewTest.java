@@ -22,6 +22,7 @@ import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
 import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
 import static androidx.test.espresso.action.ViewActions.replaceText;
+import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
 import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
@@ -31,7 +32,7 @@ import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class LogoutTest {
+public class RecyclerViewTest {
 
     @Rule
     public ActivityTestRule<HomeActivity> mActivityTestRule = new ActivityTestRule<>(HomeActivity.class);
@@ -42,28 +43,47 @@ public class LogoutTest {
                     "android.permission.ACCESS_FINE_LOCATION");
 
     @Test
-    public void logoutTest() throws InterruptedException {
-        Thread.sleep(1500);
-        ViewInteraction circleImageView = onView(
-                allOf(withId(R.id.userProfile),
+    public void recyclerViewTest() throws InterruptedException {
+        ViewInteraction materialEditText = onView(
+                allOf(withId(R.id.email),
                         childAtPosition(
-                                allOf(withId(R.id.my_toolbar),
+                                allOf(withId(R.id.loginLayout),
                                         childAtPosition(
                                                 withClassName(is("android.widget.RelativeLayout")),
-                                                0)),
+                                                1)),
                                 1),
                         isDisplayed()));
-        circleImageView.perform(click());
+        materialEditText.perform(replaceText("E@app.com"), closeSoftKeyboard());
 
-        ViewInteraction appCompatButton2 = onView(
-                allOf(withId(R.id.btn_logout), withText("Log Out"),
+        ViewInteraction materialEditText2 = onView(
+                allOf(withId(R.id.password),
                         childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        8),
-                                0),
+                                allOf(withId(R.id.loginLayout),
+                                        childAtPosition(
+                                                withClassName(is("android.widget.RelativeLayout")),
+                                                1)),
+                                2),
                         isDisplayed()));
-        appCompatButton2.perform(click());
+        materialEditText2.perform(replaceText("testing"), closeSoftKeyboard());
+
+        ViewInteraction appCompatButton = onView(
+                allOf(withId(R.id.loginBtn), withText("Login"),
+                        childAtPosition(
+                                allOf(withId(R.id.loginLayout),
+                                        childAtPosition(
+                                                withClassName(is("android.widget.RelativeLayout")),
+                                                1)),
+                                3),
+                        isDisplayed()));
+        appCompatButton.perform(click());
+
+        Thread.sleep(1500);
+        ViewInteraction recyclerView = onView(
+                allOf(withId(R.id.recycler_view),
+                        childAtPosition(
+                                withClassName(is("android.widget.RelativeLayout")),
+                                0)));
+        recyclerView.perform(actionOnItemAtPosition(0, click()));
     }
 
     private static Matcher<View> childAtPosition(

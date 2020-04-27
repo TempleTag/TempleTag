@@ -1,11 +1,11 @@
 package edu.temple.templetag;
 
-
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.ViewParent;
 
 import androidx.test.espresso.ViewInteraction;
+import androidx.test.espresso.contrib.RecyclerViewActions;
 import androidx.test.ext.junit.runners.AndroidJUnit4;
 import androidx.test.filters.LargeTest;
 import androidx.test.rule.ActivityTestRule;
@@ -18,20 +18,23 @@ import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 
+import static androidx.test.espresso.Espresso.onData;
 import static androidx.test.espresso.Espresso.onView;
 import static androidx.test.espresso.action.ViewActions.click;
-import static androidx.test.espresso.action.ViewActions.closeSoftKeyboard;
-import static androidx.test.espresso.action.ViewActions.replaceText;
-import static androidx.test.espresso.matcher.ViewMatchers.isDisplayed;
+import static androidx.test.espresso.contrib.RecyclerViewActions.actionOnItemAtPosition;
+import static androidx.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static androidx.test.espresso.matcher.ViewMatchers.withClassName;
 import static androidx.test.espresso.matcher.ViewMatchers.withId;
 import static androidx.test.espresso.matcher.ViewMatchers.withText;
 import static org.hamcrest.Matchers.allOf;
+import static org.hamcrest.Matchers.equalTo;
+import static org.hamcrest.Matchers.hasEntry;
+import static org.hamcrest.Matchers.instanceOf;
 import static org.hamcrest.Matchers.is;
 
 @LargeTest
 @RunWith(AndroidJUnit4.class)
-public class LogoutTest {
+public class DeleteTagTest {
 
     @Rule
     public ActivityTestRule<HomeActivity> mActivityTestRule = new ActivityTestRule<>(HomeActivity.class);
@@ -42,28 +45,22 @@ public class LogoutTest {
                     "android.permission.ACCESS_FINE_LOCATION");
 
     @Test
-    public void logoutTest() throws InterruptedException {
-        Thread.sleep(1500);
-        ViewInteraction circleImageView = onView(
-                allOf(withId(R.id.userProfile),
-                        childAtPosition(
-                                allOf(withId(R.id.my_toolbar),
-                                        childAtPosition(
-                                                withClassName(is("android.widget.RelativeLayout")),
-                                                0)),
-                                1),
-                        isDisplayed()));
-        circleImageView.perform(click());
+    public void DeleteTagTest() throws InterruptedException {
 
-        ViewInteraction appCompatButton2 = onView(
-                allOf(withId(R.id.btn_logout), withText("Log Out"),
+        Thread.sleep(1500);
+
+        ViewInteraction recyclerView = onView(
+                allOf(withId(R.id.recycler_view),
                         childAtPosition(
-                                childAtPosition(
-                                        withClassName(is("android.widget.LinearLayout")),
-                                        8),
-                                0),
-                        isDisplayed()));
-        appCompatButton2.perform(click());
+                                withClassName(is("android.widget.RelativeLayout")),
+                                0)));
+
+        recyclerView.perform(RecyclerViewActions
+                .actionOnItem(withText("Esp")
+                        , click()));
+
+
+        Thread.sleep(1500);
     }
 
     private static Matcher<View> childAtPosition(
