@@ -245,12 +245,28 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             CameraUpdate cameraUpdate = CameraUpdateFactory.newLatLngZoom(latLng, 15);
             googleMap.animateCamera(cameraUpdate);
 
-            //This value is in miles so keep the radius somewhere near 1.6*the max radius in home activity
+            // Create the radius circle
+            // This value is in miles so keep the radius somewhere near 1.6*the max radius in home activity
             java.util.List<PatternItem> pattern = Arrays.<PatternItem>asList(new Dash(1));
             Circle circle = this.googleMap.addCircle(new CircleOptions()
                     .center(latLng)
                     .radius(400)
                     .strokeColor(Color.rgb(157,34,53)).strokePattern(pattern).fillColor(Color.parseColor("#22c499a0")));
+
+            // Create red marker for person using app's location
+            // Default map marker size
+            int height = 35;
+            int width = 35;
+            Bitmap s = BitmapFactory.decodeResource(getResources(), R.drawable.reddotmarker);
+            Bitmap selfMarker = Bitmap.createScaledBitmap(s, width, height, false);
+            BitmapDescriptor selfMarkerIcon = BitmapDescriptorFactory.fromBitmap(selfMarker);
+
+            LatLng currentPos = new LatLng(currentLocation.getLatitude(),currentLocation.getLongitude());
+            // Add marker with custom marker icon
+
+            Marker currentPositionMarker = (googleMap.addMarker(new MarkerOptions()
+                    .position(currentPos)
+                    .icon(selfMarkerIcon).flat(true).title("Your Location")));
         }
     }
 
@@ -314,7 +330,6 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
             displayAMarker(this.tag);
         }
         this.googleMap.setOnInfoWindowClickListener(this);
-//        this.googleMap.setMinZoomPreference(7);
     }
 
     @Override
@@ -323,4 +338,5 @@ public class MapFragment extends Fragment implements OnMapReadyCallback,
         intent.putExtra("theTag", ((Tag)marker.getTag()));
         mContext.startActivity(intent);
     }
+
 }
