@@ -14,7 +14,6 @@
         android:background="@color/TempleTagTheme"
         android:elevation="4dp"
         android:theme="@style/ThemeOverlay.AppCompat.ActionBar"
-        app:popupTheme="@style/ThemeOverlay.AppCompat.Light"
         app:titleTextColor="#FFFFFF"
         android:gravity="right">
 
@@ -45,7 +44,7 @@
         android:textSize="20dp"
         android:id="@+id/tag_created_by"
         android:fontFamily="monospace"
-        android:textColor="#000000"/>
+        android:textColor="#FFFFFF"/>
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -57,9 +56,7 @@
             android:layout_width="45dp"
             android:layout_height="40dp"
             android:background="@drawable/ic_action_thumb_up"
-            android:id="@+id/up_vote_icon"
-            android:foreground="@drawable/my_selector"
-            android:clickable="true"/>
+            android:id="@+id/up_vote_icon"/>
 
         <TextView
             android:layout_width="wrap_content"
@@ -68,15 +65,13 @@
             android:gravity="center_vertical"
             android:id="@+id/tag_up_vote"
             android:fontFamily="monospace"
-            android:textColor="#000000"/>
+            android:textColor="#FFFFFF"/>
 
         <de.hdodenhof.circleimageview.CircleImageView
             android:layout_width="40dp"
             android:layout_height="40dp"
             android:background="@drawable/ic_action_thumb_down"
-            android:id="@+id/down_vote_icon"
-            android:foreground="@drawable/my_selector"
-            android:clickable="true"/>
+            android:id="@+id/down_vote_icon"/>
 
 
         <TextView
@@ -86,7 +81,7 @@
             android:gravity="center_vertical"
             android:id="@+id/tag_down_vote"
             android:fontFamily="monospace"
-            android:textColor="#000000"/>
+            android:textColor="#FFFFFF"/>
 
     </LinearLayout>
 
@@ -106,7 +101,7 @@
             android:gravity="center_vertical"
             android:id="@+id/tag_popularity"
             android:fontFamily="monospace"
-            android:textColor="#000000"/>
+            android:textColor="#FFFFFF"/>
 
     </LinearLayout>
 
@@ -121,7 +116,8 @@
         android:layout_height="150dp"
         app:srcCompat="@android:drawable/ic_menu_report_image"
         android:id="@+id/tag_image_view"
-        android:background="@drawable/rounded"/>
+        android:layout_marginTop="10dp"
+        android:background="@android:drawable/dialog_holo_dark_frame"/>
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -130,7 +126,7 @@
         android:textStyle="bold"
         android:layout_marginTop="10dp"
         android:layout_marginLeft="10dp"
-        android:textColor="@color/colorPrimaryDark"
+        android:textColor="@color/white"
         android:fontFamily="monospace"/>
 
     <TextView
@@ -141,6 +137,6 @@
         android:layout_marginRight="10dp"
         android:fontFamily="monospace"
         android:textSize="20sp"
-        android:textColor="#000000"
+        android:textColor="#FFFFFF"
         android:scrollbars = "vertical"/>
 </LinearLayout>

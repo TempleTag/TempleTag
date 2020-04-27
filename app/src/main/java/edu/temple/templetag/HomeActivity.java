@@ -2,8 +2,11 @@ package edu.temple.templetag;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
+import android.graphics.Color;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
@@ -33,8 +36,10 @@ import androidx.appcompat.widget.Toolbar;
 
 import android.util.Log;
 import android.view.View;
+import android.view.WindowManager;
 import android.widget.Toast;
 
+import java.io.File;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -59,7 +64,6 @@ public class HomeActivity extends AppCompatActivity {
     //Location
     private LocationManager locationManager;
     private LocationListener locationListener;
-    private FusedLocationProviderClient fusedLocationClient;
     public static Location currentLocation;
 
     // Fragments
@@ -72,14 +76,14 @@ public class HomeActivity extends AppCompatActivity {
     // Distance Calculator
     DistanceCalculator distanceCalculator = new DistanceCalculator();
 
-    private boolean firstStart = true;
-
-    //Other variables
+    // Other variables
     private Intent createTagIntent;
     private String txt_username, txt_email;
     public static final String TAG = "HomeActivity";
     public static final String TAG_LIST_FRAGMENT = "TagRecyclerFragment_HOME"; //This is the tag for TagRecyclerViewFragment for HomeActivity. This is not to be confused with the one in UserProfileActivity
     public static final double MAX_RADIUS = 0.25; //This is the radius of tags that will be displayed to the user
+    private final String MAP_FRAG_IN_HOME = "MapFragmentInHomeActivity"; //MapFragment Tag to distinguish with MapFragment in TagDetailActivity
+    private boolean firstStart = true;
 
     @Override
     protected void onStart() {
@@ -107,6 +111,11 @@ public class HomeActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = findViewById(R.id.my_toolbar);
         setSupportActionBar(toolbar);
+
+        //Change StatusBar Color
+        getWindow().addFlags(WindowManager.LayoutParams.FLAG_DRAWS_SYSTEM_BAR_BACKGROUNDS);
+        getWindow().clearFlags(WindowManager.LayoutParams.FLAG_TRANSLUCENT_STATUS);
+        getWindow().setStatusBarColor(getResources().getColor(R.color.TempleTagTheme));
 
         createTagBtn = findViewById(R.id.createTagBtn);
 
@@ -169,18 +178,12 @@ public class HomeActivity extends AppCompatActivity {
             showLocationUpdates();
         }
 
-        // Attach mapFragment
-        mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag("mapfragment");
-        if (mapFragment != null) {
-            getSupportFragmentManager().beginTransaction()
-                    .remove(mapFragment)
-                    .add(R.id.mapContainer, MapFragment.newInstance(Tags, currentLocation), "mapfragment")
-                    .commitAllowingStateLoss();
-        } else {
-            mapFragment = MapFragment.newInstance(Tags, currentLocation);
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.mapContainer, mapFragment, "mapfragment")
-                    .commitAllowingStateLoss();
+        if (!firstStart) {
+            try {
+                fetchTags();
+            } catch (ParseException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -333,6 +336,7 @@ public class HomeActivity extends AppCompatActivity {
                             }
                         case REMOVED:
                             // Do something
+                            System.out.println("Deleted");
                         case MODIFIED:
                             // Do something
                     }
@@ -340,15 +344,42 @@ public class HomeActivity extends AppCompatActivity {
 
                 // Create a TagRecyclerViewFragment after fetching new tags near user's current location
                 tagRecyclerViewFragment = (TagRecyclerViewFragment) getSupportFragmentManager().findFragmentByTag(TAG_LIST_FRAGMENT);
+                BlankFragment blankFragment = (BlankFragment)getSupportFragmentManager().findFragmentByTag("blankfragment");
+
                 if (tagRecyclerViewFragment != null) {
                     tagRecyclerViewFragment.updateDataSet(Tags);
                 } else {
                     getSupportFragmentManager().beginTransaction()
-                            .add(R.id.tag_recycler_fragment_container, TagRecyclerViewFragment.newInstance(Tags), TAG_LIST_FRAGMENT)
+                            .replace(R.id.tag_recycler_fragment_container, TagRecyclerViewFragment.newInstance(Tags), TAG_LIST_FRAGMENT)
                             .commitAllowingStateLoss();
                 }
 
-                mapFragment.updateNewTagsLocations(Tags, currentLocation);
+                mapFragment = (MapFragment) getSupportFragmentManager().findFragmentByTag("mapfragment");
+                if (mapFragment != null) {
+                    // Attach mapFragment
+//                    getSupportFragmentManager().beginTransaction()
+//                            .replace(R.id.mapContainer, MapFragment.newInstance(Tags, currentLocation), "mapfragment")
+//                            .commitAllowingStateLoss();
+                    mapFragment.updateNewTagsLocations(Tags, currentLocation);
+                } else {
+                    // Attach mapFragment
+                    mapFragment = MapFragment.newInstance(Tags, currentLocation);
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.mapContainer, mapFragment, "mapfragment")
+                            .commitAllowingStateLoss();
+                }
+
+                if (Tags.size() > 0) {
+                    if (blankFragment != null){
+                        getSupportFragmentManager().beginTransaction()
+                                .remove(blankFragment)
+                                .commitAllowingStateLoss();
+                    }
+                } else {
+                    getSupportFragmentManager().beginTransaction()
+                            .replace(R.id.tag_recycler_fragment_container, BlankFragment.newInstance("Opps! There are no nearby events"), "blankfragment")
+                            .commitAllowingStateLoss();
+                }
             }
         });
     }
